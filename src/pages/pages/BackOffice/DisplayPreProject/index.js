@@ -27,11 +27,13 @@ function ProprojectDisplay() {
       field: '',
       headerName: 'Edit',
       width: 100,
-      renderCell: cellValues => (
-        <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
-          ...
-        </Button>
-      )
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
+            ...
+          </Button>
+        )
+      }
     }
   ]
 

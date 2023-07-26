@@ -22,6 +22,9 @@ import Swal from 'sweetalert2'
 
 export default function PreprojectEdit() {
   const router = useRouter() // router สร้าง path
+  const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
+  //console.log(projectId)
+
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -45,6 +48,9 @@ export default function PreprojectEdit() {
   //เก็บตัวแปรนักเรียน
   const [allStudentValues, setAllStudentValues] = useState([]) // เก็บข้อมูลนักเรียนทั้งหมด(ใช้อันนี้บัคเยอะนะ)
   const [allStudent, setAllStudent] = useState([]) // รับ Id นักเรียนเพื่อส่งฟอร์ม
+
+  // เก็บตัวแปร Edit
+  const [Editdata, setEditdata] = useState([])
 
   //   console.log(curriculumsId)
   //   console.log(subjectId)
@@ -170,6 +176,30 @@ export default function PreprojectEdit() {
   const [yearData, setYearData] = useState([]) // รับข้อมูลปี
   const [termData, setTermData] = useState([]) // รับข้อมูล เทอม กับ Sec
   const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
+
+  // ดึงข้อมูล Api มา Set form Edit
+  useEffect(() => {
+    const fetchEditData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3200/api/project-mgt/preproject?preproject_id=${projectId}`)
+        setEditdata(response.data)
+
+        //console.log(response.data)
+
+        //console.log(Editdata.PreprojectCommittee)
+
+        // console.log(Editdata.PreprojectData)
+
+        // console.log(Editdata.PreprojectStudent)
+
+        // console.log(Editdata.PreprojectSubAdviser)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchEditData()
+  }, [projectId, Editdata])
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
