@@ -20,7 +20,11 @@ const TeacherMenu = () => {
       {/* contain 01 */}
       <Grid item xs={12} sm={6} md={2.5}>
         <Card sx={{ maxWidth: 350, maxHeight: 220 }}>
-          <CardActionArea onClick={() => router.push(`#1`)}>
+          <CardActionArea
+            onClick={() =>
+              router.push(`http://localhost:3000/pages/Preproject/InstructorMenu/PreprojectInstructorManage/`)
+            }
+          >
             <CardMedia
               component='img'
               style={{ padding: '25px', maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto' }}

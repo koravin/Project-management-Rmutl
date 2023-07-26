@@ -23,13 +23,18 @@ import Swal from 'sweetalert2'
 export default function PreprojectEdit() {
   const router = useRouter() // router สร้าง path
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
-  //console.log(projectId)
+  const requestdata = projectId // หากไม่เก็บค่าลงตัวแปรใหม่ Additional Select จะมีการเปลี่ยนแปลงค่า Id ตลอดเวลาตัวเลือกจะปิดเองอัตโนมัติ
+
+  console.log(requestdata)
 
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
   // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
   const [submitted, setSubmitted] = useState(false)
+
+  // เก็บตัวแปร Edit
+  const [Editdata, setEditdata] = useState([])
 
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
   const [curriculumsId, setCurriculumsId] = useState('') // เก็บข้อมูลหลักสูตร
@@ -48,9 +53,6 @@ export default function PreprojectEdit() {
   //เก็บตัวแปรนักเรียน
   const [allStudentValues, setAllStudentValues] = useState([]) // เก็บข้อมูลนักเรียนทั้งหมด(ใช้อันนี้บัคเยอะนะ)
   const [allStudent, setAllStudent] = useState([]) // รับ Id นักเรียนเพื่อส่งฟอร์ม
-
-  // เก็บตัวแปร Edit
-  const [Editdata, setEditdata] = useState([])
 
   //   console.log(curriculumsId)
   //   console.log(subjectId)
@@ -151,7 +153,7 @@ export default function PreprojectEdit() {
     console.log(data)
 
     axios
-      .post('http://localhost:3200/api/project-mgt/insertpreproject', data)
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
       .then(response => {
         console.log(response)
         handleClose()
@@ -181,10 +183,12 @@ export default function PreprojectEdit() {
   useEffect(() => {
     const fetchEditData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3200/api/project-mgt/preproject?preproject_id=${projectId}`)
-        setEditdata(response.data)
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
+        )
+        setEditdata('response.data')
 
-        //console.log(response.data)
+        console.log(response.data)
 
         //console.log(Editdata.PreprojectCommittee)
 
@@ -199,13 +203,13 @@ export default function PreprojectEdit() {
     }
 
     fetchEditData()
-  }, [projectId, Editdata])
+  }, [requestdata, Editdata])
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3200/api/project-mgt/curriculums')
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums`)
         setCurriculumsData(response.data.data)
       } catch (error) {
         console.error(error)
@@ -220,7 +224,7 @@ export default function PreprojectEdit() {
     const fetchSubjectsData = async () => {
       if (curriculumsId) {
         try {
-          const response = await axios.get('http://localhost:3200/api/project-mgt/curriculums/subjects', {
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects`, {
             params: { curriculum_id: curriculumsId }
           })
           const subjectData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
@@ -240,7 +244,7 @@ export default function PreprojectEdit() {
     const fetchYearData = async () => {
       if (subjectId) {
         try {
-          const response = await axios.get('http://localhost:3200/api/project-mgt/curriculums/subjects/year', {
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects/year`, {
             params: { subject_id: subjectId }
           })
           const yearData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
@@ -260,9 +264,12 @@ export default function PreprojectEdit() {
     const fetchTermData = async () => {
       if (subjectId && yearId) {
         try {
-          const response = await axios.get('http://localhost:3200/api/project-mgt/curriculums/subjects/year/sections', {
-            params: { subject_id: subjectId, year: yearId }
-          })
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects/year/sections`,
+            {
+              params: { subject_id: subjectId, year: yearId }
+            }
+          )
           const termData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
           setTermData(termData)
           setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
@@ -279,7 +286,7 @@ export default function PreprojectEdit() {
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
-        const response = await axios.get('http://localhost:3200/api/project-mgt/instructors')
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/instructors`)
         const teacherData = response.data.data || []
         setTeacherData(teacherData)
         setSelectableSubTeachers(teacherData)
@@ -297,7 +304,7 @@ export default function PreprojectEdit() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const response = await axios.get('http://localhost:3200/api/project-mgt/students')
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/students`)
         const studentData = response.data.data || []
         setSelectStudent(studentData)
       } catch (error) {

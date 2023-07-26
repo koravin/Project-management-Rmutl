@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
-// MUI Import
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Card from '@mui/material/Card'
@@ -17,10 +15,10 @@ import Select from '@mui/material/Select'
 import Autocomplete from '@mui/material/Autocomplete'
 
 const EditCurriculumTest = () => {
-  const projectId = 205
-
   // เก็บตัวแปร Edit
-  const [Editdata, setEditdata] = useState([])
+  const [editData, setEditData] = useState([])
+
+  // console.log(editData.PreprojectData[0].curriculum_id)
 
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
   const [curriculumsId, setCurriculumsId] = useState('') // เก็บข้อมูลหลักสูตร
@@ -32,32 +30,22 @@ const EditCurriculumTest = () => {
   useEffect(() => {
     const fetchEditData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3200/api/project-mgt/preproject?preproject_id=${projectId}`)
-        setEditdata(response.data)
-
-        //console.log(response.data)
-
-        //console.log(Editdata.PreprojectCommittee)
-
-        // console.log(Editdata.PreprojectData)
-
-        // console.log(Editdata.PreprojectStudent)
-
-        // console.log(Editdata.PreprojectSubAdviser)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=205`)
+        setEditData(response.data)
       } catch (error) {
         console.error(error)
       }
     }
 
     fetchEditData()
-  }, [projectId, Editdata])
+  }, [])
 
   // ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown
   const handleCurriculumsChange = event => {
     setCurriculumsId(event.target.value)
-    setSubjectId('')
-    setYearId('')
-  } // จัดการการเปลี่ยนแปลงค่าของหลักสูตร
+
+    // You can perform additional actions here based on the selected curriculum, if needed.
+  }
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
@@ -75,7 +63,8 @@ const EditCurriculumTest = () => {
 
   return (
     <div>
-      <div>555</div>
+      {/* Display Edit Data */}
+      <div>{/* You can display editData here if needed */}</div>
       {/* Curriculum Select */}
       <Grid item xs={12} sm={6}>
         <FormControl fullWidth>

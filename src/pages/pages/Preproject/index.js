@@ -24,7 +24,7 @@ const MainMenu = () => {
             <CardMedia
               component='img'
               height='150'
-              image='https://24.media.tumblr.com/05049ac35f88fa4844273f300c3c9b9a/tumblr_n1a2euWyTF1sfso7wo1_400.gif'
+              image='https://t4.ftcdn.net/jpg/02/39/06/85/360_F_239068579_8FQK3K7Bs9235z7pP96nZCkkOR5nB5g9.jpg'
               alt='Instructor'
             />
             <CardContent>
@@ -51,8 +51,8 @@ const MainMenu = () => {
             <CardMedia
               component='img'
               height='150'
-              image='https://custom-doodle.com/wp-content/uploads/doodle/swole-doge-hits-the-ground-meme/swole-doge-hits-the-ground-meme-doodle.gif'
-              alt='green iguana'
+              image='https://cdn5.vectorstock.com/i/1000x1000/67/34/teacher-icon-vector-23946734.jpg'
+              alt='Teacher'
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
@@ -78,7 +78,7 @@ const MainMenu = () => {
             <CardMedia
               component='img'
               height='150'
-              image='https://media.tenor.com/8Ly-VdB52IoAAAAd/shiba-sad.gif'
+              image='https://logowik.com/content/uploads/images/810_student.jpg'
               alt='green iguana'
             />
             <CardContent>

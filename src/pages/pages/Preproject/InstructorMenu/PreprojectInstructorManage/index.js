@@ -4,18 +4,12 @@ import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
-import PreprojectEdit from './PreprojectEditForm'
 
-function ProprojectDisplay() {
+function PreprojectInstructorManage() {
   const router = useRouter() // router สร้าง path
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
   console.log(projectdata)
-
-  // ส่งค่าจากแถวไปหน้า Edit
-  const handleEditClick = projectId => {
-    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
-  }
 
   // ประกาศ Colum DataGrid
   const columns = [
@@ -24,15 +18,11 @@ function ProprojectDisplay() {
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     { field: 'YearColum', headerName: 'ปีการศึกษา / เทอม / Sec', width: 200 },
     {
-      field: '',
+      field: 'Edit',
       headerName: 'Edit',
       width: 100,
       renderCell: cellValues => {
-        return (
-          <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
-            ...
-          </Button>
-        )
+        return <Button variant='text'>...</Button>
       }
     }
   ]
@@ -61,7 +51,7 @@ function ProprojectDisplay() {
         sx={{ marginBottom: '10px', width: '15vh', height: '20' }}
         variant='contained'
         onClick={() => {
-          router.push(`/pages/BackOffice/DisplayPreProject/PreprojectInsertForm/`)
+          router.push(`#`)
         }}
       >
         เพิ่มข้อมูล
@@ -91,4 +81,4 @@ function ProprojectDisplay() {
   )
 }
 
-export default ProprojectDisplay
+export default PreprojectInstructorManage
