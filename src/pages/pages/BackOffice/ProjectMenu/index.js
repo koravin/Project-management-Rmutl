@@ -1,0 +1,130 @@
+// ** React Imports
+import { useState } from 'react'
+
+// ** MUI Imports
+import Tab from '@mui/material/Tab'
+import Card from '@mui/material/Card'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Button from '@mui/material/Button'
+import TabContext from '@mui/lab/TabContext'
+import Typography from '@mui/material/Typography'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import { Grid } from '@mui/material'
+import { useRouter } from 'next/router'
+
+const PreMenu = () => {
+  const router = useRouter() // router สร้าง path
+  // ** State
+  const [value, setValue] = useState('1')
+  const [value2, setValue2] = useState('3')
+
+  const handleChange1 = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  const handleChange2 = (event, newValue) => {
+    setValue2(newValue)
+  }
+
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12} sx={{ paddingBottom: 4, m: 5 }}>
+        <Typography variant='h5'>เลือกตาราง</Typography>
+      </Grid>
+      {/* การ์ด 1 */}
+      <Grid item xs={12} md={6}>
+        <Card>
+          <TabContext value={value}>
+            <TabList centered onChange={handleChange1} aria-label='card navigation example'>
+              <Tab value='1' label='Pre Project' />
+              <Tab value='2' label='Project' />
+            </TabList>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <TabPanel value='1' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  ตารางแสดงหัวข้อโครงงาน วิชาพรีโปรเจค
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/1087/1087815.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button
+                  variant='contained'
+                  onClick={function () {
+                    router.push(`/pages/BackOffice/DisplayPreProject/`)
+                  }}
+                >
+                  Button One
+                </Button>
+              </TabPanel>
+              <TabPanel value='2' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  ตารางแสดงหัวข้อโครงงาน วิชาพรีโปรเจค
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/2683/2683272.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button variant='contained'>Button Two</Button>
+              </TabPanel>
+            </CardContent>
+          </TabContext>
+        </Card>
+      </Grid>
+
+      {/* การ์ด 2 */}
+      <Grid item xs={12} md={6}>
+        <Card>
+          <TabContext value={value2}>
+            <TabList centered onChange={handleChange2} aria-label='card navigation example'>
+              <Tab value='3' label='Teacher' />
+              <Tab value='4' label='Student' />
+            </TabList>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <TabPanel value='3' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  ตารางแสดงรายชื่อ อาจารย์ในแผนก
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/1048/1048950.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button variant='contained'>Button One</Button>
+              </TabPanel>
+              <TabPanel value='4' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  ตารางแสดงรายชื่อ นักศึกษาในระบบ
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/354/354637.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button variant='contained'>Button Two</Button>
+              </TabPanel>
+            </CardContent>
+          </TabContext>
+        </Card>
+      </Grid>
+    </Grid>
+  )
+}
+
+export default PreMenu

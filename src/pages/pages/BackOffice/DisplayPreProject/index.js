@@ -1,0 +1,92 @@
+import React, { useEffect, useState } from 'react'
+import Box from '@mui/material/Box'
+import { DataGrid } from '@mui/x-data-grid'
+import axios from 'axios'
+import Button from '@mui/material/Button'
+import { useRouter } from 'next/router'
+import PreprojectEdit from './PreprojectEditForm'
+
+function ProprojectDisplay() {
+  const router = useRouter() // router สร้าง path
+  // รับค่าข้อมูลโปรเจค
+  const [projectdata, setProjectData] = useState([])
+  console.log(projectdata)
+
+  // ส่งค่าจากแถวไปหน้า Edit
+  const handleEditClick = projectId => {
+    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
+  }
+
+  // ประกาศ Colum DataGrid
+  const columns = [
+    { field: 'project_code', headerName: 'ID', width: 120 },
+    { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
+    { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
+    { field: 'YearColum', headerName: 'ปีการศึกษา / เทอม / Sec', width: 200 },
+    {
+      field: '',
+      headerName: 'Edit',
+      width: 100,
+      renderCell: cellValues => (
+        <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
+          ...
+        </Button>
+      )
+    }
+  ]
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3200/api/project-mgt/preprojects')
+
+        const projects = response.data.data.map(project => ({
+          ...project,
+          YearColum: `${project.sem_year} / ${project.semester_order} / ${project.section_name}`
+        }))
+        setProjectData(projects)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  return (
+    <div>
+      {/* ปุ่ม Insert project */}
+      <Button
+        sx={{ marginBottom: '10px', width: '15vh', height: '20' }}
+        variant='contained'
+        onClick={() => {
+          router.push(`/pages/BackOffice/DisplayPreProject/PreprojectInsertForm/`)
+        }}
+      >
+        เพิ่มข้อมูล
+      </Button>
+      <Box sx={{ height: 400, width: '100%' }}>
+        {/* เช็คค่าว่างของข้อมูลก่อนที่จะทำการ map */}
+        {projectdata.length === 0 ? (
+          <p>No Data</p>
+        ) : (
+          <DataGrid
+            rows={projectdata}
+            columns={columns}
+            getRowId={row => row.preproject_id}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5
+                }
+              }
+            }}
+            pageSizeOptions={[5]}
+            disableRowSelectionOnClick
+          />
+        )}
+      </Box>
+    </div>
+  )
+}
+
+export default ProprojectDisplay
