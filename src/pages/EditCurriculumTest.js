@@ -15,11 +15,6 @@ import Select from '@mui/material/Select'
 import Autocomplete from '@mui/material/Autocomplete'
 
 const EditCurriculumTest = () => {
-  // เก็บตัวแปร Edit
-  const [editData, setEditData] = useState([])
-
-  // console.log(editData.PreprojectData[0].curriculum_id)
-
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
   const [curriculumsId, setCurriculumsId] = useState('') // เก็บข้อมูลหลักสูตร
 
@@ -31,7 +26,8 @@ const EditCurriculumTest = () => {
     const fetchEditData = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=205`)
-        setEditData(response.data)
+        setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
+        console.log(response.data)
       } catch (error) {
         console.error(error)
       }
@@ -60,6 +56,8 @@ const EditCurriculumTest = () => {
 
     fetchData()
   }, [])
+
+  console.log(curriculumsId)
 
   return (
     <div>

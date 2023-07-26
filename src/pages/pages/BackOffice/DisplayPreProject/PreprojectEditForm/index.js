@@ -33,9 +33,6 @@ export default function PreprojectEdit() {
   // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
   const [submitted, setSubmitted] = useState(false)
 
-  // เก็บตัวแปร Edit
-  const [Editdata, setEditdata] = useState([])
-
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
   const [curriculumsId, setCurriculumsId] = useState('') // เก็บข้อมูลหลักสูตร
   const [subjectId, setSubjectId] = useState('') // เก็บข้อมูลวิชา
@@ -186,9 +183,18 @@ export default function PreprojectEdit() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
         )
-        setEditdata('response.data')
-
         console.log(response.data)
+        console.log(response.data.PreprojectData[0].semester_order)
+        setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
+        setSubjectId(response.data.PreprojectData[0].subject_id)
+        setYearId(response.data.PreprojectData[0].sem_year)
+        setSelectedTerm(response.data.PreprojectData[0].section_id)
+        setProjectCode(response.data.PreprojectData[0].project_code)
+        setProjectType(response.data.PreprojectData[0].project_type)
+        setProjectStatus(response.data.PreprojectData[0].project_status)
+        setProjectNameTh(response.data.PreprojectData[0].preproject_name_th)
+        setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
+        setAdvisorId(response.data.PreprojectData[0].instructor_id)
 
         //console.log(Editdata.PreprojectCommittee)
 
@@ -203,7 +209,7 @@ export default function PreprojectEdit() {
     }
 
     fetchEditData()
-  }, [requestdata, Editdata])
+  }, [requestdata])
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
