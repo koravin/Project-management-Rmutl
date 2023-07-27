@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/router'
+
+// MUI Import
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Card from '@mui/material/Card'
@@ -15,11 +18,9 @@ import Select from '@mui/material/Select'
 import Autocomplete from '@mui/material/Autocomplete'
 
 const EditCurriculumTest = () => {
-  // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
-  const [allAdvisorSubValues, setAllAdvisorSubValues] = useState([]) // เก็บข้อมูลอาจารย์ที่ปรึกษารอง
-
-  // รับค่าข้อมูลจาก Api
-  const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
+  //เก็บตัวแปรนักเรียน
+  const [allStudentValues, setAllStudentValues] = useState([]) // เก็บข้อมูลนักเรียนทั้งหมด(ใช้อันนี้บัคเยอะนะ)
+  const [allStudent, setAllStudent] = useState([]) // รับ Id นักเรียนเพื่อส่งฟอร์ม
 
   // ดึงข้อมูล Api มา Set form Edit
   useEffect(() => {
@@ -27,19 +28,22 @@ const EditCurriculumTest = () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=210`)
         console.log(response.data.PreprojectSubAdviser)
-        console.log(response.data.PreprojectSubAdviser[0].instructor_id)
+        console.log(response.data)
+        console.log(response.data.PreprojectStudent[0].studen_id)
 
-        //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
-        setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
+        //--------------------------------------เซตค่าเริ่มต้นให้ Student--------------------------------------------//
+
+        setSelectedValueStudent(response.data.PreprojectStudent[0].studen_id)
 
         // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
-        const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
+        const StudentFromSecondElement = response.data.PreprojectStudent.slice(1)
 
         // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-        const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
-        setAdditionalSubAdvisorForms(initialSubAdvisorIds)
+        const initialStudent = StudentFromSecondElement.map(student => student.studen_id)
+        setAdditionalStudentForms(initialStudent)
+        console.log(initialStudent)
 
-        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Student--------------------------------------------//
       } catch (error) {
         console.error(error)
       }
@@ -48,133 +52,134 @@ const EditCurriculumTest = () => {
     fetchEditData()
   }, [])
 
-  // ดึงข้อมูล อาจารย์ จาก Api
+  // ดึงข้อมูล นักเรียนจาก Api
   useEffect(() => {
-    const fetchTeacherData = async () => {
+    const fetchStudentData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/instructors`)
-        const teacherData = response.data.data || []
-        setTeacherData(teacherData)
-        setSelectableSubTeachers(teacherData)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/students`)
+        const studentData = response.data.data || []
+        setSelectStudent(studentData)
       } catch (error) {
         console.error(error)
       }
     }
 
-    fetchTeacherData()
+    fetchStudentData()
   }, [])
 
-  //-----------------------ฟังชันเก็บค่าอาจารย์ที่ปรึกษารอง(Select)----------------------//
-  const [selectedValueAdvisorSub, setSelectedValueAdvisorSub] = useState('')
-  const [selectableSubTeachers, setSelectableSubTeachers] = useState([])
-  const [additionalSubAdvisorForms, setAdditionalSubAdvisorForms] = useState([])
+  //------------------------------ฟังชันเก็บค่านักศึกษา (Autocom)--------------------------//
+  const [selectedValueStudent, setSelectedValueStudent] = useState('')
+  const [selectStudent, setSelectStudent] = useState([])
+  const [additionalStudentForms, setAdditionalStudentForms] = useState([])
+
+  //ตัวรี Input
+  const autocompleteRef = useRef()
+
   useEffect(() => {
-    const updatedAllAdvisorSubValues = [selectedValueAdvisorSub, ...additionalSubAdvisorForms].filter(
-      value => value !== ''
-    )
-    setAllAdvisorSubValues(updatedAllAdvisorSubValues)
-  }, [selectedValueAdvisorSub, additionalSubAdvisorForms])
+    const updatedAllStudentValues = [selectedValueStudent, ...additionalStudentForms].filter(value => value !== '')
+    setAllStudentValues(updatedAllStudentValues)
+  }, [selectedValueStudent, additionalStudentForms])
 
-  const handleAddSubAdvisorData = () => {
-    setAdditionalSubAdvisorForms(prevForms => {
-      const updatedForms = [...prevForms, '']
+  useEffect(() => {
+    const updatedAllStudent = allStudentValues.map(value => value?.studen_id).filter(id => id !== undefined)
+    setAllStudent(updatedAllStudent)
+  }, [allStudentValues])
 
-      return Array.from(new Set(updatedForms))
-    })
+  const handleAddStudentData = () => {
+    setAdditionalStudentForms(prevForms => Array.from(new Set([...prevForms, ''])))
   }
 
-  const handleClearSubAdvisorData = () => {
-    setAdditionalSubAdvisorForms([])
+  const handleClearStudentData = () => {
+    setSelectedValueStudent('')
+    setAdditionalStudentForms([])
+
+    // เคลียร์ค่าที่แสดงในกล่อง input ของ Autocomplete ด้วยการกำหนดค่าว่าง
+    if (autocompleteRef.current) {
+      autocompleteRef.current.value = ''
+    }
   }
 
-  const handleSubAdvisorChange = event => {
-    setSelectedValueAdvisorSub(event.target.value)
+  const handleStudentChange = (_, value) => {
+    setSelectedValueStudent(value)
   }
 
-  const handleAdditionalSubAdvisorChange = (event, formIndex) => {
-    const selectedSubAdvisor = event.target.value
-    setAdditionalSubAdvisorForms(prevForms => {
+  const handleAdditionalStudentChange = (_, value, formIndex) => {
+    setAdditionalStudentForms(prevForms => {
       const updatedForms = [...prevForms]
-      updatedForms[formIndex] = selectedSubAdvisor
-
-      const updatedAllAdvisorSubValues = [selectedValueAdvisorSub, ...updatedForms].filter(value => value !== '')
-      setAllAdvisorSubValues(updatedAllAdvisorSubValues)
+      updatedForms[formIndex] = value
+      const updatedAllStudentValues = [selectedValueStudent, ...updatedForms].filter(value => value !== '')
+      setAllStudentValues(updatedAllStudentValues)
 
       return Array.from(new Set(updatedForms))
     })
   }
 
-  const AdditionalSubAdvisorForm = ({ formIndex, selectedOptions }) => {
-    const additionalSubAdvisor = additionalSubAdvisorForms[formIndex]
+  const getOptionLabel = option => {
+    if (!option) return ''
 
+    const selectedStudent = selectStudent.find(student => student.studen_id === option)
+
+    if (selectedStudent) {
+      return `${selectedStudent.prefix} ${selectedStudent.studen_first_name} ${selectedStudent.studen_last_name} ${selectedStudent.studen_number}`
+    }
+
+    if (option) {
+      return `${option.prefix} ${option.studen_first_name} ${option.studen_last_name} ${option.studen_number}`
+    }
+
+    return ''
+  }
+
+  const AdditionalStudentForm = ({ formIndex }) => {
     return (
       <FormControl fullWidth style={{ marginTop: '15px' }}>
-        <InputLabel id={`additional-sub-advisor-label-${formIndex}`}>Additional Sub Advisor {formIndex + 1}</InputLabel>
-        <Select
-          label={`additional sub advisor ${formIndex + 1}`}
-          labelId={`additional-sub-advisor-label-${formIndex}`}
-          value={additionalSubAdvisor || ''}
-          onChange={event => handleAdditionalSubAdvisorChange(event, formIndex)}
-        >
-          {selectableSubTeachers.map(contentTeacher => (
-            <MenuItem
-              key={contentTeacher.instructor_id}
-              value={contentTeacher.instructor_id}
-              disabled={allAdvisorSubValues.includes(contentTeacher.instructor_id)}
-            >
-              {contentTeacher.instructors_name}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          id={`additional-student-label-${formIndex}`}
+          value={additionalStudentForms[formIndex] || null}
+          onChange={(event, newValue) => handleAdditionalStudentChange(event, newValue, formIndex)}
+          options={selectStudent}
+          getOptionLabel={getOptionLabel}
+          renderInput={params => <TextField {...params} label={`additional student ${formIndex + 1}`} />}
+        />
       </FormControl>
     )
   }
-
-  //-----------------------จบฟังชันเก็บค่าอาจารย์ที่ปรึกษารอง(Select)----------------------//
 
   return (
     <div>
       {/* Display Edit Data */}
       <div>{/* You can display editData here if needed */}</div>
-      {/* Curriculum Select */}
-      {/* Sub Advisor Select */}
+      {/* Student Select */}
       <Grid item xs={12} sm={12}>
         <Typography variant='body2' sx={{ fontWeight: 600 }}>
-          ชื่ออาจารย์ที่ปรึกษารอง**
+          รายชื่อนักศึกษา**
         </Typography>
         <Grid container justifyContent='flex-end' alignItems='center'>
           <Grid item>
-            <Button size='small' onClick={handleAddSubAdvisorData}>
+            <Button size='small' onClick={handleAddStudentData}>
               เพิ่มข้อมูล
             </Button>
           </Grid>
           <Grid item>
-            <Button size='small' onClick={handleClearSubAdvisorData}>
+            <Button size='small' onClick={handleClearStudentData}>
               ล้างข้อมูล
             </Button>
           </Grid>
         </Grid>
         <FormControl fullWidth>
-          <InputLabel id='sub-advisor-label'>Sub Advisor</InputLabel>
-          <Select
-            label='Sub Advisor'
-            labelId='sub-advisor-label'
-            value={selectedValueAdvisorSub || ''}
-            onChange={handleSubAdvisorChange}
-          >
-            {selectableSubTeachers.map(contentTeacher => (
-              <MenuItem
-                key={contentTeacher.instructor_id}
-                value={contentTeacher.instructor_id}
-                disabled={additionalSubAdvisorForms.includes(contentTeacher.instructor_id)}
-              >
-                {contentTeacher.instructors_name}
-              </MenuItem>
-            ))}
-          </Select>
+          <FormControl fullWidth>
+            <Autocomplete
+              id='student-label'
+              value={selectedValueStudent === '' ? null : selectedValueStudent}
+              onChange={handleStudentChange}
+              options={selectStudent}
+              getOptionLabel={getOptionLabel}
+              renderInput={params => <TextField {...params} label='Student' />}
+            />
+          </FormControl>
         </FormControl>
-        {additionalSubAdvisorForms.map((_, index) => (
-          <AdditionalSubAdvisorForm key={index} formIndex={index} selectedOptions={additionalSubAdvisorForms} />
+        {additionalStudentForms.map((_, index) => (
+          <AdditionalStudentForm key={index} formIndex={index} />
         ))}
       </Grid>
     </div>

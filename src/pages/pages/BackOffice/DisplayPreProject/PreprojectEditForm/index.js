@@ -104,7 +104,7 @@ export default function PreprojectEdit() {
   }
 
   // ฟังก์ชันสำหรับ INSERT DATA
-  const handleInsertSubmit = e => {
+  const handleEditSubmit = e => {
     e.preventDefault()
     setSubmitted(true)
 
@@ -149,21 +149,21 @@ export default function PreprojectEdit() {
 
     console.log(data)
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
-      .then(response => {
-        console.log(response)
-        handleClose()
+    // axios
+    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
+    //   .then(response => {
+    //     console.log(response)
+    //     handleClose()
 
-        // window.location.reload()
-        Route.replace(Route.asPath, undefined, { scroll: false })
-        handleCancel() // รีข้อมูล
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    //     // window.location.reload()
+    //     Route.replace(Route.asPath, undefined, { scroll: false })
+    //     handleCancel() // รีข้อมูล
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
 
-    router.push(`/pages/BackOffice/DisplayPreProject`)
+    // router.push(`/pages/BackOffice/DisplayPreProject`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -196,6 +196,52 @@ export default function PreprojectEdit() {
         setProjectNameTh(response.data.PreprojectData[0].preproject_name_th)
         setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
         setAdvisorId(response.data.PreprojectData[0].instructor_id)
+
+        //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
+
+        setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
+
+        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+        const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
+
+        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+        const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
+        setAdditionalSubAdvisorForms(initialSubAdvisorIds)
+
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
+
+        //--------------------------------------เซตค่าเริ่มต้นให้ Committee--------------------------------------------//
+
+        setSelectedValueCommittee(response.data.PreprojectCommittee[0].instructor_id)
+
+        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+        const CommitteeFromSecondElement = response.data.PreprojectCommittee.slice(1)
+
+        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+        const initialCommittee = CommitteeFromSecondElement.map(committee => committee.instructor_id)
+        setAdditionalCommitteeForms(initialCommittee)
+
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Committee--------------------------------------------//
+
+        //--------------------------------------เซตค่าเริ่มต้นให้ Student--------------------------------------------//
+
+        setSelectedValueStudent(response.data.PreprojectStudent[0].studen_id)
+
+        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+        const StudentFromSecondElement = response.data.PreprojectStudent.slice(1)
+
+        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+        const initialStudent = StudentFromSecondElement.map(student => student.studen_id)
+        setAdditionalStudentForms(initialStudent)
+        console.log(initialStudent)
+
+        // นำค่าที่เซตเริ่มต้นทั้งหมดไปเก็บใน allStudentValues
+        const allStudentData = [response.data.PreprojectStudent[0].studen_id, ...initialStudent].filter(
+          value => value !== ''
+        )
+        setAllStudent(allStudentData)
+
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Student--------------------------------------------//
 
         //console.log(Editdata.PreprojectCommittee)
 
@@ -551,9 +597,19 @@ export default function PreprojectEdit() {
   }
 
   const getOptionLabel = option => {
-    return option
-      ? `${option.prefix} ${option.studen_first_name} ${option.studen_last_name} ${option.studen_number}`
-      : ''
+    if (!option) return ''
+
+    const selectedStudent = selectStudent.find(student => student.studen_id === option)
+
+    if (selectedStudent) {
+      return `${selectedStudent.prefix} ${selectedStudent.studen_first_name} ${selectedStudent.studen_last_name} ${selectedStudent.studen_number}`
+    }
+
+    if (option) {
+      return `${option.prefix} ${option.studen_first_name} ${option.studen_last_name} ${option.studen_number}`
+    }
+
+    return ''
   }
 
   const AdditionalStudentForm = ({ formIndex }) => {
@@ -921,7 +977,7 @@ export default function PreprojectEdit() {
             type='submit'
             sx={{ mr: 2 }}
             variant='outlined'
-            onClick={handleInsertSubmit}
+            onClick={handleEditSubmit}
           >
             Submit
           </Button>
