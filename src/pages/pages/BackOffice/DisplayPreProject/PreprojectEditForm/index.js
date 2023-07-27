@@ -103,7 +103,7 @@ export default function PreprojectEdit() {
     }
   }
 
-  // ฟังก์ชันสำหรับ INSERT DATA
+  // ฟังก์ชันสำหรับ Edit DATA
   const handleEditSubmit = e => {
     e.preventDefault()
     setSubmitted(true)
@@ -128,6 +128,31 @@ export default function PreprojectEdit() {
         icon: 'error',
         title: 'แกทำร้ายเพื่อนฉัน...',
         text: 'แกไม่รอดแน่ คนอีสาน!'
+      })
+
+      return
+    }
+
+    // เพิ่มเงื่อนไขเพื่อตรวจสอบข้อมูลที่ซ้ำกันของเหล่าอาจารย์ทั้งหลาย
+    const allTeacherValues = [advisorId, ...allAdvisorSubValues, ...allCommitteeValues]
+    const uniqueValues = new Set(allTeacherValues)
+    if (allTeacherValues.length !== uniqueValues.size) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'คุณกรอกข้อมูลอาจารย์ซ้ำ',
+        text: 'กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง'
+      })
+
+      return
+    }
+
+    // เพิ่มเงื่อนไขเพื่อตรวจสอบข้อมูลที่ซ้ำกันในภายในตัวแปร studen_id
+    const uniqueStudents = new Set(allStudent)
+    if (uniqueStudents.size !== allStudent.length) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'คุณเลือกนักศึกษาซ้ำกัน',
+        text: 'กรุณาเลือกนักศึกษาใหม่อีกครั้ง'
       })
 
       return

@@ -44,7 +44,7 @@ function ProprojectDisplay() {
 
         const projects = response.data.data.map(project => ({
           ...project,
-          YearColum: `${project.sem_year} / ${project.semester_order} / ${project.section_name}`
+          YearColum: `${project.sem_year}/${project.semester_order}/${project.section_name}`
         }))
         setProjectData(projects)
       } catch (error) {
