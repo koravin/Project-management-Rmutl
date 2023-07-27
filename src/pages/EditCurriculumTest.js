@@ -16,18 +16,30 @@ import Autocomplete from '@mui/material/Autocomplete'
 
 const EditCurriculumTest = () => {
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
-  const [curriculumsId, setCurriculumsId] = useState('') // เก็บข้อมูลหลักสูตร
+  const [allAdvisorSubValues, setAllAdvisorSubValues] = useState([]) // เก็บข้อมูลอาจารย์ที่ปรึกษารอง
 
   // รับค่าข้อมูลจาก Api
-  const [curriculumsData, setCurriculumsData] = useState([]) // รับข้อมูลหลักสูตร
+  const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
 
   // ดึงข้อมูล Api มา Set form Edit
   useEffect(() => {
     const fetchEditData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=205`)
-        setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
-        console.log(response.data)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=210`)
+        console.log(response.data.PreprojectSubAdviser)
+        console.log(response.data.PreprojectSubAdviser[0].instructor_id)
+
+        //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
+        setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
+
+        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+        const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
+
+        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+        const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
+        setAdditionalSubAdvisorForms(initialSubAdvisorIds)
+
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
       } catch (error) {
         console.error(error)
       }
@@ -36,50 +48,134 @@ const EditCurriculumTest = () => {
     fetchEditData()
   }, [])
 
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown
-  const handleCurriculumsChange = event => {
-    setCurriculumsId(event.target.value)
-
-    // You can perform additional actions here based on the selected curriculum, if needed.
-  }
-
-  // ดึงข้อมูลหลักสูตรจาก Api curriculums
+  // ดึงข้อมูล อาจารย์ จาก Api
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTeacherData = async () => {
       try {
-        const response = await axios.get('http://localhost:3200/api/project-mgt/curriculums')
-        setCurriculumsData(response.data.data)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/instructors`)
+        const teacherData = response.data.data || []
+        setTeacherData(teacherData)
+        setSelectableSubTeachers(teacherData)
       } catch (error) {
         console.error(error)
       }
     }
 
-    fetchData()
+    fetchTeacherData()
   }, [])
 
-  console.log(curriculumsId)
+  //-----------------------ฟังชันเก็บค่าอาจารย์ที่ปรึกษารอง(Select)----------------------//
+  const [selectedValueAdvisorSub, setSelectedValueAdvisorSub] = useState('')
+  const [selectableSubTeachers, setSelectableSubTeachers] = useState([])
+  const [additionalSubAdvisorForms, setAdditionalSubAdvisorForms] = useState([])
+  useEffect(() => {
+    const updatedAllAdvisorSubValues = [selectedValueAdvisorSub, ...additionalSubAdvisorForms].filter(
+      value => value !== ''
+    )
+    setAllAdvisorSubValues(updatedAllAdvisorSubValues)
+  }, [selectedValueAdvisorSub, additionalSubAdvisorForms])
+
+  const handleAddSubAdvisorData = () => {
+    setAdditionalSubAdvisorForms(prevForms => {
+      const updatedForms = [...prevForms, '']
+
+      return Array.from(new Set(updatedForms))
+    })
+  }
+
+  const handleClearSubAdvisorData = () => {
+    setAdditionalSubAdvisorForms([])
+  }
+
+  const handleSubAdvisorChange = event => {
+    setSelectedValueAdvisorSub(event.target.value)
+  }
+
+  const handleAdditionalSubAdvisorChange = (event, formIndex) => {
+    const selectedSubAdvisor = event.target.value
+    setAdditionalSubAdvisorForms(prevForms => {
+      const updatedForms = [...prevForms]
+      updatedForms[formIndex] = selectedSubAdvisor
+
+      const updatedAllAdvisorSubValues = [selectedValueAdvisorSub, ...updatedForms].filter(value => value !== '')
+      setAllAdvisorSubValues(updatedAllAdvisorSubValues)
+
+      return Array.from(new Set(updatedForms))
+    })
+  }
+
+  const AdditionalSubAdvisorForm = ({ formIndex, selectedOptions }) => {
+    const additionalSubAdvisor = additionalSubAdvisorForms[formIndex]
+
+    return (
+      <FormControl fullWidth style={{ marginTop: '15px' }}>
+        <InputLabel id={`additional-sub-advisor-label-${formIndex}`}>Additional Sub Advisor {formIndex + 1}</InputLabel>
+        <Select
+          label={`additional sub advisor ${formIndex + 1}`}
+          labelId={`additional-sub-advisor-label-${formIndex}`}
+          value={additionalSubAdvisor || ''}
+          onChange={event => handleAdditionalSubAdvisorChange(event, formIndex)}
+        >
+          {selectableSubTeachers.map(contentTeacher => (
+            <MenuItem
+              key={contentTeacher.instructor_id}
+              value={contentTeacher.instructor_id}
+              disabled={allAdvisorSubValues.includes(contentTeacher.instructor_id)}
+            >
+              {contentTeacher.instructors_name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+  }
+
+  //-----------------------จบฟังชันเก็บค่าอาจารย์ที่ปรึกษารอง(Select)----------------------//
 
   return (
     <div>
       {/* Display Edit Data */}
       <div>{/* You can display editData here if needed */}</div>
       {/* Curriculum Select */}
-      <Grid item xs={12} sm={6}>
+      {/* Sub Advisor Select */}
+      <Grid item xs={12} sm={12}>
+        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+          ชื่ออาจารย์ที่ปรึกษารอง**
+        </Typography>
+        <Grid container justifyContent='flex-end' alignItems='center'>
+          <Grid item>
+            <Button size='small' onClick={handleAddSubAdvisorData}>
+              เพิ่มข้อมูล
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button size='small' onClick={handleClearSubAdvisorData}>
+              ล้างข้อมูล
+            </Button>
+          </Grid>
+        </Grid>
         <FormControl fullWidth>
-          <InputLabel id='curriculum-label'>Curriculum</InputLabel>
+          <InputLabel id='sub-advisor-label'>Sub Advisor</InputLabel>
           <Select
-            label='Curriculum'
-            value={curriculumsId}
-            onChange={handleCurriculumsChange}
-            labelId='curriculum-label'
+            label='Sub Advisor'
+            labelId='sub-advisor-label'
+            value={selectedValueAdvisorSub || ''}
+            onChange={handleSubAdvisorChange}
           >
-            {curriculumsData.map(curriculum => (
-              <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                {curriculum.curriculum_name}
+            {selectableSubTeachers.map(contentTeacher => (
+              <MenuItem
+                key={contentTeacher.instructor_id}
+                value={contentTeacher.instructor_id}
+                disabled={additionalSubAdvisorForms.includes(contentTeacher.instructor_id)}
+              >
+                {contentTeacher.instructors_name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+        {additionalSubAdvisorForms.map((_, index) => (
+          <AdditionalSubAdvisorForm key={index} formIndex={index} selectedOptions={additionalSubAdvisorForms} />
+        ))}
       </Grid>
     </div>
   )

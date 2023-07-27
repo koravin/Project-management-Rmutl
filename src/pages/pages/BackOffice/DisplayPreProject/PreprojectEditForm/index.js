@@ -184,7 +184,8 @@ export default function PreprojectEdit() {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
         )
         console.log(response.data)
-        console.log(response.data.PreprojectData[0].semester_order)
+
+        // console.log(response.data.PreprojectData[0].semester_order)
         setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
         setSubjectId(response.data.PreprojectData[0].subject_id)
         setYearId(response.data.PreprojectData[0].sem_year)
