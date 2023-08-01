@@ -4,17 +4,65 @@ import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
-import PreprojectEdit from './PreprojectEditForm'
+
+// import sweetalert2 popup
+import Swal from 'sweetalert2'
 
 function ProprojectDisplay() {
   const router = useRouter() // router สร้าง path
+  // นำเข้าตัวsweetalert2
+  const Swal = require('sweetalert2')
+
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
-  console.log(projectdata)
 
   // ส่งค่าจากแถวไปหน้า Edit
   const handleEditClick = projectId => {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
+  }
+
+  // ส่งค่าจากแถวไปหน้า Edit
+  const handleDetailClick = projectId => {
+    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectDetail/?id=${projectId}`)
+  }
+
+  // ฟังก์ชันสำหรับ Delete DATA
+  const handleDeleteSubmit = projectId => {
+    console.log(projectId)
+
+    const data = {
+      preproject_id: projectId
+    }
+
+    if (projectId !== '') {
+      axios
+        .put(`${process.env.NEXT_PUBLIC_API}api/project-mgt/deletepreproject`, data)
+        .then(function (response) {
+          console.log(response)
+
+          // หากลบข้อมูลสำเร็จให้แสดง popup แจ้งเตือนด้วย Swal
+          Swal.fire({
+            icon: 'success',
+            title: 'ลบข้อมูลแล้วเสร็จ',
+            text: 'น้องซาอาระน่ารักเกินไป'
+          })
+
+          // อัปเดต State ของตารางใหม่เมื่อมีการลบข้อมูล
+          setProjectData(prevData => prevData.filter(project => project.preproject_id !== projectId))
+        })
+        .catch(function (error) {
+          console.log(error)
+
+          // หากเกิดข้อผิดพลาดในการลบข้อมูลให้แสดง popup แจ้งเตือนด้วย Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถลบข้อมูลได้'
+          })
+        })
+    } else {
+      console.log('not have any id to delete')
+    }
   }
 
   // ประกาศ Colum DataGrid
@@ -24,12 +72,36 @@ function ProprojectDisplay() {
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     { field: 'YearColum', headerName: 'ปีการศึกษา / เทอม / Sec', width: 200 },
     {
-      field: '',
+      field: 'Detail',
+      headerName: 'Detail',
+      width: 100,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
+            ...
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'Edit',
       headerName: 'Edit',
       width: 100,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
+            ...
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'Delete',
+      headerName: 'Delete',
+      width: 100,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleDeleteSubmit(cellValues.row.preproject_id)}>
             ...
           </Button>
         )

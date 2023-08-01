@@ -120,7 +120,6 @@ export default function PreprojectEdit() {
       !selectedTerm ||
       !advisorId ||
       !projectstatus ||
-      allAdvisorSubValues.length === 0 ||
       allCommitteeValues.length === 0 ||
       allStudent.length === 0
     ) {
@@ -159,13 +158,13 @@ export default function PreprojectEdit() {
     }
 
     const data = {
+      preproject_id: requestdata,
       section_id: selectedTerm,
       preproject_name_th: projectNameTh,
       preproject_name_eng: projectNameEn,
       project_code: projectCode,
       project_status: projectstatus,
       project_type: projecttype,
-      created_by: 'Jongrai',
       adviser: advisorId,
       subadviser: allAdvisorSubValues,
       committee: allCommitteeValues,
@@ -174,21 +173,27 @@ export default function PreprojectEdit() {
 
     console.log(data)
 
-    // axios
-    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
-    //   .then(response => {
-    //     console.log(response)
-    //     handleClose()
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/updatepreproject`, data)
+      .then(response => {
+        console.log(response)
+        handleClose()
 
-    //     // window.location.reload()
-    //     Route.replace(Route.asPath, undefined, { scroll: false })
-    //     handleCancel() // รีข้อมูล
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
+        // window.location.reload()
+        Route.replace(Route.asPath, undefined, { scroll: false })
+        handleCancel() // รีข้อมูล
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
-    // router.push(`/pages/BackOffice/DisplayPreProject`)
+    Swal.fire({
+      icon: 'success',
+      title: 'อัปเดทแล้วเสร็จ',
+      text: 'น้องซาอาระน่ารักเกินไป'
+    })
+
+    router.push(`/pages/BackOffice/DisplayPreProject`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -224,14 +229,17 @@ export default function PreprojectEdit() {
 
         //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
 
-        setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
+        // เช็คว่ามีข้อมูล Sub Advisors มากกว่า 0 ค่าหรือไม่
+        if (response.data.PreprojectSubAdviser.length > 0) {
+          setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
 
-        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
-        const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
+          // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+          const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
 
-        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-        const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
-        setAdditionalSubAdvisorForms(initialSubAdvisorIds)
+          // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+          const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
+          setAdditionalSubAdvisorForms(initialSubAdvisorIds)
+        }
 
         //--------------------------------------จบการเซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
 
@@ -458,6 +466,7 @@ export default function PreprojectEdit() {
 
   const handleClearSubAdvisorData = () => {
     setAdditionalSubAdvisorForms([])
+    setSelectedValueAdvisorSub('')
   }
 
   const handleSubAdvisorChange = event => {
@@ -527,6 +536,7 @@ export default function PreprojectEdit() {
 
   const handleClearCommitteeData = () => {
     setAdditionalCommitteeForms([])
+    setSelectedValueCommittee('')
   }
 
   const handleCommitteeChange = event => {
@@ -847,14 +857,9 @@ export default function PreprojectEdit() {
 
             {/* Advisor Select */}
             <Grid item xs={12} sm={12}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 600, mb: 5 }}>
                 ชื่ออาจารย์ที่ปรึกษา**
               </Typography>
-              <Grid container justifyContent='flex-end'>
-                <Grid item>
-                  <Button sx={{ fontSize: '12px', padding: '4px 8px' }}>เพิ่มข้อมูล</Button>
-                </Grid>
-              </Grid>
               <FormControl fullWidth>
                 <InputLabel id='advisor-label'>Advisor</InputLabel>
                 <Select
@@ -897,7 +902,6 @@ export default function PreprojectEdit() {
                   labelId='sub-advisor-label'
                   value={selectedValueAdvisorSub || ''}
                   onChange={handleSubAdvisorChange}
-                  error={submitted && allAdvisorSubValues.length === 0} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 >
                   {selectableSubTeachers.map(contentTeacher => (
                     <MenuItem

@@ -115,7 +115,6 @@ export default function PreprojectInsert() {
       !selectedTerm ||
       !advisorId ||
       !projectstatus ||
-      allAdvisorSubValues.length === 0 ||
       allCommitteeValues.length === 0 ||
       allStudent.length === 0
     ) {
@@ -182,7 +181,11 @@ export default function PreprojectInsert() {
       .catch(error => {
         console.log(error)
       })
-
+    Swal.fire({
+      icon: 'success',
+      title: 'เพิ่มข้อมูลแล้วเสร็จ',
+      text: 'น้องซาอาระน่ารักเกินไป'
+    })
     router.push(`/pages/BackOffice/DisplayPreProject`)
   }
 
@@ -371,6 +374,7 @@ export default function PreprojectInsert() {
 
   const handleClearSubAdvisorData = () => {
     setAdditionalSubAdvisorForms([])
+    setSelectedValueAdvisorSub('')
   }
 
   const handleSubAdvisorChange = event => {
@@ -440,6 +444,7 @@ export default function PreprojectInsert() {
 
   const handleClearCommitteeData = () => {
     setAdditionalCommitteeForms([])
+    setSelectedValueCommittee('')
   }
 
   const handleCommitteeChange = event => {
@@ -750,14 +755,9 @@ export default function PreprojectInsert() {
 
             {/* Advisor Select */}
             <Grid item xs={12} sm={12}>
-              <Typography variant='body2' sx={{ fontWeight: 600 }}>
+              <Typography variant='body2' sx={{ fontWeight: 600, mb: 5 }}>
                 ชื่ออาจารย์ที่ปรึกษา**
               </Typography>
-              <Grid container justifyContent='flex-end'>
-                <Grid item>
-                  <Button sx={{ fontSize: '12px', padding: '4px 8px' }}>เพิ่มข้อมูล</Button>
-                </Grid>
-              </Grid>
               <FormControl fullWidth>
                 <InputLabel id='advisor-label'>Advisor</InputLabel>
                 <Select
@@ -800,7 +800,6 @@ export default function PreprojectInsert() {
                   labelId='sub-advisor-label'
                   value={selectedValueAdvisorSub || ''}
                   onChange={handleSubAdvisorChange}
-                  error={submitted && allAdvisorSubValues.length === 0} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 >
                   {selectableSubTeachers.map(contentTeacher => (
                     <MenuItem
