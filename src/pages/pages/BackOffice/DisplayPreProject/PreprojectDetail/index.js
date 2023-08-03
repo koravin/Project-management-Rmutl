@@ -8,41 +8,16 @@ import axios from 'axios'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Menu from '@mui/material/Menu'
 import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import ImgShow from './ImgShow'
 
-// ** Icons Imports
-import Twitter from 'mdi-material-ui/Twitter'
-import CartPlus from 'mdi-material-ui/CartPlus'
-import Facebook from 'mdi-material-ui/Facebook'
-import Linkedin from 'mdi-material-ui/Linkedin'
-import GooglePlus from 'mdi-material-ui/GooglePlus'
-import ShareVariant from 'mdi-material-ui/ShareVariant'
-
 // Page Import
 import ManageDocuments from './ManageDocuments'
-
-// Card Styled Grid component
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  [theme.breakpoints.down('md')]: {
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  [theme.breakpoints.up('md')]: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
-}))
 
 function CustomTabPanel(props) {
   //------------------------------TabPanel Functions----------------------------//
@@ -58,7 +33,6 @@ function CustomTabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          {/* เปลี่ยน tag ของ Typography ให้เป็น div หรือ span */}
           <Typography component='div'>{children}</Typography>
         </Box>
       )}
@@ -86,19 +60,17 @@ export default function PreprojectDetail() {
   const [projectNameTh, setProjectNameTh] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาไทย)
   const [projectNameEn, setProjectNameEn] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาอังกฤษ)
   const [projectstatus, setProjectStatus] = useState('') // รับข้อมูล สถานะของโครงงาน
-  //------------------------เส้นคั่น----------------------------------//
   const [year, setYear] = useState('') // เก็บข้อมูลปี
   const [Term, setTerm] = useState('') // เก็บข้อมูล Term
   const [Sec, setSec] = useState('') // เก็บข้อมูล Sec
   const [projectCode, setProjectCode] = useState('') // เก็บข้อมูลรหัสโครงงาน
   const [curriculums, setCurriculums] = useState('') // เก็บข้อมูลหลักสูตร
   const [projectType, setProjectType] = useState('') // รับข้อมูล ประเภทของโครงงาน
-  //------------------------เส้นคั่น----------------------------------//
   const [advisor, setAdvisor] = useState('') // เก็บข้อมูลอาจารย์ที่ปรึกษา
   const [subAdvisor, setSubAdvisor] = useState([]) // เก็บข้อมูลอาจารย์ที่ปรึกษารอง
   const [committee, setCommittee] = useState([]) // เก็บข้อมูลคณะกรรมการ
-  //------------------------เส้นคั่น----------------------------------//
   const [student, setStudent] = useState([]) // เก็บข้อมูลนักศึกษา
+  const [documentStatus, setDocumentStatus] = useState([]) // เก็บข้อมูลสถานะเอกสาร
 
   //----------------------------ตัวแปร Routers ------------------------//
   const router = useRouter() // router สร้าง path
@@ -112,23 +84,11 @@ export default function PreprojectDetail() {
     setValueTabPanel(newValue)
   }
 
-  //------------------------------Card Functions----------------------------//
-  const [anchorEl, setAnchorEl] = useState(null)
-  const openCardSelect = Boolean(anchorEl)
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
   //------------------------------End Card Functions----------------------------//
 
-  // ดึงข้อมูล Api มา Set form Edit
+  // ดึงข้อมูล Api มา Set
   useEffect(() => {
-    const fetchEditData = async () => {
+    const fetcData = async () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
@@ -149,12 +109,15 @@ export default function PreprojectDetail() {
         setSubAdvisor(response.data.PreprojectSubAdviser)
         setCommittee(response.data.PreprojectCommittee)
         setStudent(response.data.PreprojectStudent)
+
+        //เก็บข้อมูลสถานะ
+        setDocumentStatus(response.data.PreprojectDocument)
       } catch (error) {
         console.error(error)
       }
     }
 
-    fetchEditData()
+    fetcData()
   }, [requestdata])
 
   // ส่งค่าไปหน้า Edit
@@ -299,39 +262,7 @@ export default function PreprojectDetail() {
               </CardContent>
               <CardActions className='card-action-dense'>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                  <Button onClick={() => handleEditClick(requestdata)}>Editdata</Button>
-                  <IconButton
-                    id='long-button'
-                    aria-label='share'
-                    aria-haspopup='true'
-                    onClick={handleClick}
-                    aria-controls='long-menu'
-                    aria-expanded={openCardSelect ? 'true' : undefined}
-                  >
-                    <ShareVariant fontSize='small' />
-                  </IconButton>
-                  <Menu
-                    open={openCardSelect}
-                    id='long-menu'
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      'aria-labelledby': 'long-button'
-                    }}
-                  >
-                    <MenuItem onClick={handleClose}>
-                      <Facebook />
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <Twitter />
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <Linkedin />
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <GooglePlus />
-                    </MenuItem>
-                  </Menu>
+                  <Button onClick={() => handleEditClick(requestdata)}>แก้ไขข้อมูล</Button>
                 </Box>
               </CardActions>
             </Grid>
@@ -341,8 +272,23 @@ export default function PreprojectDetail() {
 
       {/* ส่วนของ Document Detail  */}
       <CustomTabPanel value={valueTabPanel} index={1}>
-        <ManageDocuments />
+        <ManageDocuments documentStatus={documentStatus} />
       </CustomTabPanel>
+
+      {/* ปุ่มใช้แก้ขัด */}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        {' '}
+        <Button
+          size='large'
+          color='error'
+          variant='outlined'
+          onClick={function () {
+            router.push(`/pages/BackOffice/DisplayPreProject`)
+          }}
+        >
+          ย้อนกลับ
+        </Button>
+      </div>
     </Box>
   )
 }
