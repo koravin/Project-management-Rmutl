@@ -28,6 +28,9 @@ import Linkedin from 'mdi-material-ui/Linkedin'
 import GooglePlus from 'mdi-material-ui/GooglePlus'
 import ShareVariant from 'mdi-material-ui/ShareVariant'
 
+// Page Import
+import ManageDocuments from './ManageDocuments'
+
 // Card Styled Grid component
 const StyledGrid = styled(Grid)(({ theme }) => ({
   display: 'flex',
@@ -97,8 +100,6 @@ export default function PreprojectDetail() {
   //------------------------เส้นคั่น----------------------------------//
   const [student, setStudent] = useState([]) // เก็บข้อมูลนักศึกษา
 
-  console.log(committee)
-
   //----------------------------ตัวแปร Routers ------------------------//
   const router = useRouter() // router สร้าง path
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
@@ -156,6 +157,11 @@ export default function PreprojectDetail() {
     fetchEditData()
   }, [requestdata])
 
+  // ส่งค่าไปหน้า Edit
+  const handleEditClick = projectId => {
+    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -169,24 +175,17 @@ export default function PreprojectDetail() {
       <CustomTabPanel value={valueTabPanel} index={0}>
         <Card>
           <Grid container spacing={0.5}>
-            {/* Component แสดงรูปภาพในโปรเจค  */}
-            <StyledGrid item md={5} xs={12}>
-              <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Img
-                {/* <ImgShow /> */}
-              </CardContent>
-            </StyledGrid>
             <Grid
               item
               xs={12}
-              md={7}
+              width={'max'} // md={'max'} // กำหนดความกว้าง card
               sx={{
                 paddingTop: ['0 !important', '0 !important', '1.5rem !important'],
                 paddingLeft: ['1.5rem !important', '1.5rem !important', '0 !important']
               }}
             >
               <CardContent>
-                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2, textAlign: 'center' }}>
                   Project Detail
                 </Typography>
                 <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
@@ -205,15 +204,17 @@ export default function PreprojectDetail() {
                   <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
                     สถานะของโครงงาน :
                   </Box>
-                  <Box
-                    component='span'
-                    sx={{
-                      color: projectstatus === '0' ? 'red' : 'green',
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {projectstatus === '0' ? 'โปรเจคยังไม่แล้วเสร็จ' : 'โปรเจคแล้วเสร็จ'}
-                  </Box>
+                  {projectstatus === '0' || projectstatus === '1' ? (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: projectstatus === '0' ? 'red' : 'green',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {projectstatus === '0' ? 'โปรเจคยังไม่แล้วเสร็จ' : 'โปรเจคแล้วเสร็จ'}
+                    </Box>
+                  ) : null}
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
@@ -281,6 +282,7 @@ export default function PreprojectDetail() {
                     </span>
                   ))}
                 </Typography>
+                <Divider sx={{ my: 2 }} />
                 <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
                   <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
                     รายชื่อนักศึกษา
@@ -297,7 +299,7 @@ export default function PreprojectDetail() {
               </CardContent>
               <CardActions className='card-action-dense'>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                  <Button>Editdata</Button>
+                  <Button onClick={() => handleEditClick(requestdata)}>Editdata</Button>
                   <IconButton
                     id='long-button'
                     aria-label='share'
@@ -339,7 +341,7 @@ export default function PreprojectDetail() {
 
       {/* ส่วนของ Document Detail  */}
       <CustomTabPanel value={valueTabPanel} index={1}>
-        Item Two
+        <ManageDocuments />
       </CustomTabPanel>
     </Box>
   )
