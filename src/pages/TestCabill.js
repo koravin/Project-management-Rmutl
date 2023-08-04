@@ -8,12 +8,19 @@ import { useTransition, animated } from 'react-spring'
 
 export default function BeatCabill() {
   const [showSubContent, setShowSubContent] = useState(false)
+  const [showSubContent02, setShowSubContent02] = useState(false)
 
   const handleMainContentButtonClick = () => {
     setShowSubContent(!showSubContent)
+    setShowSubContent02(false)
   }
 
-  const transitions = useTransition(showSubContent, {
+  const handleSubContentButtonClick = () => {
+    setShowSubContent(false)
+    setShowSubContent02(!showSubContent02)
+  }
+
+  const transitions = useTransition(showSubContent || showSubContent02, {
     from: { opacity: 0, height: 0, marginTop: 0 },
     enter: { opacity: 1, height: 'auto', marginTop: 10 },
     leave: { opacity: 0, height: 0, marginTop: 0 }
@@ -21,15 +28,13 @@ export default function BeatCabill() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {' '}
-      {/* เพิ่ม margin ที่นี่ */}
       {/* Main Content */}
       <Card
         sx={{
           border: 0,
           boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.8)',
           color: 'common.white',
-          backgroundColor: '#ff7961',
+          backgroundColor: 'white',
           borderRadius: 3,
           width: '30%',
           mr: 3
@@ -50,44 +55,78 @@ export default function BeatCabill() {
           </Box>
         </CardContent>
       </Card>
+
       {/* Sub Content */}
-      {transitions(
-        (styles, item) =>
-          item && (
-            <animated.div
-              style={{
-                ...styles,
-                position: 'relative',
-                overflow: 'hidden',
-                width: '30%'
-              }}
-            >
-              <Card
-                sx={{
-                  border: 0,
-                  boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.8)',
-                  color: 'common.white',
-                  backgroundColor: '#ff7961',
-                  borderRadius: 3,
-                  width: '100%'
-                }}
-              >
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
-                    <video controls style={{ width: '80%', borderRadius: '5px' }}>
-                      <source src='https://twitter.com/i/status/1683072910846758913' type='video' />
-                      Your browser does not support the video tag.
-                    </video>
-                  </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant='contained' color='primary'>
-                      คนน่ารัก
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </animated.div>
-          )
+      {showSubContent && (
+        <animated.div
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            width: '30%',
+            opacity: showSubContent ? 1 : 0,
+            height: showSubContent ? 'auto' : 0,
+            marginTop: showSubContent ? 10 : 0
+          }}
+        >
+          <Card
+            sx={{
+              border: 0,
+              color: 'common.white',
+              backgroundColor: 'white',
+              borderRadius: 3,
+              width: '100%'
+            }}
+          >
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
+                <img
+                  src='https://media.tenor.com/UEEu1xu58HgAAAAC/matsumoto-momona-takane-no-nadeshiko.gif'
+                  alt='BeatCabill'
+                  style={{ width: '80%', height: 'auto', borderRadius: '5px' }}
+                />
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant='contained' color='primary' onClick={handleSubContentButtonClick}>
+                  เอาจัยไปเรย
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </animated.div>
+      )}
+
+      {/* Sub Conten02 */}
+      {showSubContent02 && (
+        <animated.div
+          style={{
+            position: 'relative',
+            overflow: 'hidden',
+            width: '30%',
+            opacity: showSubContent02 ? 1 : 0,
+            height: showSubContent02 ? 'auto' : 0,
+            marginTop: showSubContent02 ? 10 : 0
+          }}
+        >
+          <Card
+            sx={{
+              border: 0,
+              color: 'common.white',
+              backgroundColor: 'white',
+              borderRadius: 3,
+              width: '100%'
+            }}
+          >
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
+                <img
+                  src='https://media.tenor.com/AFNwQm7a0igAAAAC/matsumoto-momona-takane-no-nadeshiko.gif'
+                  alt='BeatCabill'
+                  style={{ width: '80%', height: 'auto', borderRadius: '5px' }}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </animated.div>
       )}
     </Box>
   )

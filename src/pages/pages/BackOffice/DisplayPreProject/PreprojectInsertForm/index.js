@@ -120,8 +120,8 @@ export default function PreprojectInsert() {
     ) {
       Swal.fire({
         icon: 'error',
-        title: 'แกทำร้ายเพื่อนฉัน...',
-        text: 'แกไม่รอดแน่ คนอีสาน!'
+        title: 'คุณกรอกข้อมูลไม่ครบ...',
+        text: 'กรุณาระบุข้อมูลให้ครบถ้วน!'
       })
 
       return
@@ -183,8 +183,7 @@ export default function PreprojectInsert() {
       })
     Swal.fire({
       icon: 'success',
-      title: 'เพิ่มข้อมูลแล้วเสร็จ',
-      text: 'น้องซาอาระน่ารักเกินไป'
+      title: 'เพิ่มข้อมูลแล้วเสร็จ'
     })
     router.push(`/pages/BackOffice/DisplayPreProject`)
   }
@@ -399,7 +398,7 @@ export default function PreprojectInsert() {
 
     return (
       <FormControl fullWidth style={{ marginTop: '15px' }}>
-        <InputLabel id={`additional-sub-advisor-label-${formIndex}`}>Additional Sub Advisor {formIndex + 1}</InputLabel>
+        <InputLabel id={`additional-sub-advisor-label-${formIndex}`}>ที่ปรึกษารอง {formIndex + 2}</InputLabel>
         <Select
           label={`additional sub advisor ${formIndex + 1}`}
           labelId={`additional-sub-advisor-label-${formIndex}`}
@@ -469,7 +468,7 @@ export default function PreprojectInsert() {
 
     return (
       <FormControl fullWidth style={{ marginTop: '15px' }}>
-        <InputLabel id={`additional-committee-label-${formIndex}`}>Additional Committee {formIndex + 1}</InputLabel>
+        <InputLabel id={`additional-committee-label-${formIndex}`}>กรรมการ {formIndex + 2}</InputLabel>
         <Select
           label={`additional committee ${formIndex + 1}`}
           labelId={`additional-committee-label-${formIndex}`}
@@ -554,7 +553,7 @@ export default function PreprojectInsert() {
           onChange={(event, newValue) => handleAdditionalStudentChange(event, newValue, formIndex)}
           options={selectStudent}
           getOptionLabel={getOptionLabel}
-          renderInput={params => <TextField {...params} label={`additional student ${formIndex + 1}`} />}
+          renderInput={params => <TextField {...params} label={`นักศึกษา ${formIndex + 2}`} />}
         />
       </FormControl>
     )
@@ -574,7 +573,7 @@ export default function PreprojectInsert() {
             {/* Curriculum Select */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='curriculum-label'>Curriculum</InputLabel>
+                <InputLabel id='curriculum-label'>หลักสูตร</InputLabel>
                 <Select
                   label='Curriculum'
                   value={curriculumsId}
@@ -594,7 +593,7 @@ export default function PreprojectInsert() {
             {/* Subject Select */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='subject-label'>Subject</InputLabel>
+                <InputLabel id='subject-label'>วิชา</InputLabel>
                 <Select
                   label='Subject'
                   value={subjectId}
@@ -619,7 +618,7 @@ export default function PreprojectInsert() {
             {/* Year Select */}
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id='year-label'>Year</InputLabel>
+                <InputLabel id='year-label'>ปีการศึกษา</InputLabel>
                 <Select
                   label='Year'
                   value={yearId}
@@ -644,7 +643,7 @@ export default function PreprojectInsert() {
             {/* Term Select */}
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id='term-label'>Term</InputLabel>
+                <InputLabel id='term-label'>เทอม/เซค</InputLabel>
                 <Select
                   label='Term'
                   value={selectedTerm}
@@ -671,7 +670,7 @@ export default function PreprojectInsert() {
               <TextField
                 fullWidth
                 type='text'
-                label='Project-Code'
+                label='รหัสโครงงาน'
                 placeholder='CE0101'
                 value={projectCode}
                 error={submitted && !projectCode} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
@@ -682,7 +681,7 @@ export default function PreprojectInsert() {
             {/* Project-Type Select */}
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id='term-label'>Project-Type</InputLabel>
+                <InputLabel id='term-label'>ประเภทของโครงงาน</InputLabel>
                 <Select
                   label='Project-Type'
                   defaultValue=''
@@ -702,7 +701,7 @@ export default function PreprojectInsert() {
             {/* Project-Status Select */}
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id='term-label'>Project-Status</InputLabel>
+                <InputLabel id='term-label'>สถานะของโครงงาน</InputLabel>
                 <Select
                   label='Project-Status'
                   defaultValue=''
@@ -728,8 +727,8 @@ export default function PreprojectInsert() {
               <TextField
                 fullWidth
                 type='text'
-                label='Project Name (Th)'
-                placeholder='Thai Name'
+                label='ชื่อโครงงาน(ภาษาไทย)'
+                placeholder='ชื่อโครงงาน(ภาษาไทย)'
                 error={submitted && !projectNameTh} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 value={projectNameTh}
                 onChange={e => {
@@ -742,8 +741,8 @@ export default function PreprojectInsert() {
               <TextField
                 fullWidth
                 type='text'
-                label='Project Name (En)'
-                placeholder='English Name'
+                label='ชื่อโครงงาน(ภาษาอังกฤษ)'
+                placeholder='ชื่อโครงงาน(ภาษาอังกฤษ)'
                 error={submitted && !projectNameEn} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 value={projectNameEn}
                 onChange={e => {
@@ -759,7 +758,7 @@ export default function PreprojectInsert() {
                 ชื่ออาจารย์ที่ปรึกษา**
               </Typography>
               <FormControl fullWidth>
-                <InputLabel id='advisor-label'>Advisor</InputLabel>
+                <InputLabel id='advisor-label'>ที่ปรึกษา</InputLabel>
                 <Select
                   label='Advisor'
                   labelId='advisor-label'
@@ -794,7 +793,7 @@ export default function PreprojectInsert() {
                 </Grid>
               </Grid>
               <FormControl fullWidth>
-                <InputLabel id='sub-advisor-label'>Sub Advisor</InputLabel>
+                <InputLabel id='sub-advisor-label'>ที่ปรึกษารอง</InputLabel>
                 <Select
                   label='Sub Advisor'
                   labelId='sub-advisor-label'
@@ -835,7 +834,7 @@ export default function PreprojectInsert() {
                 </Grid>
               </Grid>
               <FormControl fullWidth>
-                <InputLabel id='committee-label'>Committee</InputLabel>
+                <InputLabel id='committee-label'>กรรมการ</InputLabel>
                 <Select
                   label='Committee'
                   labelId='committee-label'
@@ -885,7 +884,7 @@ export default function PreprojectInsert() {
                     options={selectStudent}
                     getOptionLabel={getOptionLabel}
                     renderInput={params => (
-                      <TextField {...params} label='Student' error={submitted && allStudent.length === 0} />
+                      <TextField {...params} label='ชื่อนักศึกษา' error={submitted && allStudent.length === 0} />
                     )}
                   />
                 </FormControl>
@@ -906,10 +905,10 @@ export default function PreprojectInsert() {
             variant='outlined'
             onClick={handleInsertSubmit}
           >
-            Submit
+            บัณทึก
           </Button>
           <Button size='large' color='warning' variant='outlined' onClick={handleResetForm}>
-            Reset
+            รีข้อมูล
           </Button>
           <Button
             size='large'
@@ -919,7 +918,7 @@ export default function PreprojectInsert() {
               router.push(`/pages/BackOffice/DisplayPreProject`)
             }}
           >
-            Cancel
+            ย้อนกลับ
           </Button>
         </CardActions>
       </form>

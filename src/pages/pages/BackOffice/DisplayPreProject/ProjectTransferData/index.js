@@ -20,6 +20,9 @@ import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 
 export default function ProjectTransferData() {
+  // นำเข้าตัวsweetalert2
+  const Swal = require('sweetalert2')
+
   //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลเพื่อแสดง------------------------//
   const [projectNameTh, setProjectNameTh] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาไทย)
   const [projectNameEn, setProjectNameEn] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาอังกฤษ)
@@ -34,13 +37,18 @@ export default function ProjectTransferData() {
   const [subAdvisor, setSubAdvisor] = useState([]) // เก็บข้อมูลอาจารย์ที่ปรึกษารอง
   const [committee, setCommittee] = useState([]) // เก็บข้อมูลคณะกรรมการ
   const [student, setStudent] = useState([]) // เก็บข้อมูลนักศึกษา
-  const [documentStatus, setDocumentStatus] = useState([]) // เก็บข้อมูลสถานะเอกสาร
+
+  // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
+  const [submitted, setSubmitted] = useState(false)
+
+  // ตัวแปรเช็คค่าว่าง
+  const [hasData, setHasData] = useState(false)
 
   //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลเพื่อส่ง------------------------//
-  const [newCurriculumsData, setNewCurriculumsData] = useState([]) // เก็บข้อมูลหลักสูตรใหม่
-  const [newSubjectsData, setNewSubjectsData] = useState([]) // เก็บข้อมูลวิชาใหม่
-  const [newYearData, setNewYearData] = useState([]) // เก็บข้อมูลปีใหม่
-  const [newTermData, setNewTermData] = useState([]) // เก็บข้อมูลSec และ เทอม ใหม่
+  const [newCurriculumsData, setNewCurriculumsData] = useState('') // เก็บข้อมูลหลักสูตรใหม่
+  const [newSubjectsData, setNewSubjectsData] = useState('') // เก็บข้อมูลวิชาใหม่
+  const [newYearData, setNewYearData] = useState('') // เก็บข้อมูลปีใหม่
+  const [newTermData, setNewTermData] = useState('') // เก็บข้อมูลSec และ เทอม ใหม่
 
   //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลจาก Api 4 สหาย เพื่อเเสดงในตัวเลือก ------------------------//
   const [allCurriculumsData, setAllCurriculumsData] = useState([]) // เก็บข้อมูลหลักสูตรใหม่
@@ -78,9 +86,6 @@ export default function ProjectTransferData() {
         setSubAdvisor(response.data.PreprojectSubAdviser)
         setCommittee(response.data.PreprojectCommittee)
         setStudent(response.data.PreprojectStudent)
-
-        //เก็บข้อมูลสถานะ
-        setDocumentStatus(response.data.PreprojectDocument)
       } catch (error) {
         console.error(error)
       }
@@ -115,6 +120,7 @@ export default function ProjectTransferData() {
           })
           const subjectData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
           setAllSubjectsData(subjectData)
+          setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
           console.error(error)
         }
@@ -134,6 +140,7 @@ export default function ProjectTransferData() {
           })
           const yearData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
           setAllYearData(yearData)
+          setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
           console.error(error)
         }
@@ -156,6 +163,7 @@ export default function ProjectTransferData() {
           )
           const termData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
           setAllTermData(termData)
+          setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
           console.error(error)
         }
@@ -183,6 +191,7 @@ export default function ProjectTransferData() {
 
   const handleNewYearChange = event => {
     setNewYearData(event.target.value)
+    setNewTermData('')
   } // จัดการการเปลี่ยนแปลงค่าของปีการศึกษา
 
   const handleNewTermChange = event => {
@@ -196,6 +205,58 @@ export default function ProjectTransferData() {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
   }
 
+  // ฟังชันส่งค่าการโอนย้ายข้อมูล
+  const handleTranferSubmit = e => {
+    e.preventDefault()
+    setSubmitted(true)
+
+    // ตรวจสอบค่าว่างใน TextField
+    if (!newCurriculumsData || !newSubjectsData || !newYearData || !newTermData) {
+      Swal.fire({
+        icon: 'error',
+        title: 'คุณกรอกข้อมูลไม่ครบ...',
+        text: 'กรุณาระบุข้อมูลให้ครบถ้วน!'
+      })
+
+      return
+    }
+
+    const data = {
+      curriculum_id: newCurriculumsData,
+      subject_id: newSubjectsData,
+      sem_year: newYearData,
+      semester_order: newTermData,
+      preproject_id: projectId
+    }
+
+    console.log(data)
+
+    // axios
+    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
+    //   .then(response => {
+    //     console.log(response)
+    //     handleClose()
+
+    //     // Route.replace(Route.asPath, undefined, { scroll: false })
+    //     // handleCancel() // รีข้อมูล
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // Swal.fire({
+    //   icon: 'success',
+    //   title: 'เพิ่มข้อมูลแล้วเสร็จ'
+    // })
+  }
+
+  // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม
+  const handleResetForm = () => {
+    setNewCurriculumsData('')
+    setNewSubjectsData('')
+    setNewYearData('')
+    setNewTermData('')
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       {/* ระบุรายละเอียดการโอนย้ายโครงงาน  */}
@@ -205,14 +266,12 @@ export default function ProjectTransferData() {
             {/* Curriculum Select */}
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <InputLabel id='curriculum-label'>Curriculum</InputLabel>
+                <InputLabel id='curriculum-label'>หลักสูตร</InputLabel>
                 <Select
                   label='Curriculum'
                   value={newCurriculumsData}
                   onChange={handleNewCurriculumsChange}
                   labelId='curriculum-label'
-
-                  //error={submitted && !newCurriculumsData} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 >
                   {allCurriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
@@ -226,15 +285,13 @@ export default function ProjectTransferData() {
             {/* Subject Select */}
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <InputLabel id='subject-label'>Subject</InputLabel>
+                <InputLabel id='subject-label'>วิชา</InputLabel>
                 <Select
                   label='Subject'
                   value={newSubjectsData}
                   onChange={handleNewSubjectChange}
                   labelId='subject-label'
-
-                  // error={submitted && !subjectId} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
-                  // disabled={!curriculumsId || !hasData}
+                  disabled={!newCurriculumsData || !hasData}
                 >
                   {AllSubjectsData && AllSubjectsData.length > 0 ? (
                     AllSubjectsData.map(subject => (
@@ -252,15 +309,13 @@ export default function ProjectTransferData() {
             {/* Year Select */}
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <InputLabel id='year-label'>Year</InputLabel>
+                <InputLabel id='year-label'>ปีการศึกษา</InputLabel>
                 <Select
                   label='Year'
                   value={newYearData}
                   onChange={handleNewYearChange}
                   labelId='year-label'
-
-                  // error={submitted && !yearId} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
-                  // disabled={!subjectId || !hasData}
+                  disabled={!newSubjectsData || !hasData}
                 >
                   {allYearData && allYearData.length > 0 ? (
                     allYearData.map(year => (
@@ -278,15 +333,13 @@ export default function ProjectTransferData() {
             {/* Term Select */}
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <InputLabel id='term-label'>Term</InputLabel>
+                <InputLabel id='term-label'>เทอม/เซ็คชัน</InputLabel>
                 <Select
                   label='Term'
                   value={newTermData}
                   onChange={handleNewTermChange}
                   labelId='term-label'
-
-                  // error={submitted && !selectedTerm} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
-                  // disabled={!yearId || !hasData}
+                  disabled={!newYearData || !hasData}
                 >
                   {allTermData && allTermData.length > 0 ? (
                     allTermData.map(term => (
@@ -442,7 +495,12 @@ export default function ProjectTransferData() {
 
       {/* ปุ่มใช้แก้ขัด */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        {' '}
+        <Button size='large' color='success' variant='outlined' onClick={handleTranferSubmit} sx={{ mt: 3, mr: 2 }}>
+          โอนย้าย
+        </Button>
+        <Button size='large' color='warning' variant='outlined' onClick={handleResetForm} sx={{ mt: 3, mr: 2 }}>
+          รีข้อมูล
+        </Button>
         <Button
           size='large'
           color='error'
