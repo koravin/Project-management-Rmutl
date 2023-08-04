@@ -21,9 +21,14 @@ function ProprojectDisplay() {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
   }
 
-  // ส่งค่าจากแถวไปหน้า Edit
+  // ส่งค่าจากแถวไปหน้า Detail
   const handleDetailClick = projectId => {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectDetail/?id=${projectId}`)
+  }
+
+  // ส่งค่าจากแถวไปหน้า Transfer Preproject Data
+  const handleTransferClick = projectId => {
+    router.push(`/pages/BackOffice/DisplayPreProject/ProjectTransferData/?id=${projectId}`)
   }
 
   // ฟังก์ชันสำหรับ Delete DATA
@@ -44,7 +49,7 @@ function ProprojectDisplay() {
           Swal.fire({
             icon: 'success',
             title: 'ลบข้อมูลแล้วเสร็จ',
-            text: 'น้องซาอาระน่ารักเกินไป'
+            text: 'คุณไม่สามารถกู้คืนข้อมูลได้แล้ว'
           })
 
           // อัปเดต State ของตารางใหม่เมื่อมีการลบข้อมูล
@@ -78,6 +83,18 @@ function ProprojectDisplay() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
+            ...
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'Transfer',
+      headerName: 'Transfer',
+      width: 100,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleTransferClick(cellValues.row.preproject_id)}>
             ...
           </Button>
         )
