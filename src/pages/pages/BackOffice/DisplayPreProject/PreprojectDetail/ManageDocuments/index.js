@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 // ** Icons Imports
 import DescriptionIcon from '@mui/icons-material/Description'
 
-const ManageDocuments = ({ documentStatus }) => {
+const ManageDocuments = ({ documentStatus, requestdata }) => {
   const router = useRouter() // router สร้าง path
   // ตรวจสอบค่าว่างใน Props
   if (!documentStatus) {
@@ -23,7 +23,8 @@ const ManageDocuments = ({ documentStatus }) => {
 
   // เก็บค่าจาก Props ลงในตัวแปร
   const DocState = documentStatus
-  console.log('Cabill = ', DocState)
+  const ProjectID = requestdata
+  console.log('Carbill', ProjectID)
 
   return (
     <Card>
@@ -49,7 +50,9 @@ const ManageDocuments = ({ documentStatus }) => {
                 cursor: 'pointer'
               }}
               onClick={() => {
-                router.push('pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE01Upload/')
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE01Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
