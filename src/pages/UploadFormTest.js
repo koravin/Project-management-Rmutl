@@ -12,7 +12,7 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 
-const acceptedFileTypes = ['.pdf', '.doc', '.docx', '.mp4', '.jpeg'] // นามสกุลที่อนุญาติให้อับโหลด
+const acceptedFileTypes = ['.pdf', '.doc', '.docx', '.mp4'] // นามสกุลที่อนุญาติให้อับโหลด
 const maxFileSizeInBytes = 1000000000 //ขนาดไฟล์สูงสุดที่อนุญาติให้อัปโหลด
 const modalHeight = '500px'
 
@@ -109,6 +109,13 @@ export default function UploadTest() {
           )}
           {selectedFile?.type === 'application/pdf' && (
             <iframe src={URL.createObjectURL(selectedFile)} width='100%' height={modalHeight} title='PDF Preview' />
+          )}
+          {selectedFile?.type.startsWith('image/') && (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt='Image Preview'
+              style={{ width: '100%', height: modalHeight }}
+            />
           )}
           {(selectedFile?.type === 'application/msword' ||
             selectedFile?.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') && (

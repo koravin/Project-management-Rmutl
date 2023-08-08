@@ -45,14 +45,11 @@ export default function ProjectTransferData() {
   const [hasData, setHasData] = useState(false)
 
   //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลเพื่อส่ง------------------------//
-  const [newCurriculumsData, setNewCurriculumsData] = useState('') // เก็บข้อมูลหลักสูตรใหม่
-  const [newSubjectsData, setNewSubjectsData] = useState('') // เก็บข้อมูลวิชาใหม่
   const [newYearData, setNewYearData] = useState('') // เก็บข้อมูลปีใหม่
   const [newTermData, setNewTermData] = useState('') // เก็บข้อมูลSec และ เทอม ใหม่
+  const [projectPK, setProjectPK] = useState('') // // เก็บค่า ID ของ Project เพื่อส่งค่าไปที่ Select ที่สอง
 
-  //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลจาก Api 4 สหาย เพื่อเเสดงในตัวเลือก ------------------------//
-  const [allCurriculumsData, setAllCurriculumsData] = useState([]) // เก็บข้อมูลหลักสูตรใหม่
-  const [AllSubjectsData, setAllSubjectsData] = useState([]) // เก็บข้อมูลวิชาใหม่
+  //------------------------------------สร้างตัวแปรเก็บค่าข้อมูลจาก Api 2 สหาย เพื่อเเสดงในตัวเลือก ------------------------//
   const [allYearData, setAllYearData] = useState([]) // เก็บข้อมูลปีใหม่
   const [allTermData, setAllTermData] = useState([]) // เก็บข้อมูลSec และ เทอม ใหม่
 
@@ -96,51 +93,20 @@ export default function ProjectTransferData() {
 
   //-------------------------------------------รับค่าข้อมูล Api หลักสูตรใหม่ทีที่จะโอนย้าย--------------------------------------//
 
-  // ดึงข้อมูลหลักสูตรจาก Api curriculums
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums`)
-        setAllCurriculumsData(response.data.data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  // ดึงข้อมูลวิชาจาก Api subjects
-  useEffect(() => {
-    const fetchSubjectsData = async () => {
-      if (newCurriculumsData) {
-        try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects`, {
-            params: { curriculum_id: newCurriculumsData }
-          })
-          const subjectData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
-          setAllSubjectsData(subjectData)
-          setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    }
-
-    fetchSubjectsData()
-  }, [newCurriculumsData])
-
   // ดึงข้อมูลปีจาก Api year
   useEffect(() => {
     const fetchYearData = async () => {
-      if (newSubjectsData) {
+      if (requestdata) {
         try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects/year`, {
-            params: { subject_id: newSubjectsData }
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallyearsubjectproject`, {
+            params: { preproject_id: requestdata }
           })
-          const yearData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
+          console.log(response.data)
+          const yearData = response.data && response.data.all_years ? response.data.all_years : [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
+          console.log(yearData)
           setAllYearData(yearData)
-          setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
+          setProjectPK(response.data.project_subject_id)
+          setHasData(yearData.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
           console.error(error)
         }
@@ -148,20 +114,18 @@ export default function ProjectTransferData() {
     }
 
     fetchYearData()
-  }, [newSubjectsData])
+  }, [requestdata])
 
   // ดึงข้อมูล Sec และ Term จาก Api
   useEffect(() => {
     const fetchTermData = async () => {
-      if (newSubjectsData && newYearData) {
+      if (newYearData) {
         try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}api/project-mgt/curriculums/subjects/year/sections`,
-            {
-              params: { subject_id: newSubjectsData, year: newYearData }
-            }
-          )
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallsecinprojectsubject`, {
+            params: { subject_project_id: projectPK, year: newYearData }
+          })
           const termData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
+          console.log(termData)
           setAllTermData(termData)
           setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
@@ -171,23 +135,11 @@ export default function ProjectTransferData() {
     }
 
     fetchTermData()
-  }, [newSubjectsData, newYearData])
+  }, [projectPK, newYearData])
 
   //------------------------------------จบการรับค่าข้อมูล Api หลักสูตรใหม่ทีที่จะโอนย้าย---------------------------------//
 
   //---------ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown---------//
-  const handleNewCurriculumsChange = event => {
-    setNewCurriculumsData(event.target.value)
-    setNewSubjectsData('')
-    setNewYearData('')
-    setNewTermData('')
-  } // จัดการการเปลี่ยนแปลงค่าของหลักสูตร
-
-  const handleNewSubjectChange = event => {
-    setNewSubjectsData(event.target.value)
-    setNewYearData('')
-    setNewTermData('')
-  } // จัดการการเปลี่ยนแปลงค่าของวิชา
 
   const handleNewYearChange = event => {
     setNewYearData(event.target.value)
@@ -211,7 +163,7 @@ export default function ProjectTransferData() {
     setSubmitted(true)
 
     // ตรวจสอบค่าว่างใน TextField
-    if (!newCurriculumsData || !newSubjectsData || !newYearData || !newTermData) {
+    if (!newYearData || !newTermData) {
       Swal.fire({
         icon: 'error',
         title: 'คุณกรอกข้อมูลไม่ครบ...',
@@ -222,37 +174,54 @@ export default function ProjectTransferData() {
     }
 
     const data = {
-      curriculum_id: newCurriculumsData,
-      subject_id: newSubjectsData,
-      sem_year: newYearData,
-      semester_order: newTermData,
+      section_id: newTermData,
       preproject_id: projectId
     }
 
     console.log(data)
 
-    // axios
-    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
-    //   .then(response => {
-    //     console.log(response)
-    //     handleClose()
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/transferproject`, data)
+      .then(response => {
+        console.log(response)
 
-    //     // Route.replace(Route.asPath, undefined, { scroll: false })
-    //     // handleCancel() // รีข้อมูล
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // Swal.fire({
-    //   icon: 'success',
-    //   title: 'เพิ่มข้อมูลแล้วเสร็จ'
-    // })
+        // ตรวจสอบ HTTP status code ของ response
+        if (response.status === 200) {
+          // กรณีสำเร็จ
+          Swal.fire({
+            icon: 'success',
+            title: 'โอนย้ายข้อมูลแล้วเสร็จ'
+          })
+        } else {
+          // กรณีไม่สำเร็จ และตรวจสอบ HTTP status code เพื่อแสดงข้อความแจ้งเตือนที่ต้องการ
+          if (response.status === 400) {
+            // กรณี Error 400 (Bad Request)
+            Swal.fire({
+              icon: 'error',
+              title: 'มิคุ น่ารั๊ก'
+            })
+          } else {
+            // กรณี Error อื่น ๆ
+            Swal.fire({
+              icon: 'error',
+              title: 'คุณได้โอนย้ายโครงการนี้ไปแล้ว'
+            })
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error)
+
+        // กรณีเกิด error จากการเชื่อมต่อหรืออื่นๆ
+        Swal.fire({
+          icon: 'error',
+          title: 'คุณได้โอนย้ายโครงการนี้ไปแล้ว'
+        })
+      })
   }
 
   // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม
   const handleResetForm = () => {
-    setNewCurriculumsData('')
-    setNewSubjectsData('')
     setNewYearData('')
     setNewTermData('')
   }
@@ -263,60 +232,11 @@ export default function ProjectTransferData() {
       <Card sx={{ mb: 5, borderRadius: 2 }}>
         <CardContent>
           <Grid container spacing={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-            {/* Curriculum Select */}
-            <Grid item xs={12} sm={3}>
-              <FormControl fullWidth>
-                <InputLabel id='curriculum-label'>หลักสูตร</InputLabel>
-                <Select
-                  label='Curriculum'
-                  value={newCurriculumsData}
-                  onChange={handleNewCurriculumsChange}
-                  labelId='curriculum-label'
-                >
-                  {allCurriculumsData.map(curriculum => (
-                    <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Subject Select */}
-            <Grid item xs={12} sm={3}>
-              <FormControl fullWidth>
-                <InputLabel id='subject-label'>วิชา</InputLabel>
-                <Select
-                  label='Subject'
-                  value={newSubjectsData}
-                  onChange={handleNewSubjectChange}
-                  labelId='subject-label'
-                  disabled={!newCurriculumsData || !hasData}
-                >
-                  {AllSubjectsData && AllSubjectsData.length > 0 ? (
-                    AllSubjectsData.map(subject => (
-                      <MenuItem key={subject.subject_id} value={subject.subject_id}>
-                        {subject.subject_name_th}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
-                  )}
-                </Select>
-              </FormControl>
-            </Grid>
-
             {/* Year Select */}
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
                 <InputLabel id='year-label'>ปีการศึกษา</InputLabel>
-                <Select
-                  label='Year'
-                  value={newYearData}
-                  onChange={handleNewYearChange}
-                  labelId='year-label'
-                  disabled={!newSubjectsData || !hasData}
-                >
+                <Select label='Year' value={newYearData} onChange={handleNewYearChange} labelId='year-label'>
                   {allYearData && allYearData.length > 0 ? (
                     allYearData.map(year => (
                       <MenuItem key={year.sem_year} value={year.sem_year}>

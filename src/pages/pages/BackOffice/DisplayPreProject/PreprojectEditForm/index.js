@@ -813,8 +813,13 @@ export default function PreprojectEdit() {
                   error={submitted && !projectstatus} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   value={projectstatus}
                 >
-                  <MenuItem value={'1'}>แล้วเสร็จ</MenuItem>
-                  <MenuItem value={'0'}>ยังไม่แล้วเสร็จ</MenuItem>
+                  <MenuItem value={'0'}>ไม่ผ่าน</MenuItem>
+                  <MenuItem value={'1'}>โครงงานยังไม่ได้รับการอนุมัติ</MenuItem>
+                  <MenuItem value={'2'}>ยังไม่ได้ดำเนินการ</MenuItem>
+                  <MenuItem value={'3'}>อยู่ระหว่างการดำเนินการ</MenuItem>
+                  <MenuItem value={'4'}>สามารถสอบได้</MenuItem>
+                  <MenuItem value={'5'}>ยังไม่ผ่านการสอบ</MenuItem>
+                  <MenuItem value={'6'}>ผ่านแล้วแต่ยังไม่ได้โอน</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

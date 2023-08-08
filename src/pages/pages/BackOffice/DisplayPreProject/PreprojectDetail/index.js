@@ -167,18 +167,96 @@ export default function PreprojectDetail() {
                   <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
                     สถานะของโครงงาน :
                   </Box>
-                  {projectstatus === '0' || projectstatus === '1' ? (
+                  {projectstatus === '0' && (
                     <Box
                       component='span'
                       sx={{
-                        color: projectstatus === '0' ? 'red' : 'green',
+                        color: '#f44336',
                         fontWeight: 'bold'
                       }}
                     >
-                      {projectstatus === '0' ? 'โปรเจคยังไม่แล้วเสร็จ' : 'โปรเจคแล้วเสร็จ'}
+                      ไม่ผ่าน
                     </Box>
-                  ) : null}
+                  )}
+                  {projectstatus === '1' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#f44336',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      โครงงานยังไม่ได้รับการอนุมัติ
+                    </Box>
+                  )}
+                  {projectstatus === '2' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#f44336',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ยังไม่ได้ดำเนินการ
+                    </Box>
+                  )}
+                  {projectstatus === '3' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#2979ff',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      อยู่ระหว่างการดำเนินการ
+                    </Box>
+                  )}
+                  {projectstatus === '4' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#f2d05e',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      สามารถสอบได้
+                    </Box>
+                  )}
+                  {projectstatus === '5' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#f2d05e',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ยังไม่ผ่านการสอบ
+                    </Box>
+                  )}
+                  {projectstatus === '6' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#4caf50',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      ผ่านแล้วแต่ยังไม่ได้โอน
+                    </Box>
+                  )}
+                  {projectstatus === '7' && (
+                    <Box
+                      component='span'
+                      sx={{
+                        color: '#4caf50',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      โอนแล้ว
+                    </Box>
+                  )}
                 </Typography>
+
                 <Divider sx={{ my: 2 }} />
                 <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
                   <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
@@ -272,7 +350,11 @@ export default function PreprojectDetail() {
 
       {/* ส่วนของ Document Detail  */}
       <CustomTabPanel value={valueTabPanel} index={1}>
-        <ManageDocuments documentStatus={documentStatus} />
+        {documentStatus.length === 0 ? (
+          <Typography variant='body2'>แตก</Typography>
+        ) : (
+          <ManageDocuments documentStatus={documentStatus} />
+        )}
       </CustomTabPanel>
 
       {/* ปุ่มใช้แก้ขัด */}

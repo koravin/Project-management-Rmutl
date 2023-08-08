@@ -74,7 +74,71 @@ function ProprojectDisplay() {
   const columns = [
     { field: 'project_code', headerName: 'ID', width: 120 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
-    { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
+    {
+      field: 'project_status',
+      headerName: 'สถานะโครงงาน',
+      width: 200,
+      renderCell: params => {
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        let statusText
+        let statusColor
+        let bgColor
+
+        if (value === '0') {
+          statusText = 'ไม่ผ่าน'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === '1') {
+          statusText = 'โครงงานยังไม่ได้รับการอนุมัติ'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === '2') {
+          statusText = 'ยังไม่ได้ดำเนินการ'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === '3') {
+          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusColor = 'white'
+          bgColor = '#2979ff'
+        } else if (value === '4') {
+          statusText = 'สามารถสอบได้'
+          statusColor = 'white'
+          bgColor = '#ff9800'
+        } else if (value === '5') {
+          statusText = 'ยังไม่ผ่านการสอบ'
+          statusColor = 'white'
+          bgColor = '#ff9800'
+        } else if (value === '6') {
+          statusText = 'ผ่านแล้วแต่ยังไม่ได้โอน'
+          statusColor = 'white'
+          bgColor = '#4caf50'
+        } else if (value === '7') {
+          statusText = 'โอนแล้ว'
+          statusColor = 'white'
+          bgColor = '#4caf50'
+        } else {
+          statusText = value
+          bgColor = value
+        }
+
+        return (
+          <div
+            style={{
+              color: statusColor,
+              backgroundColor: bgColor,
+              paddingLeft: '10px',
+              paddingRight: '10px',
+              paddingTop: '2px',
+              paddingBottom: '2px',
+              fontSize: '11px',
+              borderRadius: '50px'
+            }}
+          >
+            {statusText}
+          </div>
+        )
+      }
+    },
     { field: 'YearColum', headerName: 'ปีการศึกษา / เทอม / Sec', width: 200 },
     {
       field: 'Detail',
@@ -93,9 +157,15 @@ function ProprojectDisplay() {
       headerName: 'Transfer',
       width: 100,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.project_status === '7'
+
         return (
-          <Button variant='text' onClick={() => handleTransferClick(cellValues.row.preproject_id)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleTransferClick(cellValues.row.preproject_id)}
+            disabled={isDisabled}
+          >
+            {isDisabled ? 'disable' : '...'}
           </Button>
         )
       }
@@ -105,9 +175,11 @@ function ProprojectDisplay() {
       headerName: 'Edit',
       width: 100,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.project_status === '7'
+
         return (
-          <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)}>
-            ...
+          <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)} disabled={isDisabled}>
+            {isDisabled ? 'disable' : '...'}
           </Button>
         )
       }
@@ -126,10 +198,12 @@ function ProprojectDisplay() {
     }
   ]
 
+  // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
+        console.log(response.data.data)
 
         const projects = response.data.data.map(project => ({
           ...project,
@@ -155,7 +229,7 @@ function ProprojectDisplay() {
       >
         เพิ่มข้อมูล
       </Button>
-      <Box sx={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: '100%', width: '100%' }}>
         {/* เช็คค่าว่างของข้อมูลก่อนที่จะทำการ map */}
         {projectdata.length === 0 ? (
           <p>No Data</p>
@@ -167,11 +241,11 @@ function ProprojectDisplay() {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5
+                  pageSize: 10
                 }
               }
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10, 20]}
             disableRowSelectionOnClick
           />
         )}

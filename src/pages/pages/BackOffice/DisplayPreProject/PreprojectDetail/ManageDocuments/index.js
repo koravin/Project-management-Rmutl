@@ -5,11 +5,13 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import { useRouter } from 'next/router'
 
 // ** Icons Imports
 import DescriptionIcon from '@mui/icons-material/Description'
 
 const ManageDocuments = ({ documentStatus }) => {
+  const router = useRouter() // router สร้าง path
   // ตรวจสอบค่าว่างใน Props
   if (!documentStatus) {
     return (
@@ -43,7 +45,11 @@ const ManageDocuments = ({ documentStatus }) => {
                     : DocState.ce01.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push('pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE01Upload/')
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
