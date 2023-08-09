@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Typography,
@@ -17,6 +17,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd'
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/system'
 import { useRouter } from 'next/router'
+import CE01Record from './CE01Record' // เรียกใช้งานหน้า CE01Record
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024 // กำหนดขาดสูดของไฟล์ที่อัปโหลดเป็น 1GB
 
@@ -30,15 +31,6 @@ const ACCEPTED_FILE_TYPES = [
   'application/vnd.ms-powerpoint',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation'
 ] // กำหนด fix ประเภทไฟล์
-
-const RootContainer = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: '1px',
-  marginBottom: '16px',
-  marginTop: '8px'
-})
 
 const WhiteBlackButton = styled(Button)({
   background: 'linear-gradient(to bottom, white, white)',
@@ -58,17 +50,61 @@ const CE01Upload = () => {
 
   // เก็บค่าจาก Props ลงในตัวแปร
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
-  const projectID = projectId // หากไม่เก็บค่าลงตัวแปรใหม่ Additional Select จะมีการเปลี่ยนแปลงค่า Id ตลอดเวลาตัวเลือกจะปิดเองอัตโนมัติ
+  const projectID = projectId
 
-  console.log('Carbillxxx', projectID)
+  console.log('รหัสโครงการหน้า Upload', projectID)
 
   const [selectedFile, setSelectedFile] = useState(null) // ตัวแปรเก็บค่าไฟล์ที่อัปโหลด
-  const [documentType, setDocumentType] = useState('') // ตัวแปรเก็บค่าประเภทเอกสาร
+  const [documentName, setDocumentName] = useState('') // เก็บชื่อเอกสารพร้อมนามสกุลก่อนกดอัปโหลดไฟล์
   const [showFileDetails, setShowFileDetails] = useState(false) // ตัวแปรควบคุมการแสดงรายละเอียดเอกสาร
   const [openFileDialog, setOpenFileDialog] = useState(false) // ตัวแปรควบคุมการเปิดปิด Dialog
   const [fileInputKey, setFileInputKey] = useState(0) // ตัวแปร state สำหรับ key ของ input(ทำให้ input รีค่าใหม่ทึกครั้งที่มีการ อัปโหลดไฟล์)
+  const [index, setIndex] = useState('') // ตัวนับเอกสาร
+  const [refreshFlag, setRefreshFlag] = useState(false) // ตัวแปรรีค่าทีเซตใน useEffect
 
-  console.log('Love Sayaga :', documentType)
+  // console.log('ชื่อเอกสาร :', selectedFile.name)
+
+  //-------------------เริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
+
+  // ดึงข้อมูลโครงงานจาก id
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${projectID}`
+        )
+
+        // console.log('ข้อมูลโครงงาน', response.data)
+        setDocumentName('CE01_' + response.data.PreprojectData[0].preproject_name_th)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchData()
+  }, [projectID, documentName])
+
+  // ดึงข้อมูลไฟล์เอกสารในฐานข้อมูล
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
+        )
+
+        // console.log('ข้อมูลเอกสาร', response.data)
+
+        // console.log('ข้อมูลIndex', response.data.index)
+        setIndex(response.data.index)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchData()
+  }, [projectID, refreshFlag])
+
+  //-------------------จบการเริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
   // ฟังก์ชันเก็บค่าไฟลที่อัปโหลด
   const handleFileChange = event => {
@@ -90,7 +126,9 @@ const CE01Upload = () => {
         })
       } else {
         setSelectedFile(file)
-        setDocumentType(file.type)
+
+        // setDocumentType(file.type)
+        const i = event.target.files[0]
 
         // เปลี่ยนค่า key เพื่อให้ React ทำการสร้าง input ใหม่
         setFileInputKey(prevKey => prevKey + 1)
@@ -120,28 +158,70 @@ const CE01Upload = () => {
   }
 
   // ฟังก์ชันสำหรับ ส่งเอกสาร CE01
-  const handleCE01Upload = e => {
-    const data = {
-      preproject_id: projectID,
-      document_type: documentType,
-      document_name: 'CE01',
-      document_owner: '0'
+  const handleCE01Upload = async () => {
+    try {
+      // ประกอบร่างชื่อใหม่
+      const documentNameWithoutSpecialChars = documentName.replace(/[ :]/g, '_') // แทนที่เครื่องหมายพิเศษด้วย _
+      const fileExtension = selectedFile.name.split('.').pop() // รับนามสกุลของไฟล์
+      //ชื่อไฟล์ใหม่
+      const Countindex = parseInt(index) // รับค่า index เป็นตัวเลขและแปลงเป็นจำนวนเต็ม
+      const newFilename = `${documentNameWithoutSpecialChars}_${Countindex + 1}.${fileExtension}`
+
+      // ส่วนเซฟไฟล์ลงในเครื่อง
+      const body = new FormData()
+      body.append('file', selectedFile) //ส่งไฟล์เข้า Api
+      body.append('newFilename', newFilename) //ส่งชื่อเอกสารเข้าไปใน Api
+
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body
+      })
+
+      if (!uploadResponse.ok) {
+        Swal.fire({
+          icon: 'error',
+          title: 'มีข้อผิดพลาดเกิดขึ้นนะจ๊ะคนดี'
+        })
+
+        return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
+      }
+
+      // ส่วนส่งข้อมูลไปยัง API ภายนอก
+      const data = {
+        preproject_id: projectID,
+        document_type: 'CE01',
+        document_name: newFilename,
+        document_owner: '0'
+      }
+
+      // console.log(data)
+      try {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadpreprojectdocuments`,
+          data
+        )
+
+        Swal.fire({
+          icon: 'success',
+          title: 'อัปโหลดข้อมูลแล้วเสร็จ'
+        })
+
+        // เมื่ออัปโหลดเสร็จ ให้เปลี่ยนค่า refreshFlag เพื่อให้ useEffect ทำงานใหม่
+        setRefreshFlag(prevFlag => !prevFlag) // สลับค่า refreshFlag
+      } catch (error) {
+        console.error(error)
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาดในการอัปโหลดข้อมูล'
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'มีข้อผิดพลาดเกิดขึ้น'
+      })
     }
-
-    console.log(data)
-
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadpreprojectdocuments`, data)
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    Swal.fire({
-      icon: 'success',
-      title: 'อัปโหลดข้อมูลแล้วเสร็จ'
-    })
   }
 
   return (
@@ -190,7 +270,9 @@ const CE01Upload = () => {
                   color='primary'
                   endIcon={<SendIcon />}
                   disabled={!selectedFile}
-                  onClick={handleCE01Upload}
+                  onClick={() => {
+                    handleCE01Upload()
+                  }}
                 >
                   ส่ง
                 </WhiteBlackButton>
@@ -257,6 +339,8 @@ const CE01Upload = () => {
           ย้อนกลับ
         </Button>
       </Box>
+
+      <CE01Record />
     </div>
   )
 }
