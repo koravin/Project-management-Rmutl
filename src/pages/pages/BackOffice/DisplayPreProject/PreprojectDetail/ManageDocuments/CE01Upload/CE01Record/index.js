@@ -15,9 +15,12 @@ import {
 import { DataGrid } from '@mui/x-data-grid'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 
-export default function CE01Record(projectid) {
+export default function CE01Record(projectid, refreshFlag) {
   const projectID = projectid.projectID
-  console.log('Id หน้าประวัติการค้นหา :', projectID)
+  const RefreshFlag = refreshFlag
+
+  // console.log('Id หน้าประวัติการค้นหา :', projectID)
+  // console.log('ค่าน่ารัก', RefreshFlag)
 
   // กำหนดตัวแปร
   const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
@@ -25,7 +28,6 @@ export default function CE01Record(projectid) {
 
   // กำหนดหัว Colum
   const columns = [
-    { field: 'id', headerName: 'ID เอกสาร', width: 120 },
     {
       field: 'document_name',
       headerName: 'เวอร์ชันเอกสาร',
@@ -33,10 +35,14 @@ export default function CE01Record(projectid) {
       editable: true
     },
     {
-      field: 'ดาวน์โหลดเอกสาร',
+      field: 'download_button',
       headerName: 'ดาวน์โหลดเอกสาร',
       width: 180,
-      editable: true
+      renderCell: params => (
+        <Button variant='outlined' onClick={() => handleDownload(params.row.id)}>
+          ดาวน์โหลด
+        </Button>
+      )
     }
   ]
 
@@ -65,13 +71,21 @@ export default function CE01Record(projectid) {
     }
 
     fetchData()
-  }, [projectID])
+  }, [projectID, refreshFlag])
 
   //-------------------จบการเริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
+  // ฟังก์ชันดาวโหลดเอกสาร
+  const handleDownload = documentId => {
+    alert('ขวย')
+
+    // ทำการดาวน์โหลดเอกสารโดยใช้ documentId
+    // สามารถเรียกใช้ API หรือทำการเปิด URL สำหรับดาวน์โหลดเอกสารได้ตามที่คุณต้องการ
+  }
+
   return (
-    <Box sx={{ mt: 10 }}>
-      <Card>
+    <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
+      <Card style={{ width: '80%', borderRadius: 15 }}>
         <Typography
           align='center'
           variant='h6'
@@ -87,18 +101,31 @@ export default function CE01Record(projectid) {
         </Typography>
         <CardContent style={{ display: 'flex', justifyContent: 'center' }}>
           <Box></Box>
-          <Card style={{ width: '55%' }}>
+          <Card style={{ width: '80%' }}>
             <DataGrid
               rows={rowdata}
               columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 5
-                  }
-                }
+              autoHeight
+              components={{
+                NoRowsOverlay: () => (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '2rem',
+                      height: '100%',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <Typography variant='h6' color='textSecondary'>
+                      ไม่พบข้อมูล
+                    </Typography>
+                  </div>
+                )
               }}
-              pageSizeOptions={[5]}
+              pageSize={5}
               disableRowSelectionOnClick
             />
           </Card>
