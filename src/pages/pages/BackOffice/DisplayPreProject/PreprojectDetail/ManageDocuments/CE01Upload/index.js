@@ -340,7 +340,7 @@ const CE01Upload = () => {
         </Button>
       </Box>
 
-      <CE01Record />
+      <CE01Record projectID={projectID} />
     </div>
   )
 }
