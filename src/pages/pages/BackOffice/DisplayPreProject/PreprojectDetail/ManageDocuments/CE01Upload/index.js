@@ -17,7 +17,8 @@ import PostAddIcon from '@mui/icons-material/PostAdd'
 import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/system'
 import { useRouter } from 'next/router'
-import CE01Record from './CE01Record' // เรียกใช้งานหน้า CE01Record
+import { DataGrid } from '@mui/x-data-grid'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024 // กำหนดขาดสูดของไฟล์ที่อัปโหลดเป็น 1GB
 
@@ -60,9 +61,9 @@ const CE01Upload = () => {
   const [openFileDialog, setOpenFileDialog] = useState(false) // ตัวแปรควบคุมการเปิดปิด Dialog
   const [fileInputKey, setFileInputKey] = useState(0) // ตัวแปร state สำหรับ key ของ input(ทำให้ input รีค่าใหม่ทึกครั้งที่มีการ อัปโหลดไฟล์)
   const [index, setIndex] = useState('') // ตัวนับเอกสาร
-  const [refreshFlag, setRefreshFlag] = useState(false) // ตัวแปรรีค่าทีเซตใน useEffect
+  const [refreshFlag, setRefreshFlag] = useState(true) // ตัวแปรรีค่าทีเซตใน useEffect
 
-  // console.log('ชื่อเอกสาร :', selectedFile.name)
+  // console.log('ค่า refreshFlag:', selectedFile.name)
 
   //-------------------เริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
@@ -93,8 +94,16 @@ const CE01Upload = () => {
         )
 
         // console.log('ข้อมูลเอกสาร', response.data)
-
         // console.log('ข้อมูลIndex', response.data.index)
+
+        // สร้างอาเรย์ของ object ที่เข้ากับ DataGrid เพื่อใช้ map row
+        const rowData = response.data.documentList.map(document => ({
+          id: document.document_id,
+          document_name: document.document_name,
+          document_type: document.document_type
+        }))
+
+        setRowData(rowData)
         setIndex(response.data.index)
       } catch (error) {
         console.error(error)
@@ -193,6 +202,7 @@ const CE01Upload = () => {
         document_name: newFilename,
         document_owner: '0'
       }
+      setRefreshFlag(Date.now())
 
       // console.log(data)
       try {
@@ -223,6 +233,41 @@ const CE01Upload = () => {
       })
     }
   }
+
+  //-------------------------ส่วนของการ Download เอกสาร--------------------//
+  // กำหนดตัวแปร
+  const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
+  console.log('ข้อมูลแถว', rowdata)
+
+  // กำหนดหัว Colum
+  const columns = [
+    {
+      field: 'document_name',
+      headerName: 'เวอร์ชันเอกสาร',
+      width: 300,
+      editable: true
+    },
+    {
+      field: 'download_button',
+      headerName: 'ดาวน์โหลดเอกสาร',
+      width: 180,
+      renderCell: params => (
+        <Button variant='outlined' onClick={() => handleDownload(params.row.id)}>
+          ดาวน์โหลด
+        </Button>
+      )
+    }
+  ]
+
+  // ฟังก์ชันดาวโหลดเอกสาร
+  const handleDownload = documentId => {
+    alert('ขวย')
+
+    // ทำการดาวน์โหลดเอกสารโดยใช้ documentId
+    // สามารถเรียกใช้ API หรือทำการเปิด URL สำหรับดาวน์โหลดเอกสารได้ตามที่คุณต้องการ
+  }
+
+  //-------------------------จบส่วนของการ Download เอกสาร--------------------//
 
   return (
     <div>
@@ -272,6 +317,7 @@ const CE01Upload = () => {
                   disabled={!selectedFile}
                   onClick={() => {
                     handleCE01Upload()
+                    setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE01Record
                   }}
                 >
                   ส่ง
@@ -340,7 +386,55 @@ const CE01Upload = () => {
         </Button>
       </Box>
 
-      <CE01Record projectID={projectID} />
+      {/* ส่วนของการอัปโหลดเอกสาร */}
+      <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
+        <Card style={{ width: '80%', borderRadius: 15 }}>
+          <Typography
+            align='center'
+            variant='h6'
+            style={{
+              fontWeight: 'bold',
+              marginTop: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <AccessTimeIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> ประวัติการส่งเอกสาร
+          </Typography>
+          <CardContent style={{ display: 'flex', justifyContent: 'center' }}>
+            <Box></Box>
+            <Card style={{ width: '80%' }}>
+              <DataGrid
+                rows={rowdata}
+                columns={columns}
+                autoHeight
+                components={{
+                  NoRowsOverlay: () => (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '2rem',
+                        height: '100%',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      <Typography variant='h6' color='textSecondary'>
+                        ไม่พบข้อมูล
+                      </Typography>
+                    </div>
+                  )
+                }}
+                pageSize={5}
+                disableRowSelectionOnClick
+              />
+            </Card>
+          </CardContent>
+        </Card>
+      </Box>
     </div>
   )
 }
