@@ -35,11 +35,22 @@ export default function CE01Record(projectid, refreshFlag) {
       editable: true
     },
     {
+      field: 'Preview_data',
+      headerName: 'ดูตัวอย่างเอกสาร',
+      width: 150,
+      editable: false,
+      renderCell: params => (
+        <Typography variant='h6' style={{ color: 'pink' }} onClick={() => handlePreview()}>
+          ...
+        </Typography>
+      )
+    },
+    {
       field: 'download_button',
       headerName: 'ดาวน์โหลดเอกสาร',
       width: 180,
       renderCell: params => (
-        <Button variant='outlined' onClick={() => handleDownload(params.row.id)}>
+        <Button variant='outlined' onClick={() => handleDownload(params.row.document_name)}>
           ดาวน์โหลด
         </Button>
       )
@@ -76,11 +87,58 @@ export default function CE01Record(projectid, refreshFlag) {
   //-------------------จบการเริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
   // ฟังก์ชันดาวโหลดเอกสาร
-  const handleDownload = documentId => {
-    alert('ขวย')
+  const handleDownload = async FileName => {
+    const fileName = FileName
+    const docType = 'CE01'
 
-    // ทำการดาวน์โหลดเอกสารโดยใช้ documentId
-    // สามารถเรียกใช้ API หรือทำการเปิด URL สำหรับดาวน์โหลดเอกสารได้ตามที่คุณต้องการ
+    console.log('ชื่อไฟล์', fileName)
+
+    try {
+      const downloadResponse = await fetch('/api/download', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fileName, docType }),
+        responseType: 'blob' // Indicate that the response should be treated as binary data
+      })
+
+      if (downloadResponse.ok) {
+        const blob = await downloadResponse.blob()
+        const blobUrl = URL.createObjectURL(blob)
+
+        // Create a FileReader to read the Blob
+        const reader = new FileReader()
+
+        reader.onload = event => {
+          const blobData = event.target.result
+
+          // 'blobData' เป็นข้อมูลในรูปแบบของ ArrayBuffer
+          console.log('ข้อมูลใน Blob:', blobData)
+
+          // ทำอะไรกับข้อมูลใน Blob ต่อไป
+        }
+
+        // อ่าน Blob ด้วย FileReader
+        reader.readAsArrayBuffer(blob)
+        console.log('หาไฟล์', reader)
+
+        // Create a download link and initiate the download
+        const downloadLink = document.createElement('a')
+        downloadLink.href = blobUrl
+        downloadLink.download = fileName
+        downloadLink.click()
+
+        // Clean up the object URL after the download is initiated
+        URL.revokeObjectURL(blobUrl)
+
+        console.log('Download initiated')
+      } else {
+        console.error('Error downloading document:', downloadResponse.statusText)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   }
 
   return (
