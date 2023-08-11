@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 export default async function DownloadDocument(req, res) {
-  const { fileName, docType } = req.body
+  const { fileName, docType } = req.body // รับค่าชื่อตัวแปร กับ ประเภทเอกสาร จาก req
   try {
     const filePath = path.join('..', 'Document', docType, fileName)
 

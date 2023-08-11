@@ -19,9 +19,6 @@ export default function CE01Record(projectid, refreshFlag) {
   const projectID = projectid.projectID
   const RefreshFlag = refreshFlag
 
-  // console.log('Id หน้าประวัติการค้นหา :', projectID)
-  // console.log('ค่าน่ารัก', RefreshFlag)
-
   // กำหนดตัวแปร
   const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
   console.log('ข้อมูลแถว', rowdata)
@@ -40,7 +37,7 @@ export default function CE01Record(projectid, refreshFlag) {
       width: 150,
       editable: false,
       renderCell: params => (
-        <Typography variant='h6' style={{ color: 'pink' }} onClick={() => handlePreview()}>
+        <Typography variant='h6' style={{ color: 'pink' }} onClick={() => handlePreview(params.row.document_name)}>
           ...
         </Typography>
       )
@@ -86,7 +83,7 @@ export default function CE01Record(projectid, refreshFlag) {
 
   //-------------------จบการเริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
-  // ฟังก์ชันดาวโหลดเอกสาร
+  //----------------------------เริ่มฟังก์ชันดาวโหลดเอกสาร--------------------------//
   const handleDownload = async FileName => {
     const fileName = FileName
     const docType = 'CE01'
@@ -107,22 +104,6 @@ export default function CE01Record(projectid, refreshFlag) {
         const blob = await downloadResponse.blob()
         const blobUrl = URL.createObjectURL(blob)
 
-        // Create a FileReader to read the Blob
-        const reader = new FileReader()
-
-        reader.onload = event => {
-          const blobData = event.target.result
-
-          // 'blobData' เป็นข้อมูลในรูปแบบของ ArrayBuffer
-          console.log('ข้อมูลใน Blob:', blobData)
-
-          // ทำอะไรกับข้อมูลใน Blob ต่อไป
-        }
-
-        // อ่าน Blob ด้วย FileReader
-        reader.readAsArrayBuffer(blob)
-        console.log('หาไฟล์', reader)
-
         // Create a download link and initiate the download
         const downloadLink = document.createElement('a')
         downloadLink.href = blobUrl
@@ -140,6 +121,47 @@ export default function CE01Record(projectid, refreshFlag) {
       console.error('An error occurred:', error)
     }
   }
+
+  //----------------------------จบฟังก์ชันดาวโหลดเอกสาร--------------------------//
+
+  //----------------------------เริ่มฟังก์พรีวิวเอกสาร--------------------------//
+  // State to control the preview dialog
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewDocumentUrl, setPreviewDocumentUrl] = useState('')
+
+  // Function to open the preview dialog
+  const handlePreview = async FileName => {
+    try {
+      const previewResponse = await fetch('/api/download', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fileName: FileName, docType: 'CE01' }),
+        responseType: 'blob'
+      })
+
+      if (previewResponse.ok) {
+        const blob = await previewResponse.blob()
+        setPreviewDocumentUrl(blob)
+
+        console.log('pdf data', previewDocumentUrl)
+      } else {
+        console.error('Error fetching document:', downloadResponse.statusText)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+    setPreviewOpen(true)
+  }
+
+  // Function to close the preview dialog
+  const handleClosePreview = () => {
+    setPreviewOpen(false)
+    setPreviewDocumentUrl('')
+  }
+
+  //----------------------------จบฟังก์พรีวิวเอกสาร--------------------------//
 
   return (
     <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
@@ -187,6 +209,26 @@ export default function CE01Record(projectid, refreshFlag) {
               disableRowSelectionOnClick
             />
           </Card>
+
+          {/* Preview Dialog */}
+          <Dialog open={previewOpen} onClose={handleClosePreview} fullWidth maxWidth='md'>
+            <DialogTitle>ตัวอย่างเอกสาร</DialogTitle>
+            <DialogContent>
+              {/* Use an iframe to display the PDF inline */}
+              <iframe
+                src={previewDocumentUrl ? URL.createObjectURL(previewDocumentUrl) : ''}
+                title='PDF Preview'
+                width='100%'
+                height='600'
+                style={{ border: 'none' }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClosePreview} color='primary'>
+                ปิด
+              </Button>
+            </DialogActions>
+          </Dialog>
         </CardContent>
       </Card>
     </Box>
