@@ -18,12 +18,12 @@ export default async (req, res) => {
     }
 
     const newFilename = fields.newFilename[0] // รับค่า documentName
-    // console.log('ชื่อไฟล์หลังบ้าน', newFilename)
-    // console.log('ชื่อไฟล์เก่า', files.file[0].originalFilename)
-    // console.log(files.file[0].filepath)
+    const docType = fields.docType
+
+    // console.log('ประยวยหัวพญาครุท', fields.docType[0])
 
     var oldPath = files.file[0].filepath
-    var newPath = `../Document/CE01/${newFilename}`
+    var newPath = `../Document/${docType}/${newFilename}`
     console.log(newPath)
     mv(oldPath, newPath, function (err) {
       if (err) {

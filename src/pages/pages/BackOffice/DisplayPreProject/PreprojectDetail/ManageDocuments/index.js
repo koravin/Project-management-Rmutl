@@ -92,7 +92,13 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
                     : DocState.ce02.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE02Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
@@ -132,7 +138,13 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
                     : DocState.ce03.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE03Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
@@ -172,7 +184,13 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
                     : DocState.ce04.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE04Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
@@ -212,7 +230,13 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
                     : DocState.ce05.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE05Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
@@ -252,7 +276,13 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
                     : DocState.ce06.status === 'ยังไม่ผ่าน'
                     ? '#f44336'
                     : 'black',
-                borderRadius: 3
+                borderRadius: 3,
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                router.push(
+                  `/pages/BackOffice/DisplayPreProject/PreprojectDetail/ManageDocuments/CE06Upload/?id=${ProjectID}`
+                )
               }}
             >
               <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>

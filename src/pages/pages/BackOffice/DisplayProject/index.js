@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
 
-function DisplayPreProject() {
+function DisplayProject() {
   const router = useRouter() // router สร้าง path
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
@@ -254,4 +254,4 @@ function DisplayPreProject() {
   )
 }
 
-export default DisplayPreProject
+export default DisplayProject

@@ -9,7 +9,11 @@ import {
   DialogTitle,
   DialogActions,
   Box,
-  Grid
+  Grid,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel
 } from '@mui/material'
 import axios from 'axios'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
@@ -18,9 +22,8 @@ import SendIcon from '@mui/icons-material/Send'
 import { styled } from '@mui/system'
 import { useRouter } from 'next/router'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { DataGrid } from '@mui/x-data-grid'
-
-// import CE01Record from './CE01Record' // เรียกใช้งานหน้า CE01Record
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024 // กำหนดขาดสูดของไฟล์ที่อัปโหลดเป็น 1GB
 
@@ -46,7 +49,7 @@ const WhiteBlackButton = styled(Button)({
   }
 })
 
-const CE01Upload = () => {
+const CE03Upload = () => {
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
   const router = useRouter() // router สร้าง path
@@ -64,9 +67,9 @@ const CE01Upload = () => {
   const [fileInputKey, setFileInputKey] = useState(0) // ตัวแปร state สำหรับ key ของ input(ทำให้ input รีค่าใหม่ทึกครั้งที่มีการ อัปโหลดไฟล์)
   const [index, setIndex] = useState('') // ตัวนับเอกสาร
   const [refreshFlag, setRefreshFlag] = useState(true) // ตัวแปรรีค่าทีเซตใน useEffect
+  const [Role, setRole] = useState('') // เก็บ Role ผู้ส่ง
 
-  // console.log('ค่า refreshFlag:', selectedFile.name)
-
+  //-------------------------------------------------เริ่มกระบวนการ ฮัปโหลดเอกสาร------------------------------------------//
   //-------------------เริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
   // ดึงข้อมูลโครงงานจาก id
@@ -78,7 +81,7 @@ const CE01Upload = () => {
         )
 
         // console.log('ข้อมูลโครงงาน', response.data)
-        setDocumentName('CE01_' + response.data.PreprojectData[0].preproject_name_th)
+        setDocumentName('CE03_' + response.data.PreprojectData[0].preproject_name_th)
       } catch (error) {
         console.error(error)
       }
@@ -92,7 +95,7 @@ const CE01Upload = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE03`
         )
 
         // console.log('ข้อมูลเอกสาร', response.data)
@@ -158,11 +161,16 @@ const CE01Upload = () => {
   const ResetData = () => {
     setShowFileDetails(false)
     setSelectedFile(null)
+    setStudentData('')
+    setAdvisorData('')
+    setInstructorData('')
+    setGetDocTypeData('')
+    setGetCEData('')
   }
 
-  // ฟังก์ชันสำหรับ ส่งเอกสาร CE01
-  const handleCE01Upload = async () => {
-    const docType = 'CE01'
+  // ฟังก์ชันสำหรับ ส่งเอกสาร CE03
+  const handleCE03Upload = async () => {
+    const docType = 'CE03'
     try {
       // ประกอบร่างชื่อใหม่
       const documentNameWithoutSpecialChars = documentName.replace(/[ :]/g, '_') // แทนที่เครื่องหมายพิเศษด้วย _
@@ -175,7 +183,6 @@ const CE01Upload = () => {
       const body = new FormData()
       body.append('file', selectedFile) //ส่งไฟล์เข้า Api
       body.append('newFilename', newFilename) //ส่งชื่อเอกสารเข้าไปใน Api
-
       // ส่งข้อมูลประเภทเอกสารเข้าไปในหน้า Upload
       body.append('docType', docType) //ส่งชื่อเอกสารเข้าไปใน Api
 
@@ -193,21 +200,43 @@ const CE01Upload = () => {
         return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
       }
 
+      // ตรวจสอบค่าว่างของ Input ก่อนส่ง
+      if (getDocType.length === 0 || getCEType.length === 0 || !advisor) {
+        Swal.fire({
+          icon: 'error',
+          title: 'คุณกรอกข้อมูลไม่ครบ...',
+          text: 'กรุณาระบุข้อมูลให้ครบถ้วน!'
+        })
+
+        return
+      }
+
+      // เพิ่มเงื่อนไขตรวจสอบค่าเพิ่มเติม
+      if (getDocType === 'เอกสารรายบุคล' && studentData === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'คุณกรอกข้อมูลไม่ครบ...',
+          text: 'กรุณาระบุข้อมูลให้ครบถ้วน!'
+        })
+
+        return
+      }
+
       // ส่วนส่งข้อมูลไปยัง API ภายนอก
       const data = {
         preproject_id: projectID,
-        document_type: 'CE01',
+        document_type: 'CE03',
         document_name: newFilename,
-        instructor: '',
-        adviser: '',
-        studen_id: '',
+        adviser: advisor,
+        studen_id: studentData,
+        instructor: instructor,
+        role: Role,
         document_owner: '0',
-        description: '0',
-        committee: '',
-        role: '0'
+        description: description,
+        committee: ''
       }
+      console.log(data)
 
-      // console.log(data)
       try {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadpreprojectdocuments`,
@@ -251,6 +280,12 @@ const CE01Upload = () => {
       editable: true
     },
     {
+      field: 'description',
+      headerName: 'คำบรรยาย',
+      width: 300,
+      editable: false
+    },
+    {
       field: 'Preview_data',
       headerName: 'ดูตัวอย่างเอกสาร',
       width: 150,
@@ -280,15 +315,17 @@ const CE01Upload = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE03`
         )
-        console.log(response.data.documentList)
+
+        // console.log('ข้อมูล CE03', response.data.documentList[0].document_description)
 
         // สร้างอาเรย์ของ object ที่เข้ากับ DataGrid เพื่อใช้ map row
         const rowData = response.data.documentList.map(document => ({
           id: document.document_id,
           document_name: document.document_name,
-          document_type: document.document_type
+          document_type: document.document_type,
+          description: document.document_description
         }))
 
         setRowData(rowData)
@@ -305,7 +342,7 @@ const CE01Upload = () => {
   //----------------------------เริ่มฟังก์ชันดาวโหลดเอกสาร--------------------------//
   const handleDownload = async FileName => {
     const fileName = FileName
-    const docType = 'CE01'
+    const docType = 'CE03'
 
     console.log('ชื่อไฟล์', fileName)
 
@@ -356,7 +393,7 @@ const CE01Upload = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ fileName: FileName, docType: 'CE01' }),
+        body: JSON.stringify({ fileName: FileName, docType: 'CE03' }),
         responseType: 'blob'
       })
 
@@ -384,8 +421,214 @@ const CE01Upload = () => {
 
   //--------------------------------------------------------------จบฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
 
+  //---------------------------------ฟังก์ชันระบุ Role ผู้ส่ง------------------------------------//
+  const [studentData, setStudentData] = useState('') // เก็บค่าข้อมูลนักศึกษา
+  const [advisor, setAdvisorData] = useState('') // เก็บค่าข้อมูลอาจารที่ปรึกษา
+  const [instructor, setInstructorData] = useState([]) // เก็บค่าข้อมูลอาจารย์
+
+  //   console.log('ควยลอก', advisor)
+
+  //ตัวแปรรับข้อมูล
+  const [getStudentData, setGetStudentData] = useState('') // รับค่าข้อมูลนักศึกษา
+  const [getAdvisor, setGetAdvisorData] = useState('') // รับค่าข้อมูลอาจารที่ปรึกษา
+  const [getInstructor, setGetInstructorData] = useState([]) // รับค่าข้อมูลอาจารย์
+
+  //ตัวแปรเก็บข้อมูลเอกสาร
+  const [getDocType, setGetDocTypeData] = useState('') // รับค่าข้อมูลประเภทเอกสาร
+  const [getCEType, setGetCEData] = useState('') // รับค่าข้อมูลประเภทเอกสาร CE03
+  const [getStudentName, setGetStudentNameData] = useState('') // รับค่าข้อมูลชื่อของนักศึกษา
+
+  // ตัวแปรเก็บค่า description
+  const [description, setDescriptionData] = useState('')
+  console.log('คำบรรยาย', description)
+
+  // เก็บข้อมูลลง Api
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE03`
+        )
+
+        // console.log('ข้อมูล CE03', response.data)
+        console.log('คนจริง', response.data)
+        console.log('อาจารย์ที่ปรึกษา', response.data.adviser)
+        setGetStudentData(response.data.students)
+        setGetAdvisorData(response.data.adviser)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchData()
+  }, [projectID])
+
+  // เซตข้อมูลลง Role และ description
+  useEffect(() => {
+    // กำหนด Role ก่อนส่ง
+    // s = student
+    // i = instructor
+    // a = advisor
+    // c = committee
+
+    if (instructor) {
+      setRole('i')
+    } else if (studentData) {
+      setRole('s')
+    } else if (advisor) {
+      setRole('a')
+    }
+
+    // เซตค่า description โดยรวมค่าของ getDocType และ getCEType
+    const combinedDescription = getCEType + ' ' + getDocType + ' ' + getStudentName
+    setDescriptionData(combinedDescription)
+  }, [advisor, instructor, studentData, getDocType, getCEType, getStudentName])
+
+  //---------ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown---------//
+
+  const handleStudentChange = event => {
+    setStudentData(event.target.value)
+    const selectedStudent = getStudentData.find(student => student.studen_id === event.target.value)
+
+    if (selectedStudent) {
+      const fullName = `${selectedStudent.studen_first_name} ${selectedStudent.studen_last_name}`
+      setGetStudentNameData(fullName)
+    }
+  }
+
+  const handleAdvisorChange = event => {
+    setAdvisorData(event.target.value)
+  }
+
+  const handleDoctypeChange = event => {
+    setGetDocTypeData(event.target.value)
+
+    // เพิ่มเงื่อนไข: ถ้า selectedValue มีค่าเป็น 'เอกสารแบบกลุ่ม' ให้กำหนด setStudentData เป็นค่าว่าง
+    if (event.target.value === 'เอกสารแบบกลุ่ม') {
+      setStudentData('')
+      setGetStudentNameData('')
+
+      // setGetStudentData('')
+    }
+  }
+
+  const handleCETypeChange = event => {
+    setGetCEData(event.target.value)
+  }
+
+  //---------จบ ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown---------//
+
+  //---------------------------------จบฟังก์ชันระบุ Role ผู้ส่ง------------------------------------//
   return (
     <div>
+      {/* ฟังก์ชันระบุ Roleและเลือกผู้ส่งเอกสาร  */}
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Card sx={{ mb: 0.5, borderRadius: 2, width: '70%' }}>
+          <Typography
+            align='center'
+            variant='h6'
+            style={{
+              fontWeight: 'bold',
+              marginTop: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <AccountCircleIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> ระบุ Role ผู้ส่งเอกสาร
+          </Typography>
+          <CardContent>
+            <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+              {/* เลือกประเภทเอกสาร CE03 */}
+              <Grid item xs={12} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id='getCEType-label'>เลือกประเภทการส่ง CE03</InputLabel>
+                  <Select
+                    labelId='getCEType-label'
+                    id='getCEType-select'
+                    value={getCEType}
+                    label='getCEType'
+                    onChange={handleCETypeChange}
+                  >
+                    <MenuItem value={'CE03-1'}>CE03-1</MenuItem>
+                    <MenuItem value={'CE03-2'}>CE03-2</MenuItem>
+                    <MenuItem value={'CE03-3'}>CE03-3</MenuItem>
+                    <MenuItem value={'CE03-4'}>CE03-4</MenuItem>
+                    <MenuItem value={'CE03-5'}>CE03-5</MenuItem>
+                    <MenuItem value={'CE03-6'}>CE03-6</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* เลือกประเภทเอกสาร */}
+              <Grid item xs={12} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id='getDocType-label'>เลือกประเภทเอกสาร</InputLabel>
+                  <Select
+                    labelId='getDocType-label'
+                    id='getDocType-select'
+                    value={getDocType}
+                    label='getDocType'
+                    onChange={handleDoctypeChange}
+                  >
+                    <MenuItem value={'เอกสารแบบกลุ่ม'}>เอกสารแบบกลุ่ม</MenuItem>
+                    <MenuItem value={'เอกสารรายบุคล'}>เอกสารรายบุคล</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Student Select */}
+              <Grid item xs={12} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id='Student-label'>นักศึกษา</InputLabel>
+                  <Select
+                    label='นักศึกษา'
+                    value={studentData}
+                    onChange={handleStudentChange}
+                    labelId='student-label'
+                    disabled={getDocType === 'เอกสารแบบกลุ่ม'}
+                  >
+                    {getStudentData.length > 0 ? (
+                      getStudentData.map(student => (
+                        <MenuItem key={student.studen_id} value={student.studen_id}>
+                          {student.studen_first_name} {student.studen_last_name} รหัสนักศึกษา {student.studen_number}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Advisor Select */}
+              <Grid item xs={12} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id='Advisor-label'>อาจารย์ที่ปรึกษา</InputLabel>
+                  <Select
+                    label='อาจารย์ที่ปรึกษา'
+                    value={advisor}
+                    onChange={handleAdvisorChange}
+                    labelId='Advisor-label'
+                  >
+                    {getAdvisor.length > 0 ? (
+                      getAdvisor.map(advisor => (
+                        <MenuItem key={advisor.instructor_id} value={advisor.instructor_id}>
+                          {advisor.instructors_name}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Box>
+
+      {/* ฟังก์ชันอัปโหลดเอกสาร */}
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <Card style={{ width: '60%', borderRadius: 15 }}>
           <Typography
@@ -399,7 +642,7 @@ const CE01Upload = () => {
               justifyContent: 'center'
             }}
           >
-            <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร CE 01
+            <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร CE 03
           </Typography>
           <CardContent align='center'>
             <Grid container direction='row' justifyContent='center'>
@@ -431,8 +674,8 @@ const CE01Upload = () => {
                   endIcon={<SendIcon />}
                   disabled={!selectedFile}
                   onClick={() => {
-                    handleCE01Upload()
-                    setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE01Record
+                    handleCE03Upload()
+                    setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE03Record
                   }}
                 >
                   ส่ง
@@ -501,6 +744,7 @@ const CE01Upload = () => {
         </Button>
       </Box>
 
+      {/* เริ่มทำฟังก์ชัน Download เอกสาร */}
       <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
         <Card style={{ width: '80%', borderRadius: 15 }}>
           <Typography
@@ -573,4 +817,4 @@ const CE01Upload = () => {
   )
 }
 
-export default CE01Upload
+export default CE03Upload

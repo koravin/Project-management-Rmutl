@@ -20,8 +20,6 @@ import { useRouter } from 'next/router'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import { DataGrid } from '@mui/x-data-grid'
 
-// import CE01Record from './CE01Record' // เรียกใช้งานหน้า CE01Record
-
 const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024 // กำหนดขาดสูดของไฟล์ที่อัปโหลดเป็น 1GB
 
 const ACCEPTED_FILE_TYPES = [
@@ -46,7 +44,7 @@ const WhiteBlackButton = styled(Button)({
   }
 })
 
-const CE01Upload = () => {
+const CE02Upload = () => {
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
   const router = useRouter() // router สร้าง path
@@ -78,7 +76,7 @@ const CE01Upload = () => {
         )
 
         // console.log('ข้อมูลโครงงาน', response.data)
-        setDocumentName('CE01_' + response.data.PreprojectData[0].preproject_name_th)
+        setDocumentName('CE02_' + response.data.PreprojectData[0].preproject_name_th)
       } catch (error) {
         console.error(error)
       }
@@ -92,7 +90,7 @@ const CE01Upload = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE02`
         )
 
         // console.log('ข้อมูลเอกสาร', response.data)
@@ -160,9 +158,9 @@ const CE01Upload = () => {
     setSelectedFile(null)
   }
 
-  // ฟังก์ชันสำหรับ ส่งเอกสาร CE01
-  const handleCE01Upload = async () => {
-    const docType = 'CE01'
+  // ฟังก์ชันสำหรับ ส่งเอกสาร CE02
+  const handleCE02Upload = async () => {
+    const docType = 'CE02'
     try {
       // ประกอบร่างชื่อใหม่
       const documentNameWithoutSpecialChars = documentName.replace(/[ :]/g, '_') // แทนที่เครื่องหมายพิเศษด้วย _
@@ -175,7 +173,6 @@ const CE01Upload = () => {
       const body = new FormData()
       body.append('file', selectedFile) //ส่งไฟล์เข้า Api
       body.append('newFilename', newFilename) //ส่งชื่อเอกสารเข้าไปใน Api
-
       // ส่งข้อมูลประเภทเอกสารเข้าไปในหน้า Upload
       body.append('docType', docType) //ส่งชื่อเอกสารเข้าไปใน Api
 
@@ -196,7 +193,7 @@ const CE01Upload = () => {
       // ส่วนส่งข้อมูลไปยัง API ภายนอก
       const data = {
         preproject_id: projectID,
-        document_type: 'CE01',
+        document_type: 'CE02',
         document_name: newFilename,
         instructor: '',
         adviser: '',
@@ -206,6 +203,7 @@ const CE01Upload = () => {
         committee: '',
         role: '0'
       }
+      setRefreshFlag(Date.now())
 
       // console.log(data)
       try {
@@ -280,9 +278,10 @@ const CE01Upload = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE02`
         )
-        console.log(response.data.documentList)
+        console.log('ข้อมูล CE02', response.data)
+        console.log('ข้อมูลแตก', response)
 
         // สร้างอาเรย์ของ object ที่เข้ากับ DataGrid เพื่อใช้ map row
         const rowData = response.data.documentList.map(document => ({
@@ -305,7 +304,7 @@ const CE01Upload = () => {
   //----------------------------เริ่มฟังก์ชันดาวโหลดเอกสาร--------------------------//
   const handleDownload = async FileName => {
     const fileName = FileName
-    const docType = 'CE01'
+    const docType = 'CE02'
 
     console.log('ชื่อไฟล์', fileName)
 
@@ -356,7 +355,7 @@ const CE01Upload = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ fileName: FileName, docType: 'CE01' }),
+        body: JSON.stringify({ fileName: FileName, docType: 'CE02' }),
         responseType: 'blob'
       })
 
@@ -399,7 +398,7 @@ const CE01Upload = () => {
               justifyContent: 'center'
             }}
           >
-            <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร CE 01
+            <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร CE 02
           </Typography>
           <CardContent align='center'>
             <Grid container direction='row' justifyContent='center'>
@@ -431,8 +430,8 @@ const CE01Upload = () => {
                   endIcon={<SendIcon />}
                   disabled={!selectedFile}
                   onClick={() => {
-                    handleCE01Upload()
-                    setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE01Record
+                    handleCE02Upload()
+                    setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE02Record
                   }}
                 >
                   ส่ง
@@ -501,6 +500,7 @@ const CE01Upload = () => {
         </Button>
       </Box>
 
+      {/* เริ่มทำฟังก์ชัน Download เอกสาร */}
       <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center' }}>
         <Card style={{ width: '80%', borderRadius: 15 }}>
           <Typography
@@ -573,4 +573,4 @@ const CE01Upload = () => {
   )
 }
 
-export default CE01Upload
+export default CE02Upload

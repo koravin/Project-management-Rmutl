@@ -192,6 +192,7 @@ export default function ProjectTransferData() {
             icon: 'success',
             title: 'โอนย้ายข้อมูลแล้วเสร็จ'
           })
+          router.push(`/pages/BackOffice/DisplayPreProject`)
         } else {
           // กรณีไม่สำเร็จ และตรวจสอบ HTTP status code เพื่อแสดงข้อความแจ้งเตือนที่ต้องการ
           if (response.status === 400) {
