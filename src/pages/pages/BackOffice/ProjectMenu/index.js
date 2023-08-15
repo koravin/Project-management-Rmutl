@@ -60,7 +60,7 @@ const PreMenu = () => {
                     router.push(`/pages/BackOffice/DisplayPreProject/`)
                   }}
                 >
-                  Button One
+                  กดฉันสิ
                 </Button>
               </TabPanel>
               <TabPanel value='2' sx={{ p: 0 }}>
@@ -75,7 +75,14 @@ const PreMenu = () => {
                     alt='glass-house'
                   />
                 </Typography>
-                <Button variant='contained'>Button Two</Button>
+                <Button
+                  variant='contained'
+                  onClick={function () {
+                    router.push(`/pages/BackOffice/DisplayProject/`)
+                  }}
+                >
+                  กดฉันสิ
+                </Button>
               </TabPanel>
             </CardContent>
           </TabContext>

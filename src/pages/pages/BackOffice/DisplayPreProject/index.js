@@ -4,6 +4,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
+import { Grid, Typography } from '@mui/material'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
@@ -33,41 +34,48 @@ function DisplayPreProject() {
 
   // ฟังก์ชันสำหรับ Delete DATA
   const handleDeleteSubmit = projectId => {
-    console.log(projectId)
+    Swal.fire({
+      title: 'คุณต้องการลบข้อมูลหรือไม่?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ใช่',
+      cancelButtonText: 'ไม่'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const data = {
+          preproject_id: projectId
+        }
 
-    const data = {
-      preproject_id: projectId
-    }
+        if (projectId !== '') {
+          axios
+            .put(`${process.env.NEXT_PUBLIC_API}api/project-mgt/deletepreproject`, data)
+            .then(function (response) {
+              console.log(response)
 
-    if (projectId !== '') {
-      axios
-        .put(`${process.env.NEXT_PUBLIC_API}api/project-mgt/deletepreproject`, data)
-        .then(function (response) {
-          console.log(response)
+              Swal.fire({
+                icon: 'success',
+                title: 'ลบข้อมูลแล้วเสร็จ',
+                text: 'คุณไม่สามารถกู้คืนข้อมูลได้แล้ว'
+              })
 
-          // หากลบข้อมูลสำเร็จให้แสดง popup แจ้งเตือนด้วย Swal
-          Swal.fire({
-            icon: 'success',
-            title: 'ลบข้อมูลแล้วเสร็จ',
-            text: 'คุณไม่สามารถกู้คืนข้อมูลได้แล้ว'
-          })
+              setProjectData(prevData => prevData.filter(project => project.preproject_id !== projectId))
+            })
+            .catch(function (error) {
+              console.log(error)
 
-          // อัปเดต State ของตารางใหม่เมื่อมีการลบข้อมูล
-          setProjectData(prevData => prevData.filter(project => project.preproject_id !== projectId))
-        })
-        .catch(function (error) {
-          console.log(error)
-
-          // หากเกิดข้อผิดพลาดในการลบข้อมูลให้แสดง popup แจ้งเตือนด้วย Swal
-          Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถลบข้อมูลได้'
-          })
-        })
-    } else {
-      console.log('not have any id to delete')
-    }
+              Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถลบข้อมูลได้'
+              })
+            })
+        } else {
+          console.log('not have any id to delete')
+        }
+      } else if (result.isDenied) {
+        console.log('cancelled delete')
+      }
+    })
   }
 
   // ประกาศ Colum DataGrid
@@ -219,37 +227,42 @@ function DisplayPreProject() {
 
   return (
     <div>
-      {/* ปุ่ม Insert project */}
-      <Button
-        sx={{ marginBottom: '10px', width: '15vh', height: '20' }}
-        variant='contained'
-        onClick={() => {
-          router.push(`/pages/BackOffice/DisplayPreProject/PreprojectInsertForm/`)
-        }}
-      >
-        เพิ่มข้อมูล
-      </Button>
-      <Box sx={{ height: '100%', width: '100%' }}>
-        {/* เช็คค่าว่างของข้อมูลก่อนที่จะทำการ map */}
-        {projectdata.length === 0 ? (
-          <p>No Data</p>
-        ) : (
-          <DataGrid
-            rows={projectdata}
-            columns={columns}
-            getRowId={row => row.preproject_id}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10
+      <Grid>
+        <Typography variant='h6' align='center' sx={{ mb: 10, fontWeight: 'bold' }}>
+          ตารางแสดงรายชื่อหัวข้อโครงงาน - วิชาพรีโปรเจค
+        </Typography>
+        {/* ปุ่ม Insert project */}
+        <Button
+          sx={{ marginBottom: '10px', width: '15vh', height: '20' }}
+          variant='contained'
+          onClick={() => {
+            router.push(`/pages/BackOffice/DisplayPreProject/PreprojectInsertForm/`)
+          }}
+        >
+          เพิ่มข้อมูล
+        </Button>
+        <Box sx={{ height: '100%', width: '100%' }}>
+          {/* เช็คค่าว่างของข้อมูลก่อนที่จะทำการ map */}
+          {projectdata.length === 0 ? (
+            <p>No Data</p>
+          ) : (
+            <DataGrid
+              rows={projectdata}
+              columns={columns}
+              getRowId={row => row.preproject_id}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10
+                  }
                 }
-              }
-            }}
-            pageSizeOptions={[5, 10, 20]}
-            disableRowSelectionOnClick
-          />
-        )}
-      </Box>
+              }}
+              pageSizeOptions={[5, 10, 20]}
+              disableRowSelectionOnClick
+            />
+          )}
+        </Box>
+      </Grid>
     </div>
   )
 }
