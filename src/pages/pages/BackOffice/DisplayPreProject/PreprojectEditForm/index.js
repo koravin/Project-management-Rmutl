@@ -16,9 +16,7 @@ import CardActions from '@mui/material/CardActions'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import Autocomplete from '@mui/material/Autocomplete'
-
-// import sweetalert2 popup
-import Swal from 'sweetalert2'
+import LoadingComponent from 'src/pages/pages/component/LoadingComponent'
 
 export default function PreprojectEdit() {
   const router = useRouter() // router สร้าง path
@@ -663,6 +661,7 @@ export default function PreprojectEdit() {
 
   return (
     <Card>
+      <LoadingComponent />
       <form>
         <CardContent>
           <Grid container spacing={5}>

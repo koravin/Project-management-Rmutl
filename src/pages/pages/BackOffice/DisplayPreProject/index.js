@@ -17,6 +17,9 @@ function DisplayPreProject() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
 
+  //ตัวแปรเช็คสถานะ Loading
+  const [isLoading, setIsLoading] = useState(true)
+
   // ส่งค่าจากแถวไปหน้า Edit
   const handleEditClick = projectId => {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
@@ -210,6 +213,7 @@ function DisplayPreProject() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
         console.log(response.data.data)
 
@@ -218,8 +222,10 @@ function DisplayPreProject() {
           YearColum: `${project.sem_year}/${project.semester_order}/${project.section_name}`
         }))
         setProjectData(projects)
+        setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
       } catch (error) {
         console.error(error)
+        setIsLoading(false) // หยุด loading ในกรณีเกิดข้อผิดพลาด
       }
     }
     fetchData()
@@ -242,8 +248,27 @@ function DisplayPreProject() {
           เพิ่มข้อมูล
         </Button>
         <Box sx={{ height: '100%', width: '100%' }}>
-          {/* เช็คค่าว่างของข้อมูลก่อนที่จะทำการ map */}
-          {projectdata.length === 0 ? (
+          {isLoading ? (
+            <Box
+              sx={{
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed', // ติดตรงกลางหน้าจอ
+                top: 0,
+                left: 0,
+                zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+              }}
+            >
+              <img
+                height='150'
+                src='https://cdn.pixabay.com/animation/2022/10/11/03/16/03-16-39-160_512.gif'
+                alt='Loading...'
+              />
+            </Box>
+          ) : projectdata.length === 0 ? (
             <p>No Data</p>
           ) : (
             <DataGrid

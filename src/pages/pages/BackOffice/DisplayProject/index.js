@@ -14,6 +14,9 @@ function DisplayProject() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
 
+  //ตัวแปรเช็คสถานะ Loading
+  const [isLoading, setIsLoading] = useState(true)
+
   const columns = [
     { field: 'project_code', headerName: 'ID', width: 120 },
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
@@ -47,11 +50,14 @@ function DisplayProject() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallprojects`)
         console.log(response.data.data)
         setProjectData(response.data.data)
+        setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
       } catch (error) {
         console.error(error)
+        setIsLoading(false) // หยุด loading ในกรณีเกิดข้อผิดพลาด
       }
     }
     fetchData()
@@ -65,55 +71,49 @@ function DisplayProject() {
   // ฟังก์ชันสำหรับ Delete DATA
   const handleDeleteSubmit = projectId => {
     Swal.fire({
-      title: 'แกทำร้ายเพื่อฉันแกไม่รอดแน่ ?',
+      title: 'คุณต้องการลบข้อมูลหรือไม่?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'ใช่',
       cancelButtonText: 'ไม่'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const data = {
+          project_id: projectId
+        }
+
+        // console.log('ดาต้า', data)
+
+        if (projectId !== '') {
+          axios
+            .put(`${process.env.NEXT_PUBLIC_API}api/project-mgt/deleteproject`, data)
+            .then(function (response) {
+              console.log(response)
+
+              Swal.fire({
+                icon: 'success',
+                title: 'ลบข้อมูลแล้วเสร็จ',
+                text: 'คุณไม่สามารถกู้คืนข้อมูลได้แล้ว'
+              })
+
+              setProjectData(prevData => prevData.filter(project => project.project_id !== projectId))
+            })
+            .catch(function (error) {
+              console.log(error)
+
+              Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถลบข้อมูลได้'
+              })
+            })
+        } else {
+          console.log('not have any id to delete')
+        }
+      } else if (result.isDenied) {
+        console.log('cancelled delete')
+      }
     })
-
-    //   Swal.fire({
-    //     title: 'คุณต้องการลบข้อมูลหรือไม่?',
-    //     icon: 'warning',
-    //     showCancelButton: true,
-    //     confirmButtonText: 'ใช่',
-    //     cancelButtonText: 'ไม่'
-    //   }).then(result => {
-    //     if (result.isConfirmed) {
-    //       const data = {
-    //         preproject_id: projectId
-    //       }
-
-    //       if (projectId !== '') {
-    //         axios
-    //           .put(`${process.env.NEXT_PUBLIC_API}api/project-mgt/deletepreproject`, data)
-    //           .then(function (response) {
-    //             console.log(response)
-
-    //             Swal.fire({
-    //               icon: 'success',
-    //               title: 'ลบข้อมูลแล้วเสร็จ',
-    //               text: 'คุณไม่สามารถกู้คืนข้อมูลได้แล้ว'
-    //             })
-
-    //             setProjectData(prevData => prevData.filter(project => project.preproject_id !== projectId))
-    //           })
-    //           .catch(function (error) {
-    //             console.log(error)
-
-    //             Swal.fire({
-    //               icon: 'error',
-    //               title: 'เกิดข้อผิดพลาด',
-    //               text: 'ไม่สามารถลบข้อมูลได้'
-    //             })
-    //           })
-    //       } else {
-    //         console.log('not have any id to delete')
-    //       }
-    //     } else if (result.isDenied) {
-    //       console.log('cancelled delete')
-    //     }
-    //   })
   }
 
   return (
@@ -124,7 +124,24 @@ function DisplayProject() {
         </Typography>
 
         <Box sx={{ height: '100%', width: '100%' }}>
-          {projectdata === null || typeof projectdata === 'undefined' ? (
+          {isLoading ? (
+            <Box
+              sx={{
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
+                position: 'fixed', // ติดตรงกลางหน้าจอ
+                top: 0,
+                left: 0,
+                zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+              }}
+            >
+              <img height='150' src='https://i.gifer.com/ZKZg.gif' alt='Loading...' />
+            </Box>
+          ) : projectdata === null || typeof projectdata === 'undefined' ? (
             <p>No Data</p>
           ) : projectdata.length === 0 ? (
             <p>No Data</p>
