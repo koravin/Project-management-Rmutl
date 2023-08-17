@@ -264,7 +264,7 @@ function DisplayPreProject() {
             >
               <img
                 height='150'
-                src='https://cdn.pixabay.com/animation/2022/10/11/03/16/03-16-39-160_512.gif'
+                src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
                 alt='Loading...'
               />
             </Box>

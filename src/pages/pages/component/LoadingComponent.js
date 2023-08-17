@@ -7,7 +7,7 @@ const LoadingComponent = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(false)
-    }, 2000)
+    }, 1500)
 
     return () => clearTimeout(timer)
   }, [])
@@ -33,7 +33,7 @@ const LoadingComponent = () => {
     >
       <img
         height='150'
-        src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!sw800'
+        src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
         alt='Loading...'
       />
     </Box>

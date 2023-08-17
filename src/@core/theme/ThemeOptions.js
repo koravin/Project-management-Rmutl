@@ -15,6 +15,7 @@ const themeOptions = settings => {
     palette: palette(mode, themeColor),
     typography: {
       fontFamily: [
+        'Noto Sans Thai',
         'Inter',
         'sans-serif',
         '-apple-system',

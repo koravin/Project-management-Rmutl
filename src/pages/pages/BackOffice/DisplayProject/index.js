@@ -139,7 +139,11 @@ function DisplayProject() {
                 zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
               }}
             >
-              <img height='150' src='https://i.gifer.com/ZKZg.gif' alt='Loading...' />
+              <img
+                height='150'
+                src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
+                alt='Loading...'
+              />
             </Box>
           ) : projectdata === null || typeof projectdata === 'undefined' ? (
             <p>No Data</p>
