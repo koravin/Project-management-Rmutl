@@ -15,6 +15,9 @@ import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 
+// Page Import
+import ManageDocuments from './ManageDocuments'
+
 function CustomTabPanel(props) {
   //------------------------------TabPanel Functions----------------------------//
   const { children, value, index, ...other } = props
@@ -72,7 +75,7 @@ export default function ProjectDetail() {
   const router = useRouter() // router สร้าง path
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const requestdata = projectId // หากไม่เก็บค่าลงตัวแปรใหม่ Additional Select จะมีการเปลี่ยนแปลงค่า Id ตลอดเวลาตัวเลือกจะปิดเองอัตโนมัติ
-  // console.log(requestdata)
+  console.log('ID โปรเจค', requestdata)
 
   // เซตค่า TabPanel
   const [valueTabPanel, setValueTabPanel] = React.useState(0)
@@ -88,13 +91,12 @@ export default function ProjectDetail() {
     const fetcData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${requestdata}`
         )
-        console.log(response.data)
 
-        // console.log(response.data.PreprojectData[0].preproject_name_th)
-        setProjectNameTh(response.data.PreprojectData[0].preproject_name_th)
-        setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
+        console.log('ข้อมูลโครงงาน', response.data)
+        setProjectNameTh(response.data.PreprojectData[0].project_name_th)
+        setProjectNameEn(response.data.PreprojectData[0].project_name_eng)
         setProjectStatus(response.data.PreprojectData[0].project_status)
         setYear(response.data.PreprojectData[0].sem_year)
         setTerm(response.data.PreprojectData[0].semester_order)
@@ -119,7 +121,8 @@ export default function ProjectDetail() {
 
   // ส่งค่าไปหน้า Edit
   const handleEditClick = projectId => {
-    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
+    // router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
+    alert('ยังไม่ได้ทำ')
   }
 
   return (
@@ -167,9 +170,16 @@ export default function ProjectDetail() {
                   {projectstatus === '0' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f44336',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ไม่ผ่าน
@@ -178,75 +188,88 @@ export default function ProjectDetail() {
                   {projectstatus === '1' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      โครงงานยังไม่ได้รับการอนุมัติ
-                    </Box>
-                  )}
-                  {projectstatus === '2' && (
-                    <Box
-                      component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f44336',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ยังไม่ได้ดำเนินการ
                     </Box>
                   )}
-                  {projectstatus === '3' && (
+                  {projectstatus === '2' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#2979ff',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#2979ff',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       อยู่ระหว่างการดำเนินการ
                     </Box>
                   )}
-                  {projectstatus === '4' && (
+                  {projectstatus === '3' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f2d05e',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f2d05e',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       สามารถสอบได้
                     </Box>
                   )}
-                  {projectstatus === '5' && (
+                  {projectstatus === '4' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f2d05e',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f2d05e',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ยังไม่ผ่านการสอบ
                     </Box>
                   )}
-                  {projectstatus === '6' && (
+                  {projectstatus === '5' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#4caf50',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      ผ่านแล้วแต่ยังไม่ได้โอน
-                    </Box>
-                  )}
-                  {projectstatus === '7' && (
-                    <Box
-                      component='span'
-                      sx={{
-                        color: '#4caf50',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#4caf50',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       โอนแล้ว
@@ -347,7 +370,11 @@ export default function ProjectDetail() {
 
       {/* ส่วนของ Document Detail  */}
       <CustomTabPanel value={valueTabPanel} index={1}>
-        <div>No data</div>
+        {documentStatus.length === 0 ? (
+          <Typography variant='body2'>ไม่มีข้อมูล</Typography>
+        ) : (
+          <ManageDocuments documentStatus={documentStatus} requestdata={requestdata} />
+        )}
       </CustomTabPanel>
 
       {/* ปุ่มใช้แก้ขัด */}

@@ -171,9 +171,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '0' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f44336',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ไม่ผ่าน
@@ -182,9 +189,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '1' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f44336',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       โครงงานยังไม่ได้รับการอนุมัติ
@@ -193,9 +207,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '2' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f44336',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f44336',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ยังไม่ได้ดำเนินการ
@@ -204,9 +225,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '3' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#2979ff',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#2979ff',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       อยู่ระหว่างการดำเนินการ
@@ -215,9 +243,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '4' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f2d05e',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f2d05e',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       สามารถสอบได้
@@ -226,9 +261,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '5' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#f2d05e',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#f2d05e',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ยังไม่ผ่านการสอบ
@@ -237,9 +279,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '6' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#4caf50',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#4caf50',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       ผ่านแล้วแต่ยังไม่ได้โอน
@@ -248,9 +297,16 @@ export default function PreprojectDetail() {
                   {projectstatus === '7' && (
                     <Box
                       component='span'
-                      sx={{
-                        color: '#4caf50',
-                        fontWeight: 'bold'
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        backgroundColor: '#4caf50',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
+                        fontSize: '11px',
+                        borderRadius: '50px'
                       }}
                     >
                       โอนแล้ว
@@ -352,7 +408,7 @@ export default function PreprojectDetail() {
       {/* ส่วนของ Document Detail  */}
       <CustomTabPanel value={valueTabPanel} index={1}>
         {documentStatus.length === 0 ? (
-          <Typography variant='body2'>แตกใน</Typography>
+          <Typography variant='body2'>ไม่มีข้อมูล</Typography>
         ) : (
           <ManageDocuments documentStatus={documentStatus} requestdata={requestdata} />
         )}

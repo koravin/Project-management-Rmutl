@@ -21,12 +21,69 @@ function DisplayProject() {
     { field: 'project_code', headerName: 'ID', width: 120 },
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     {
+      field: 'project_status',
+      headerName: 'สถานะโครงงาน',
+      width: 200,
+      renderCell: params => {
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        let statusText
+        let statusColor
+        let bgColor
+
+        if (value === '0') {
+          statusText = 'ไม่ผ่าน'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === '1') {
+          statusText = 'ยังไม่ได้ดำเนินการ'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === '2') {
+          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusColor = 'white'
+          bgColor = '#2979ff'
+        } else if (value === '3') {
+          statusText = 'สามารถสอบได้'
+          statusColor = 'white'
+          bgColor = '#ff9800'
+        } else if (value === '4') {
+          statusText = 'ยังไม่ผ่านการสอบ'
+          statusColor = 'white'
+          bgColor = '#ff9800'
+        } else if (value === '5') {
+          statusText = 'ผ่านแล้ว'
+          statusColor = 'white'
+          bgColor = '#4caf50'
+        } else {
+          statusText = value
+          bgColor = value
+        }
+
+        return (
+          <div
+            style={{
+              color: statusColor,
+              backgroundColor: bgColor,
+              paddingLeft: '10px',
+              paddingRight: '10px',
+              paddingTop: '2px',
+              paddingBottom: '2px',
+              fontSize: '11px',
+              borderRadius: '50px'
+            }}
+          >
+            {statusText}
+          </div>
+        )
+      }
+    },
+    {
       field: 'Detail',
       headerName: 'Detail',
       width: 100,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
+          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.project_id)}>
             ...
           </Button>
         )
