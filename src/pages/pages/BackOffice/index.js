@@ -32,7 +32,7 @@ const MainMenu = () => {
       }}
     >
       <Grid item xs={12} sx={{ paddingBottom: 4, m: 5 }}>
-        <Typography variant='h5'>กรุณาเลือกระบบ</Typography>
+        <Typography variant='h5'>กรุณาเลือกระบบบ</Typography>
       </Grid>
       {/*-------------------------------------Contain 01----------------------------------*/}
       <Grid item xs={12} sm={6} md={4} style={{ marginLeft: '1.5rem', marginRight: '1.5rem', marginBottom: '10vh' }}>
