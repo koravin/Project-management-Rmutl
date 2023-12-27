@@ -23,8 +23,6 @@ export default function PreprojectEdit() {
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const requestdata = projectId // หากไม่เก็บค่าลงตัวแปรใหม่ Additional Select จะมีการเปลี่ยนแปลงค่า Id ตลอดเวลาตัวเลือกจะปิดเองอัตโนมัติ
 
-  console.log(requestdata)
-
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -48,19 +46,6 @@ export default function PreprojectEdit() {
   //เก็บตัวแปรนักเรียน
   const [allStudentValues, setAllStudentValues] = useState([]) // เก็บข้อมูลนักเรียนทั้งหมด(ใช้อันนี้บัคเยอะนะ)
   const [allStudent, setAllStudent] = useState([]) // รับ Id นักเรียนเพื่อส่งฟอร์ม
-
-  //   console.log(curriculumsId)
-  //   console.log(subjectId)
-  //   console.log(yearId)
-  //   console.log(projecttype)
-  //   console.log(advisorId)
-  //   console.log(projectNameTh)
-  //   console.log(projectNameEn)
-  //   console.log(projectCode)
-  //   console.log(selectedTerm)
-  // console.log(allAdvisorSubValues)
-  // console.log(allCommitteeValues)
-  // console.log(allStudent)
 
   // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม
   const handleResetForm = () => {
@@ -178,8 +163,7 @@ export default function PreprojectEdit() {
         handleClose()
 
         // window.location.reload()
-        Route.replace(Route.asPath, undefined, { scroll: false })
-        handleCancel() // รีข้อมูล
+        // Route.replace(Route.asPath, undefined, { scroll: false })
       })
       .catch(error => {
         console.log(error)
@@ -202,6 +186,8 @@ export default function PreprojectEdit() {
   const [yearData, setYearData] = useState([]) // รับข้อมูลปี
   const [termData, setTermData] = useState([]) // รับข้อมูล เทอม กับ Sec
   const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
+  const [projectStatusData, setProjectStatusData] = useState([])
+  const [projectTypeData, setprojectTypeData] = useState([])
 
   // ดึงข้อมูล Api มา Set form Edit
   useEffect(() => {
@@ -210,7 +196,7 @@ export default function PreprojectEdit() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
         )
-        console.log(response.data)
+        console.log('ข้อมูลเซตค่า', response.data)
 
         // console.log(response.data.PreprojectData[0].semester_order)
         setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
@@ -222,19 +208,19 @@ export default function PreprojectEdit() {
         setProjectStatus(response.data.PreprojectData[0].project_status)
         setProjectNameTh(response.data.PreprojectData[0].preproject_name_th)
         setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
-        setAdvisorId(response.data.PreprojectData[0].instructor_id)
+        setAdvisorId(response.data.PreprojectData[0].teacher_id)
 
         //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
 
         // เช็คว่ามีข้อมูล Sub Advisors มากกว่า 0 ค่าหรือไม่
         if (response.data.PreprojectSubAdviser.length > 0) {
-          setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].instructor_id)
+          setSelectedValueAdvisorSub(response.data.PreprojectSubAdviser[0].teacher_id)
 
           // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
           const subAdvisersFromSecondElement = response.data.PreprojectSubAdviser.slice(1)
 
           // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-          const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.instructor_id)
+          const initialSubAdvisorIds = subAdvisersFromSecondElement.map(subAdvisor => subAdvisor.teacher_id)
           setAdditionalSubAdvisorForms(initialSubAdvisorIds)
         }
 
@@ -242,44 +228,35 @@ export default function PreprojectEdit() {
 
         //--------------------------------------เซตค่าเริ่มต้นให้ Committee--------------------------------------------//
 
-        setSelectedValueCommittee(response.data.PreprojectCommittee[0].instructor_id)
+        setSelectedValueCommittee(response.data.PreprojectCommittee[0].teacher_id)
 
         // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
         const CommitteeFromSecondElement = response.data.PreprojectCommittee.slice(1)
 
         // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-        const initialCommittee = CommitteeFromSecondElement.map(committee => committee.instructor_id)
+        const initialCommittee = CommitteeFromSecondElement.map(committee => committee.teacher_id)
         setAdditionalCommitteeForms(initialCommittee)
 
         //--------------------------------------จบการเซตค่าเริ่มต้นให้ Committee--------------------------------------------//
 
         //--------------------------------------เซตค่าเริ่มต้นให้ Student--------------------------------------------//
 
-        setSelectedValueStudent(response.data.PreprojectStudent[0].studen_id)
+        setSelectedValueStudent(response.data.PreprojectStudent[0].student_id)
 
         // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
         const StudentFromSecondElement = response.data.PreprojectStudent.slice(1)
 
         // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-        const initialStudent = StudentFromSecondElement.map(student => student.studen_id)
+        const initialStudent = StudentFromSecondElement.map(student => student.student_id)
         setAdditionalStudentForms(initialStudent)
-        console.log(initialStudent)
 
         // นำค่าที่เซตเริ่มต้นทั้งหมดไปเก็บใน allStudentValues
-        const allStudentData = [response.data.PreprojectStudent[0].studen_id, ...initialStudent].filter(
+        const allStudentData = [response.data.PreprojectStudent[0].student_id, ...initialStudent].filter(
           value => value !== ''
         )
         setAllStudent(allStudentData)
 
         //--------------------------------------จบการเซตค่าเริ่มต้นให้ Student--------------------------------------------//
-
-        //console.log(Editdata.PreprojectCommittee)
-
-        // console.log(Editdata.PreprojectData)
-
-        // console.log(Editdata.PreprojectStudent)
-
-        // console.log(Editdata.PreprojectSubAdviser)
       } catch (error) {
         console.error(error)
       }
@@ -398,6 +375,36 @@ export default function PreprojectEdit() {
     fetchStudentData()
   }, [])
 
+  // ดึงข้อมูล project type
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/project_type`)
+        const projectType = response.data.data || []
+        setprojectTypeData(projectType)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
+  // ดึงข้อมูล project Status
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_status`)
+        const projectStatus = response.data.data || []
+        setProjectStatusData(projectStatus)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
   // ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown
   const handleCurriculumsChange = event => {
     setCurriculumsId(event.target.value)
@@ -497,11 +504,11 @@ export default function PreprojectEdit() {
         >
           {selectableSubTeachers.map(contentTeacher => (
             <MenuItem
-              key={contentTeacher.instructor_id}
-              value={contentTeacher.instructor_id}
-              disabled={allAdvisorSubValues.includes(contentTeacher.instructor_id)}
+              key={contentTeacher.teacher_id}
+              value={contentTeacher.teacher_id}
+              disabled={allAdvisorSubValues.includes(contentTeacher.teacher_id)}
             >
-              {contentTeacher.instructors_name}
+              {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
             </MenuItem>
           ))}
         </Select>
@@ -567,11 +574,11 @@ export default function PreprojectEdit() {
         >
           {selecCommittee.map(contentTeacher => (
             <MenuItem
-              key={contentTeacher.instructor_id}
-              value={contentTeacher.instructor_id}
-              disabled={allCommitteeValues.includes(contentTeacher.instructor_id)}
+              key={contentTeacher.teacher_id}
+              value={contentTeacher.teacher_id}
+              disabled={allCommitteeValues.includes(contentTeacher.teacher_id)}
             >
-              {contentTeacher.instructors_name}
+              {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
             </MenuItem>
           ))}
         </Select>
@@ -586,6 +593,8 @@ export default function PreprojectEdit() {
   const [selectStudent, setSelectStudent] = useState([])
   const [additionalStudentForms, setAdditionalStudentForms] = useState([])
 
+  console.log('student data', selectStudent)
+
   //ตัวรี Input
   const autocompleteRef = useRef()
 
@@ -595,7 +604,7 @@ export default function PreprojectEdit() {
   }, [selectedValueStudent, additionalStudentForms])
 
   useEffect(() => {
-    const updatedAllStudent = allStudentValues.map(value => value?.studen_id).filter(id => id !== undefined)
+    const updatedAllStudent = allStudentValues.map(value => value?.student_id).filter(id => id !== undefined)
     setAllStudent(updatedAllStudent)
   }, [allStudentValues])
 
@@ -631,14 +640,14 @@ export default function PreprojectEdit() {
   const getOptionLabel = option => {
     if (!option) return ''
 
-    const selectedStudent = selectStudent.find(student => student.studen_id === option)
+    const selectedStudent = selectStudent.find(student => student.student_id === option)
 
     if (selectedStudent) {
-      return `${selectedStudent.prefix} ${selectedStudent.studen_first_name} ${selectedStudent.studen_last_name} ${selectedStudent.studen_number}`
+      return `${selectedStudent.prefix} ${selectedStudent.first_name} ${selectedStudent.last_name} ${selectedStudent.id_rmutl}`
     }
 
     if (option) {
-      return `${option.prefix} ${option.studen_first_name} ${option.studen_last_name} ${option.studen_number}`
+      return `${option.prefix} ${option.first_name} ${option.last_name} ${option.id_rmutl}`
     }
 
     return ''
@@ -684,7 +693,7 @@ export default function PreprojectEdit() {
                 >
                   {curriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_name}
+                      {curriculum.curriculum_short_name_th}
                     </MenuItem>
                   ))}
                 </Select>
@@ -792,9 +801,15 @@ export default function PreprojectEdit() {
                   error={submitted && !projecttype} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   value={projecttype}
                 >
-                  <MenuItem value={'HardWare'}>HardWare</MenuItem>
-                  <MenuItem value={'SoftWare'}>SoftWare</MenuItem>
-                  <MenuItem value={'Network'}>Network</MenuItem>
+                  {projectTypeData && projectTypeData.length > 0 ? (
+                    projectTypeData.map(type => (
+                      <MenuItem key={type.type_id} value={type.type_id}>
+                        {type.type_name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
@@ -812,13 +827,15 @@ export default function PreprojectEdit() {
                   error={submitted && !projectstatus} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   value={projectstatus}
                 >
-                  <MenuItem value={'0'}>ไม่ผ่าน</MenuItem>
-                  <MenuItem value={'1'}>โครงงานยังไม่ได้รับการอนุมัติ</MenuItem>
-                  <MenuItem value={'2'}>ยังไม่ได้ดำเนินการ</MenuItem>
-                  <MenuItem value={'3'}>อยู่ระหว่างการดำเนินการ</MenuItem>
-                  <MenuItem value={'4'}>สามารถสอบได้</MenuItem>
-                  <MenuItem value={'5'}>ยังไม่ผ่านการสอบ</MenuItem>
-                  <MenuItem value={'6'}>ผ่านแล้วแต่ยังไม่ได้โอน</MenuItem>
+                  {projectStatusData && projectStatusData.length > 0 ? (
+                    projectStatusData.map(status => (
+                      <MenuItem key={status.status_id} value={status.status_id}>
+                        {status.status_name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
@@ -874,8 +891,8 @@ export default function PreprojectEdit() {
                   error={submitted && !advisorId} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 >
                   {teacherData.map((contentTeacher, value) => (
-                    <MenuItem key={value} value={contentTeacher.instructor_id}>
-                      {contentTeacher.instructors_name}
+                    <MenuItem key={value} value={contentTeacher.teacher_id}>
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -908,11 +925,11 @@ export default function PreprojectEdit() {
                 >
                   {selectableSubTeachers.map(contentTeacher => (
                     <MenuItem
-                      key={contentTeacher.instructor_id}
-                      value={contentTeacher.instructor_id}
-                      disabled={additionalSubAdvisorForms.includes(contentTeacher.instructor_id)}
+                      key={contentTeacher.teacher_id}
+                      value={contentTeacher.teacher_id}
+                      disabled={additionalSubAdvisorForms.includes(contentTeacher.teacher_id)}
                     >
-                      {contentTeacher.instructors_name}
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -950,11 +967,11 @@ export default function PreprojectEdit() {
                 >
                   {selecCommittee.map(contentTeacher => (
                     <MenuItem
-                      key={contentTeacher.instructor_id}
-                      value={contentTeacher.instructor_id}
-                      disabled={additionalCommitteeForms.includes(contentTeacher.instructor_id)}
+                      key={contentTeacher.teacher_id}
+                      value={contentTeacher.teacher_id}
+                      disabled={additionalCommitteeForms.includes(contentTeacher.teacher_id)}
                     >
-                      {contentTeacher.instructors_name}
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>

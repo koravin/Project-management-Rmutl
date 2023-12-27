@@ -153,26 +153,26 @@ export default function PreprojectInsert() {
       studen_id: allStudent
     }
 
-    console.log(data)
+    // console.log(data)
 
-    // axios
-    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
-    //   .then(response => {
-    //     console.log(response)
-    //     handleClose()
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
+      .then(response => {
+        console.log(response)
+        handleClose()
 
-    //     // window.location.reload()
-    //     // Route.replace(Route.asPath, undefined, { scroll: false })
-    //     // handleCancel() // รีข้อมูล
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // Swal.fire({
-    //   icon: 'success',
-    //   title: 'เพิ่มข้อมูลแล้วเสร็จ'
-    // })
-    // router.push(`/pages/BackOffice/DisplayPreProject`)
+        // window.location.reload()
+        // Route.replace(Route.asPath, undefined, { scroll: false })
+        // handleCancel() // รีข้อมูล
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    Swal.fire({
+      icon: 'success',
+      title: 'เพิ่มข้อมูลแล้วเสร็จ'
+    })
+    router.push(`/pages/BackOffice/DisplayPreProject`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -184,8 +184,8 @@ export default function PreprojectInsert() {
   const [yearData, setYearData] = useState([]) // รับข้อมูลปี
   const [termData, setTermData] = useState([]) // รับข้อมูล เทอม กับ Sec
   const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
-
-  console.log('teacherData', teacherData)
+  const [projectStatusData, setProjectStatusData] = useState([])
+  const [projectTypeData, setprojectTypeData] = useState([])
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
@@ -289,6 +289,36 @@ export default function PreprojectInsert() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/students`)
         const studentData = response.data.data || []
         setSelectStudent(studentData)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
+  // ดึงข้อมูล project type
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/project_type`)
+        const projectType = response.data.data || []
+        setprojectTypeData(projectType)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
+  // ดึงข้อมูล project Status
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_status`)
+        const projectStatus = response.data.data || []
+        setProjectStatusData(projectStatus)
       } catch (error) {
         console.error(error)
       }
@@ -570,7 +600,7 @@ export default function PreprojectInsert() {
                 >
                   {curriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_name}
+                      {curriculum.curriculum_short_name_th}
                     </MenuItem>
                   ))}
                 </Select>
@@ -678,9 +708,15 @@ export default function PreprojectInsert() {
                   error={submitted && !projecttype} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   value={projecttype}
                 >
-                  <MenuItem value={'HardWare'}>HardWare</MenuItem>
-                  <MenuItem value={'SoftWare'}>SoftWare</MenuItem>
-                  <MenuItem value={'Network'}>Network</MenuItem>
+                  {projectTypeData && projectTypeData.length > 0 ? (
+                    projectTypeData.map(type => (
+                      <MenuItem key={type.type_id} value={type.type_id}>
+                        {type.type_name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
@@ -698,13 +734,15 @@ export default function PreprojectInsert() {
                   error={submitted && !projectstatus} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   value={projectstatus}
                 >
-                  <MenuItem value={'0'}>ไม่ผ่าน</MenuItem>
-                  <MenuItem value={'1'}>โครงงานยังไม่ได้รับการอนุมัติ</MenuItem>
-                  <MenuItem value={'2'}>ยังไม่ได้ดำเนินการ</MenuItem>
-                  <MenuItem value={'3'}>อยู่ระหว่างการดำเนินการ</MenuItem>
-                  <MenuItem value={'4'}>สามารถสอบได้</MenuItem>
-                  <MenuItem value={'5'}>ยังไม่ผ่านการสอบ</MenuItem>
-                  <MenuItem value={'6'}>ผ่านแล้วแต่ยังไม่ได้โอน</MenuItem>
+                  {projectStatusData && projectStatusData.length > 0 ? (
+                    projectStatusData.map(status => (
+                      <MenuItem key={status.status_id} value={status.status_id}>
+                        {status.status_name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
