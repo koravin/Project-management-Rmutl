@@ -1,108 +1,139 @@
+// ** React Imports
 import { useState } from 'react'
+
+// ** MUI Imports
+import Tab from '@mui/material/Tab'
 import Card from '@mui/material/Card'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Button from '@mui/material/Button'
+import TabContext from '@mui/lab/TabContext'
+import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
+import { Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 
-const MainMenu = () => {
+const BackOffice = () => {
   const router = useRouter() // router สร้าง path
-  const [hoveredCard, setHoveredCard] = useState(null)
+  // ** State
+  const [value, setValue] = useState('1')
+  const [value2, setValue2] = useState('3')
 
-  const handleCardHover = index => {
-    setHoveredCard(index)
+  const handleChange1 = (event, newValue) => {
+    setValue(newValue)
   }
 
-  const handleCardLeave = () => {
-    setHoveredCard(null)
+  const handleChange2 = (event, newValue) => {
+    setValue2(newValue)
   }
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent='center'
-      style={{
-        background: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: '10px',
-        marginTop: '10px',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
-      }}
-    >
-      <Grid item xs={12} sx={{ paddingBottom: 4, m: 5 }}>
-        <Typography variant='h5'>กรุณาเลือกระบบบ</Typography>
+    <Grid container spacing={6}>
+      <Grid item xs={12} sx={{ mt: 5 }}>
+        <Typography variant='h5'>เลือกตาราง</Typography>
       </Grid>
-      {/*-------------------------------------Contain 01----------------------------------*/}
-      <Grid item xs={12} sm={6} md={4} style={{ marginLeft: '1.5rem', marginRight: '1.5rem', marginBottom: '10vh' }}>
-        <Card
-          sx={{
-            position: 'relative',
-            ...(hoveredCard === 0 && { boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)' })
-          }}
-          onMouseEnter={() => handleCardHover(0)}
-          onMouseLeave={handleCardLeave}
-        >
-          <CardMedia
-            component='img'
-            sx={{ height: '16rem' }}
-            image='https://sm.pcmag.com/pcmag_au/guide/t/the-best-p/the-best-project-management-software-for-2023_16v6.jpg'
-            alt='glass-house'
-          />
-          <CardContent>
-            <Typography variant='h6' sx={{ marginBottom: 2 }}>
-              ระบบจัดการและบริหารวิชาโปรเจค
-            </Typography>
-            <Typography variant='body2'>
-              <Button
-                variant='contained'
-                onClick={function () {
-                  router.push(`/pages/BackOffice/ProjectMenu/`)
-                }}
-              >
-                เข้าสู่ระบบ
-              </Button>
-            </Typography>
-          </CardContent>
+      {/* การ์ด 1 */}
+      <Grid item xs={12} md={6}>
+        <Card>
+          <TabContext value={value}>
+            <TabList centered onChange={handleChange1} aria-label='card navigation example'>
+              <Tab value='1' label='Pre Project' />
+              <Tab value='2' label='Project' />
+            </TabList>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <TabPanel value='1' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  Pre-project Table
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/1087/1087815.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button
+                  variant='contained'
+                  onClick={function () {
+                    router.push(`/pages/BackOffice/DisplayPreProject/`)
+                  }}
+                >
+                  Select
+                </Button>
+              </TabPanel>
+              <TabPanel value='2' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  Project Table
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/2683/2683272.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button
+                  variant='contained'
+                  onClick={function () {
+                    router.push(`/pages/BackOffice/DisplayProject/`)
+                  }}
+                >
+                  Select
+                </Button>
+              </TabPanel>
+            </CardContent>
+          </TabContext>
         </Card>
       </Grid>
+      {/* จบ การ์ด 1 */}
 
-      {/*-------------------------------------Contain 02----------------------------------*/}
-      <Grid item xs={12} sm={6} md={4} style={{ marginLeft: '1.5rem', marginRight: '1.5rem', marginBottom: '10vh' }}>
-        <Card
-          sx={{
-            position: 'relative',
-            ...(hoveredCard === 1 && { boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)' })
-          }}
-          onMouseEnter={() => handleCardHover(1)}
-          onMouseLeave={handleCardLeave}
-        >
-          <CardMedia
-            component='img'
-            sx={{ height: '16rem' }}
-            image='https://www.elegantthemes.com/blog/wp-content/uploads/2020/06/best-project-management-platforms-featured-image-scaled.jpg'
-            alt='glass-house'
-          />
-          <CardContent>
-            <Typography variant='h6' sx={{ marginBottom: 2 }}>
-              ระบบติดตามการดำเนินงาน
-            </Typography>
-            <Typography variant='body2'>
-              <Button
-                variant='contained'
-                onClick={function () {
-                  router.push(`/pages/BackOffice/ProjectMenu/`)
-                }}
-              >
-                เข้าสู่ระบบ
-              </Button>
-            </Typography>
-          </CardContent>
+      {/* การ์ด 2 */}
+      <Grid item xs={12} md={6}>
+        <Card>
+          <TabContext value={value2}>
+            <TabList centered onChange={handleChange2} aria-label='card navigation example'>
+              <Tab value='3' label='Contain 01' />
+              <Tab value='4' label='Contain 02' />
+            </TabList>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <TabPanel value='3' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  Contain 01
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/1048/1048950.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button variant='contained'>Button One</Button>
+              </TabPanel>
+              <TabPanel value='4' sx={{ p: 0 }}>
+                <Typography variant='h6' sx={{ marginBottom: 2 }}>
+                  Contain 02
+                </Typography>
+                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
+                  <CardMedia
+                    component='img'
+                    sx={{ height: '10rem', width: '10rem' }}
+                    image='https://cdn-icons-png.flaticon.com/512/354/354637.png'
+                    alt='glass-house'
+                  />
+                </Typography>
+                <Button variant='contained'>Button Two</Button>
+              </TabPanel>
+            </CardContent>
+          </TabContext>
         </Card>
       </Grid>
+      {/* จบ การ์ด 2 */}
     </Grid>
   )
 }
 
-export default MainMenu
+export default BackOffice

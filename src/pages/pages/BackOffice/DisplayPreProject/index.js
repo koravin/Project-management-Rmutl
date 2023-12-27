@@ -31,9 +31,9 @@ function DisplayPreProject() {
   }
 
   // ส่งค่าจากแถวไปหน้า Transfer Preproject Data
-  const handleTransferClick = projectId => {
-    router.push(`/pages/BackOffice/DisplayPreProject/ProjectTransferData/?id=${projectId}`)
-  }
+  // const handleTransferClick = projectId => {
+  //   router.push(`/pages/BackOffice/DisplayPreProject/ProjectTransferData/?id=${projectId}`)
+  // }
 
   // ฟังก์ชันสำหรับ Delete DATA
   const handleDeleteSubmit = projectId => {
@@ -155,6 +155,8 @@ function DisplayPreProject() {
       field: 'Detail',
       headerName: 'Detail',
       width: 100,
+      sortable: false,
+      filterable: false,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
@@ -163,28 +165,13 @@ function DisplayPreProject() {
         )
       }
     },
-    {
-      field: 'Transfer',
-      headerName: 'Transfer',
-      width: 100,
-      renderCell: cellValues => {
-        const isDisabled = cellValues.row.project_status === '7'
 
-        return (
-          <Button
-            variant='text'
-            onClick={() => handleTransferClick(cellValues.row.preproject_id)}
-            disabled={isDisabled}
-          >
-            {isDisabled ? 'disable' : '...'}
-          </Button>
-        )
-      }
-    },
     {
       field: 'Edit',
       headerName: 'Edit',
       width: 100,
+      sortable: false,
+      filterable: false,
       renderCell: cellValues => {
         const isDisabled = cellValues.row.project_status === '7'
 
@@ -199,6 +186,8 @@ function DisplayPreProject() {
       field: 'Delete',
       headerName: 'Delete',
       width: 100,
+      sortable: false,
+      filterable: false,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDeleteSubmit(cellValues.row.preproject_id)}>

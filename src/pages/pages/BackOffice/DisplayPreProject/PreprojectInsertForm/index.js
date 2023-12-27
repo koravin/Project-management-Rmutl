@@ -46,19 +46,6 @@ export default function PreprojectInsert() {
   const [allStudentValues, setAllStudentValues] = useState([]) // เก็บข้อมูลนักเรียนทั้งหมด(ใช้อันนี้บัคเยอะนะ)
   const [allStudent, setAllStudent] = useState([]) // รับ Id นักเรียนเพื่อส่งฟอร์ม
 
-  //   console.log(curriculumsId)
-  //   console.log(subjectId)
-  //   console.log(yearId)
-  //   console.log(projecttype)
-  //   console.log(advisorId)
-  //   console.log(projectNameTh)
-  //   console.log(projectNameEn)
-  //   console.log(projectCode)
-  //   console.log(selectedTerm)
-  // console.log(allAdvisorSubValues)
-  // console.log(allCommitteeValues)
-  // console.log(allStudent)
-
   // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม
   const handleResetForm = () => {
     setCurriculumsId('')
@@ -140,7 +127,7 @@ export default function PreprojectInsert() {
       return
     }
 
-    // เพิ่มเงื่อนไขเพื่อตรวจสอบข้อมูลที่ซ้ำกันในภายในตัวแปร studen_id
+    // เพิ่มเงื่อนไขเพื่อตรวจสอบข้อมูลที่ซ้ำกันในภายในตัวแปร student_id
     const uniqueStudents = new Set(allStudent)
     if (uniqueStudents.size !== allStudent.length) {
       Swal.fire({
@@ -159,7 +146,7 @@ export default function PreprojectInsert() {
       project_code: projectCode,
       project_status: projectstatus,
       project_type: projecttype,
-      created_by: 'Jongrai',
+      created_by: '11',
       adviser: advisorId,
       subadviser: allAdvisorSubValues,
       committee: allCommitteeValues,
@@ -168,24 +155,24 @@ export default function PreprojectInsert() {
 
     console.log(data)
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
-      .then(response => {
-        console.log(response)
-        handleClose()
+    // axios
+    //   .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
+    //   .then(response => {
+    //     console.log(response)
+    //     handleClose()
 
-        // window.location.reload()
-        Route.replace(Route.asPath, undefined, { scroll: false })
-        handleCancel() // รีข้อมูล
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    Swal.fire({
-      icon: 'success',
-      title: 'เพิ่มข้อมูลแล้วเสร็จ'
-    })
-    router.push(`/pages/BackOffice/DisplayPreProject`)
+    //     // window.location.reload()
+    //     // Route.replace(Route.asPath, undefined, { scroll: false })
+    //     // handleCancel() // รีข้อมูล
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // Swal.fire({
+    //   icon: 'success',
+    //   title: 'เพิ่มข้อมูลแล้วเสร็จ'
+    // })
+    // router.push(`/pages/BackOffice/DisplayPreProject`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -197,6 +184,8 @@ export default function PreprojectInsert() {
   const [yearData, setYearData] = useState([]) // รับข้อมูลปี
   const [termData, setTermData] = useState([]) // รับข้อมูล เทอม กับ Sec
   const [teacherData, setTeacherData] = useState([]) // รับข้อมูลชื่ออาจารย์
+
+  console.log('teacherData', teacherData)
 
   // ดึงข้อมูลหลักสูตรจาก Api curriculums
   useEffect(() => {
@@ -407,11 +396,11 @@ export default function PreprojectInsert() {
         >
           {selectableSubTeachers.map(contentTeacher => (
             <MenuItem
-              key={contentTeacher.instructor_id}
-              value={contentTeacher.instructor_id}
-              disabled={allAdvisorSubValues.includes(contentTeacher.instructor_id)}
+              key={contentTeacher.teacher_id}
+              value={contentTeacher.teacher_id}
+              disabled={allAdvisorSubValues.includes(contentTeacher.teacher_id)}
             >
-              {contentTeacher.instructors_name}
+              {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
             </MenuItem>
           ))}
         </Select>
@@ -477,11 +466,11 @@ export default function PreprojectInsert() {
         >
           {selecCommittee.map(contentTeacher => (
             <MenuItem
-              key={contentTeacher.instructor_id}
-              value={contentTeacher.instructor_id}
-              disabled={allCommitteeValues.includes(contentTeacher.instructor_id)}
+              key={contentTeacher.teacher_id}
+              value={contentTeacher.teacher_id}
+              disabled={allCommitteeValues.includes(contentTeacher.teacher_id)}
             >
-              {contentTeacher.instructors_name}
+              {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
             </MenuItem>
           ))}
         </Select>
@@ -505,7 +494,7 @@ export default function PreprojectInsert() {
   }, [selectedValueStudent, additionalStudentForms])
 
   useEffect(() => {
-    const updatedAllStudent = allStudentValues.map(value => value?.studen_id).filter(id => id !== undefined)
+    const updatedAllStudent = allStudentValues.map(value => value?.student_id).filter(id => id !== undefined)
     setAllStudent(updatedAllStudent)
   }, [allStudentValues])
 
@@ -539,9 +528,7 @@ export default function PreprojectInsert() {
   }
 
   const getOptionLabel = option => {
-    return option
-      ? `${option.prefix} ${option.studen_first_name} ${option.studen_last_name} ${option.studen_number}`
-      : ''
+    return option ? `${option.prefix} ${option.first_name} ${option.last_name} ${option.id_rmutl}` : ''
   }
 
   const AdditionalStudentForm = ({ formIndex }) => {
@@ -773,8 +760,8 @@ export default function PreprojectInsert() {
                   error={submitted && !advisorId} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 >
                   {teacherData.map((contentTeacher, value) => (
-                    <MenuItem key={value} value={contentTeacher.instructor_id}>
-                      {contentTeacher.instructors_name}
+                    <MenuItem key={value} value={contentTeacher.teacher_id}>
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -807,11 +794,11 @@ export default function PreprojectInsert() {
                 >
                   {selectableSubTeachers.map(contentTeacher => (
                     <MenuItem
-                      key={contentTeacher.instructor_id}
-                      value={contentTeacher.instructor_id}
-                      disabled={additionalSubAdvisorForms.includes(contentTeacher.instructor_id)}
+                      key={contentTeacher.teacher_id}
+                      value={contentTeacher.teacher_id}
+                      disabled={additionalSubAdvisorForms.includes(contentTeacher.teacher_id)}
                     >
-                      {contentTeacher.instructors_name}
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -849,11 +836,11 @@ export default function PreprojectInsert() {
                 >
                   {selecCommittee.map(contentTeacher => (
                     <MenuItem
-                      key={contentTeacher.instructor_id}
-                      value={contentTeacher.instructor_id}
-                      disabled={additionalCommitteeForms.includes(contentTeacher.instructor_id)}
+                      key={contentTeacher.teacher_id}
+                      value={contentTeacher.teacher_id}
+                      disabled={additionalCommitteeForms.includes(contentTeacher.teacher_id)}
                     >
-                      {contentTeacher.instructors_name}
+                      {contentTeacher.prefix} {contentTeacher.first_name} {contentTeacher.last_name}
                     </MenuItem>
                   ))}
                 </Select>
