@@ -433,6 +433,8 @@ const CE03Upload = () => {
   const [getAdvisor, setGetAdvisorData] = useState('') // รับค่าข้อมูลอาจารที่ปรึกษา
   const [getInstructor, setGetInstructorData] = useState([]) // รับค่าข้อมูลอาจารย์
 
+  console.log('นศ.', getStudentData)
+
   //ตัวแปรเก็บข้อมูลเอกสาร
   const [getDocType, setGetDocTypeData] = useState('') // รับค่าข้อมูลประเภทเอกสาร
   const [getCEType, setGetCEData] = useState('') // รับค่าข้อมูลประเภทเอกสาร CE03
@@ -488,7 +490,7 @@ const CE03Upload = () => {
 
   const handleStudentChange = event => {
     setStudentData(event.target.value)
-    const selectedStudent = getStudentData.find(student => student.studen_id === event.target.value)
+    const selectedStudent = getStudentData.find(student => student.student_id === event.target.value)
 
     if (selectedStudent) {
       const fullName = `${selectedStudent.studen_first_name} ${selectedStudent.studen_last_name}`
@@ -590,8 +592,8 @@ const CE03Upload = () => {
                   >
                     {getStudentData.length > 0 ? (
                       getStudentData.map(student => (
-                        <MenuItem key={student.studen_id} value={student.studen_id}>
-                          {student.studen_first_name} {student.studen_last_name} รหัสนักศึกษา {student.studen_number}
+                        <MenuItem key={student.student_id} value={student.student_id}>
+                          {student.first_name} {student.last_name} รหัสนักศึกษา {student.id_rmutl}
                         </MenuItem>
                       ))
                     ) : (
@@ -613,8 +615,8 @@ const CE03Upload = () => {
                   >
                     {getAdvisor.length > 0 ? (
                       getAdvisor.map(advisor => (
-                        <MenuItem key={advisor.instructor_id} value={advisor.instructor_id}>
-                          {advisor.instructors_name}
+                        <MenuItem key={advisor.teacher_id} value={advisor.teacher_id}>
+                          {advisor.prefix} {advisor.first_name} {advisor.last_name}
                         </MenuItem>
                       ))
                     ) : (

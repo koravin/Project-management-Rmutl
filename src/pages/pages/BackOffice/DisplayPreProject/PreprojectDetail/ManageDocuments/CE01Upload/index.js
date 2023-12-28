@@ -95,7 +95,7 @@ const CE01Upload = () => {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
         )
 
-        // console.log('ข้อมูลเอกสาร', response.data)
+        console.log('ข้อมูลเอกสาร', response.data)
 
         // console.log('ข้อมูลIndex', response.data.index)
         setIndex(response.data.index)
@@ -213,7 +213,7 @@ const CE01Upload = () => {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadpreprojectdocuments`,
           data
         )
-
+        console.log('อัปโหลดไฟล์', response.data)
         Swal.fire({
           icon: 'success',
           title: 'อัปโหลดข้อมูลแล้วเสร็จ'

@@ -530,8 +530,8 @@ const CE06Upload = () => {
                   >
                     {getAdvisor.length > 0 ? (
                       getAdvisor.map(advisor => (
-                        <MenuItem key={advisor.instructor_id} value={advisor.instructor_id}>
-                          {advisor.instructors_name}
+                        <MenuItem key={advisor.teacher_id} value={advisor.teacher_id}>
+                          {advisor.prefix} {advisor.first_name} {advisor.last_name}
                         </MenuItem>
                       ))
                     ) : (

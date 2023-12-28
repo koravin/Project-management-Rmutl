@@ -365,7 +365,9 @@ export default function PreprojectDetail() {
                   {subAdvisor.map((advisor, index) => (
                     <span key={index}>
                       {<br />}
-                      {`อาจารย์ที่ปรึกษารอง ${index + 1}: ${advisor.instructors_name}`}{' '}
+                      {`อาจารย์ที่ปรึกษารอง ${index + 1}: ${advisor.prefix} ${advisor.first_name} ${
+                        advisor.last_name
+                      }`}{' '}
                     </span>
                   ))}
                 </Typography>
@@ -376,7 +378,7 @@ export default function PreprojectDetail() {
                   {committee.map((committee, index) => (
                     <span key={index}>
                       {<br />}
-                      {`กรรมการ ${index + 1}: ${committee.instructors_name}`}{' '}
+                      {`กรรมการ ${index + 1}: ${committee.prefix} ${committee.first_name} ${committee.last_name}`}{' '}
                     </span>
                   ))}
                 </Typography>
@@ -388,9 +390,9 @@ export default function PreprojectDetail() {
                   {student.map((student, index) => (
                     <span key={index}>
                       {<br />}
-                      {`สมาชิก ${index + 1}: ${student.studen_first_name} ${student.studen_last_name} รหัสนักศึกษา ${
-                        student.studen_number
-                      }`}{' '}
+                      {`สมาชิก ${index + 1}: ${student.prefix} ${student.first_name} ${
+                        student.last_name
+                      } รหัสนักศึกษา ${student.id_rmutl}`}{' '}
                     </span>
                   ))}
                 </Typography>

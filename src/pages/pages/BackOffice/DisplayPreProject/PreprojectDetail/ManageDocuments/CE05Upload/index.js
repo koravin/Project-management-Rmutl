@@ -58,8 +58,6 @@ const CE05Upload = () => {
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const projectID = projectId
 
-  console.log('รหัสโครงการหน้า Upload', projectID)
-
   const [selectedFile, setSelectedFile] = useState(null) // ตัวแปรเก็บค่าไฟล์ที่อัปโหลด
   const [documentName, setDocumentName] = useState('') // เก็บชื่อเอกสารพร้อมนามสกุลก่อนกดอัปโหลดไฟล์
   const [showFileDetails, setShowFileDetails] = useState(false) // ตัวแปรควบคุมการแสดงรายละเอียดเอกสาร
@@ -80,7 +78,6 @@ const CE05Upload = () => {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${projectID}`
         )
 
-        // console.log('ข้อมูลโครงงาน', response.data)
         setDocumentName('CE05_' + response.data.PreprojectData[0].preproject_name_th)
       } catch (error) {
         console.error(error)
@@ -257,7 +254,6 @@ const CE05Upload = () => {
   //--------------------------------------------------------------ฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
   // กำหนดตัวแปร
   const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
-  console.log('ข้อมูลแถว', rowdata)
 
   // กำหนดหัว Colum
   const columns = [
@@ -416,7 +412,7 @@ const CE05Upload = () => {
   const [getInstructor, setGetInstructorData] = useState([]) // รับค่าข้อมูลอาจารย์
   const [getCommittee, setGetCommitteeData] = useState([]) // รับค่าข้อมูลกรรมการ
 
-  // console.log('ชื่อกรรมการ', getCommittee)
+  console.log('ชื่อกรรมการ', getCommittee)
 
   // เก็บข้อมูลลง Api
   useEffect(() => {
@@ -507,8 +503,8 @@ const CE05Upload = () => {
                   <Select label='นักศึกษา' value={studentData} onChange={handleStudentChange} labelId='student-label'>
                     {getStudentData.length > 0 ? (
                       getStudentData.map(student => (
-                        <MenuItem key={student.studen_id} value={student.studen_id}>
-                          {student.studen_first_name} {student.studen_last_name} รหัสนักศึกษา {student.studen_number}
+                        <MenuItem key={student.student_id} value={student.student_id}>
+                          {student.first_name} {student.last_name} รหัสนักศึกษา {student.id_rmutl}
                         </MenuItem>
                       ))
                     ) : (
@@ -530,8 +526,8 @@ const CE05Upload = () => {
                   >
                     {getAdvisor.length > 0 ? (
                       getAdvisor.map(advisor => (
-                        <MenuItem key={advisor.instructor_id} value={advisor.instructor_id}>
-                          {advisor.instructors_name}
+                        <MenuItem key={advisor.teacher_id} value={advisor.teacher_id}>
+                          {advisor.prefix} {advisor.first_name} {advisor.last_name}
                         </MenuItem>
                       ))
                     ) : (
@@ -548,8 +544,8 @@ const CE05Upload = () => {
                   <Select label='กรรมการ' value={committee} onChange={handleCommitteeChange} labelId='committee-label'>
                     {getCommittee.length > 0 ? (
                       getCommittee.map(committee => (
-                        <MenuItem key={committee.instructor_id} value={committee.instructor_id}>
-                          {committee.instructors_name}
+                        <MenuItem key={committee.teacher_id} value={committee.teacher_id}>
+                          {committee.prefix} {committee.first_name} {committee.last_name}
                         </MenuItem>
                       ))
                     ) : (

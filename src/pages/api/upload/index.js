@@ -23,10 +23,12 @@ export default async (req, res) => {
     // console.log('ประยวยหัวพญาครุท', fields.docType[0])
 
     var oldPath = files.file[0].filepath
-    var newPath = `../Document/${docType}/${newFilename}`
-    console.log(newPath)
+    var newPath = `public/Document/${docType}/${newFilename}`
+
+    // console.log(newPath)
     mv(oldPath, newPath, function (err) {
       if (err) {
+        console.error('Error moving file:', err)
         res.status(500).json({ error: 'Error moving file.' })
 
         return
