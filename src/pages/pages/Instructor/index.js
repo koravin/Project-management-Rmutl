@@ -14,7 +14,7 @@ const MainMenu = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Character Select</Typography>
+        <Typography variant='h5'>Instructor Menu</Typography>
       </Grid>
 
       {/* contain 01 */}
@@ -29,15 +29,15 @@ const MainMenu = () => {
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
-                อาจารย์ผู้สอน
+                Section
               </Typography>
               <Button
                 variant='contained'
                 onClick={function () {
-                  router.push(`http://localhost:3000/pages/Preproject/InstructorMenu/`)
+                  router.push(`${process.env.NEXT_PUBLIC_Router}pages/Instructor/Section_Mg/`)
                 }}
               >
-                เลือกตัวละคร
+                open
               </Button>
             </CardContent>
           </CardActionArea>
@@ -56,15 +56,15 @@ const MainMenu = () => {
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
-                อาจารย์ทั่วไป
+                Form Upload
               </Typography>
               <Button
                 variant='contained'
                 onClick={function () {
-                  router.push(`#`)
+                  router.push(`${process.env.NEXT_PUBLIC_Router}pages/Instructor/Templat_Upload/`)
                 }}
               >
-                เลือกตัวละคร
+                open
               </Button>
             </CardContent>
           </CardActionArea>

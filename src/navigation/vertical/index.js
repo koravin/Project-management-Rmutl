@@ -23,9 +23,9 @@ const navigation = () => {
       path: '/pages/BackOffice/'
     },
     {
-      title: 'Preproject',
+      title: 'Instructor',
       icon: FormatLetterCase,
-      path: '/pages/Preproject/'
+      path: '/pages/Instructor/'
     }
 
     // {
