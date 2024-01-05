@@ -18,6 +18,7 @@ import TabPanel from '@mui/lab/TabPanel'
 
 // Dialog import
 import PreprojectFormUpload from './PreprojectFormUpload'
+import ProjectFormUpload from './ProjectFormUpload'
 
 const Templat_Upload = () => {
   const router = useRouter() // router สร้าง path
@@ -27,11 +28,9 @@ const Templat_Upload = () => {
   const [ceData, setCeData] = useState([])
   const [chData, setChData] = useState([])
 
-  // console.log('ce data:', ceData)
-  // console.log('ch data:', chData)
-
   // dialog control
   const [openCeDialog, setCeOpenDialog] = React.useState(false)
+  const [openChDialog, setChOpenDialog] = React.useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
 
   // useRef สำหรับเก็บค่า openDialog
@@ -39,12 +38,24 @@ const Templat_Upload = () => {
   const openDialogRef = useRef(openCeDialog)
   openDialogRef.current = openCeDialog
 
+  // เก็บ State Dialog Ch form
+  const openDialogChRef = useRef(openChDialog)
+  openDialogChRef.current = openChDialog
+
   const handleClickOpenCeDialog = () => {
     setCeOpenDialog(true)
   }
 
   const handleCloseCeDialog = () => {
     setCeOpenDialog(false)
+  }
+
+  const handleClickOpenChDialog = () => {
+    setChOpenDialog(true)
+  }
+
+  const handleCloseChDialog = () => {
+    setChOpenDialog(false)
   }
 
   // Tab panel control
@@ -81,10 +92,10 @@ const Templat_Upload = () => {
       }
     }
     fetchData()
-    if (openCeDialog) {
+    if (openChDialog) {
       fetchData()
     }
-  }, [openCeDialog])
+  }, [openChDialog])
 
   // Table colum
   const CE_columns = [
@@ -128,7 +139,7 @@ const Templat_Upload = () => {
       width: 130,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleCeDataClick(cellValues.row)}>
+          <Button variant='text' onClick={() => handleChDataClick(cellValues.row)}>
             ...
           </Button>
         )
@@ -139,9 +150,14 @@ const Templat_Upload = () => {
     }
   ]
 
-  // Chang Section Status button click
+  // dialog open
   const handleCeDataClick = rowData => {
     handleClickOpenCeDialog()
+    setSelectedRowData(rowData) // กำหนดข้อมูลของแถวที่ถูกคลิกให้ state
+  }
+
+  const handleChDataClick = rowData => {
+    handleClickOpenChDialog()
     setSelectedRowData(rowData) // กำหนดข้อมูลของแถวที่ถูกคลิกให้ state
   }
 
@@ -277,8 +293,9 @@ const Templat_Upload = () => {
         </TabContext>
       </Box>
 
-      {/* InsertSection Dialog */}
+      {/* Document form Dialog */}
       <PreprojectFormUpload open={openCeDialog} handleClose={handleCloseCeDialog} fullWidth rowData={selectedRowData} />
+      <ProjectFormUpload open={openChDialog} handleClose={handleCloseChDialog} fullWidth rowData={selectedRowData} />
     </Grid>
   )
 }

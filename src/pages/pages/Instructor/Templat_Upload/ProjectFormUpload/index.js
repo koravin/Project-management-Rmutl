@@ -52,11 +52,13 @@ const WhiteBlackButton = styled(Button)({
   }
 })
 
-export default function PreprojectFormUpload({ open, handleClose, rowData }) {
+export default function ProjectFormUpload({ open, handleClose, rowData }) {
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
   const router = useRouter() // router สร้าง path
-  const DocumentType = rowData?.ce_type || 'CE01'
+  const DocumentType = rowData?.ch_type || 'CH01'
+
+  console.log('rowData', rowData)
 
   // เก็บค่าจาก Props ลงในตัวแปร
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
@@ -69,6 +71,8 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   const [fileInputKey, setFileInputKey] = useState(0) // ตัวแปร state สำหรับ key ของ input(ทำให้ input รีค่าใหม่ทึกครั้งที่มีการ อัปโหลดไฟล์)
   const [index, setIndex] = useState('') // ตัวนับเอกสาร
   const [refreshFlag, setRefreshFlag] = useState(true) // ตัวแปรรีค่าทีเซตใน useEffect
+
+  console.log('documentName', documentName)
 
   //รีเซ็ตตข้อมูลใหม่ทุกครั้งที่มีการ เปิด/ปิก analog
   const resetForm = () => {
@@ -93,7 +97,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   useEffect(() => {
     const currentDate = new Date()
 
-    if (rowData && rowData.ce_type) {
+    if (rowData && rowData.ch_type) {
       const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
         .toString()
         .padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')} ${currentDate
@@ -104,26 +108,11 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
         .toString()
         .padStart(2, '0')}`
 
-      const Nametrash = `${rowData.ce_type}_${formattedDate}`
+      const Nametrash = `${rowData.ch_type}_${formattedDate}`
+      console.log('Nametrash', Nametrash)
       setDocumentName(Nametrash)
     }
   }, [rowData])
-
-  // ดึงข้อมูลไฟล์เอกสารในฐานข้อมูล
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${rowData.ce_type}`
-  //       )
-  //       setIndex(response.data.index)
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-
-  //   fetchData()
-  // }, [projectID, refreshFlag])
 
   //-------------------จบการเริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
@@ -179,8 +168,8 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   }
 
   // ฟังก์ชันสำหรับ ส่งแบบฟอร์มเอกสาร CE
-  const handleCEUpload = async () => {
-    const docType = rowData.ce_type
+  const handleCHUpload = async () => {
+    const docType = rowData.ch_type
     try {
       // ประกอบร่างชื่อใหม่
       const documentNameWithoutSpecialChars = documentName.replace(/[ :]/g, '_') // แทนที่เครื่องหมายพิเศษด้วย _
@@ -196,7 +185,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       // ส่งข้อมูลประเภทเอกสารเข้าไปในหน้า Upload
       body.append('docType', docType) //ส่งชื่อเอกสารเข้าไปใน Api
 
-      const uploadResponse = await fetch('/api/upload_form_ce', {
+      const uploadResponse = await fetch('/api/upload_form_ch', {
         method: 'POST',
         body
       })
@@ -212,13 +201,13 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
 
       // ส่วนส่งข้อมูลไปยัง API ภายนอก
       const data = {
-        ce_type: rowData?.ce_type,
-        ce_file_name: newFilename
+        ch_type: rowData?.ch_type,
+        ch_file_name: newFilename
       }
 
       console.log('Upload data', data)
       try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ce`, data)
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ch`, data)
         console.log('อัปโหลดไฟล์', response.data)
         alert('Success')
 
@@ -252,13 +241,13 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   // กำหนดหัว Colum
   const columns = [
     {
-      field: 'ce_file_name',
+      field: 'ch_file_name',
       headerName: 'เวอร์ชันเอกสาร',
       width: 300,
       editable: true
     },
     {
-      field: 'ce_status',
+      field: 'ch_status',
       headerName: 'สถานะเอกสาร',
       width: 120,
       renderCell: params => {
@@ -304,7 +293,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       width: 150,
       editable: false,
       renderCell: params => (
-        <Button variant='h6' style={{ color: 'pink' }} onClick={() => handlePreview(params.row.ce_file_name)}>
+        <Button variant='h6' style={{ color: 'pink' }} onClick={() => handlePreview(params.row.ch_file_name)}>
           ...
         </Button>
       )
@@ -314,7 +303,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       headerName: 'ดาวน์โหลดเอกสาร',
       width: 180,
       renderCell: params => (
-        <Button variant='outlined' onClick={() => handleDownload(params.row.ce_file_name)}>
+        <Button variant='outlined' onClick={() => handleDownload(params.row.ch_file_name)}>
           ดาวน์โหลด
         </Button>
       )
@@ -326,7 +315,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       renderCell: params => (
         <Button
           variant='outlined'
-          onClick={() => ActiveDocument(params.row.ce_doc_id)}
+          onClick={() => ActiveDocument(params.row.ch_doc_id)}
           style={{ color: '#4CAF50', borderColor: '#4CAF50' }}
         >
           Active
@@ -340,7 +329,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       renderCell: params => (
         <Button
           variant='outlined'
-          onClick={() => UnactiveDocument(params.row.ce_doc_id)}
+          onClick={() => UnactiveDocument(params.row.ch_doc_id)}
           style={{ color: '#FF0000', borderColor: '#FF0000' }}
         >
           Unactive
@@ -356,8 +345,9 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getall_ce_template_onetype?document_type=${DocumentType}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getall_GD_documenttemplate?document_type=${DocumentType}`
         )
+        console.log('นํ้าแข็งไส', response.data.data)
 
         setDocumentData(response.data.data)
       } catch (error) {
@@ -375,8 +365,11 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
     const fileName = FileName
     const docType = DocumentType
 
+    console.log('ชื่อใหม่', fileName)
+    console.log('ประเภทเอกสาร', docType)
+
     try {
-      const downloadResponse = await fetch('/api/download_form_ce', {
+      const downloadResponse = await fetch('/api/download_form_ch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -417,7 +410,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   // Function to open the preview dialog
   const handlePreview = async FileName => {
     try {
-      const previewResponse = await fetch('/api/download_form_ce', {
+      const previewResponse = await fetch('/api/download_form_ch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -450,15 +443,18 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
 
   //--------------------------------------------------------------จบฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
 
+  console.log('Document type', DocumentType)
+  console.log('Document dataxxxx', documentData)
+
   //---------------------------------------------------------------//
   // ฟังชัน Active Document
-  const ActiveDocument = async ce_doc_id => {
+  const ActiveDocument = async ch_doc_id => {
     const data = {
-      ce_doc_id: ce_doc_id
+      ch_doc_id: ch_doc_id
     }
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/activecedocument_ce`, data)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/activecedocument_ch`, data)
 
       alert('Success')
 
@@ -471,13 +467,13 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   }
 
   // ฟังชัน Unactive Document
-  const UnactiveDocument = async ce_doc_id => {
+  const UnactiveDocument = async ch_doc_id => {
     const data = {
-      ce_doc_id: ce_doc_id
+      ch_doc_id: ch_doc_id
     }
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/unactivecedocument_ce`, data)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/unactivecedocument_ch`, data)
 
       alert('Success')
 
@@ -509,7 +505,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-              Document form {rowData?.ce_type}
+              Document form {rowData?.ch_type}
             </Typography>
             <Button autoFocus color='inherit' onClick={handleClose}>
               save
@@ -557,7 +553,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
                   <DataGrid
                     rows={documentData}
                     columns={columns}
-                    getRowId={row => row.ce_doc_id}
+                    getRowId={row => row.ch_doc_id}
                     autoHeight
                     components={{
                       NoRowsOverlay: () => (
@@ -619,7 +615,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
                   justifyContent: 'center'
                 }}
               >
-                <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร {rowData?.ce_type}
+                <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร {rowData?.ch_type}
               </Typography>
               <CardContent align='center'>
                 <Grid container direction='row' justifyContent='center'>
@@ -651,7 +647,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
                       endIcon={<SendIcon />}
                       disabled={!selectedFile}
                       onClick={() => {
-                        handleCEUpload()
+                        handleCHUpload()
                         setRefreshFlag(prevFlag => !prevFlag) // เรียกใช้ useEffect ใน CE01Record
                       }}
                     >
