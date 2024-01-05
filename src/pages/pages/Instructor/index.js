@@ -83,15 +83,15 @@ const MainMenu = () => {
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='div'>
-                นักศึกษา
+                Manage
               </Typography>
               <Button
                 variant='contained'
                 onClick={function () {
-                  router.push(`#`)
+                  router.push(`${process.env.NEXT_PUBLIC_Router}pages/Instructor/Manage/`)
                 }}
               >
-                เลือกตัวละคร
+                open
               </Button>
             </CardContent>
           </CardActionArea>

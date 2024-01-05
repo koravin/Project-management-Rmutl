@@ -51,7 +51,7 @@ const ProjectRecommend = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <h3> Project Recommend </h3>
+      {/* <h3> Project Recommend </h3>
       <Grid sx={wrapperStyles} container spacing={5}>
         <Grid sx={cardStyle}>
           <a href='/'>
@@ -98,7 +98,7 @@ const ProjectRecommend = () => {
             />
           </a>
         </Grid>
-      </Grid>
+      </Grid> */}
     </Box>
   )
 }

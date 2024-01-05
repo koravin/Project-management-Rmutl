@@ -27,8 +27,8 @@ const Templat_Upload = () => {
   const [ceData, setCeData] = useState([])
   const [chData, setChData] = useState([])
 
-  console.log('ce data:', ceData)
-  console.log('ch data:', chData)
+  // console.log('ce data:', ceData)
+  // console.log('ch data:', chData)
 
   // dialog control
   const [openCeDialog, setCeOpenDialog] = React.useState(false)
@@ -75,7 +75,7 @@ const Templat_Upload = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallformdocument_ch`)
-        setChData(response.data)
+        setChData(response.data.data)
       } catch (error) {
         console.error(error)
       }
@@ -102,7 +102,7 @@ const Templat_Upload = () => {
       width: 130,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleChangSectionCeClick(cellValues.row)}>
+          <Button variant='text' onClick={() => handleCeDataClick(cellValues.row)}>
             ...
           </Button>
         )
@@ -113,13 +113,34 @@ const Templat_Upload = () => {
     }
   ]
 
-  // New Section button click
-  // const handleNewSectionClick = () => {
-  //   handleClickOpenDialog()
-  // }
+  const CH_columns = [
+    { field: 'ch_type', headerName: 'Document type', width: 120 },
+    { field: 'ch_file_name', headerName: 'Document Name', width: 150 },
+    {
+      field: 'last_updated',
+      headerName: 'Last update',
+      width: 300,
+      valueGetter: params => formatLastUpdated(params.value)
+    },
+    {
+      field: 'Upload_Document',
+      headerName: 'Form',
+      width: 130,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleCeDataClick(cellValues.row)}>
+            ...
+          </Button>
+        )
+      },
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    }
+  ]
 
   // Chang Section Status button click
-  const handleChangSectionCeClick = rowData => {
+  const handleCeDataClick = rowData => {
     handleClickOpenCeDialog()
     setSelectedRowData(rowData) // กำหนดข้อมูลของแถวที่ถูกคลิกให้ state
   }
@@ -235,8 +256,8 @@ const Templat_Upload = () => {
                 {chData && chData.length > 0 ? (
                   <DataGrid
                     rows={chData}
-                    columns={CE_columns}
-                    getRowId={row => row.ce_doc_id}
+                    columns={CH_columns}
+                    getRowId={row => row.ch_doc_id}
                     initialState={{
                       pagination: {
                         paginationModel: {
@@ -257,7 +278,7 @@ const Templat_Upload = () => {
       </Box>
 
       {/* InsertSection Dialog */}
-      <PreprojectFormUpload open={openCeDialog} handleClose={handleCloseCeDialog} fullWidth fullScreen />
+      <PreprojectFormUpload open={openCeDialog} handleClose={handleCloseCeDialog} fullWidth rowData={selectedRowData} />
     </Grid>
   )
 }

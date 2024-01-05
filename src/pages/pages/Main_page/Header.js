@@ -26,33 +26,37 @@ import themeConfig from 'src/configs/themeConfig'
 import { Grid } from '@mui/material'
 
 const Header = () => {
-
   const wrapperStyles = {
-    width: '100%', 
-    display: 'flex', 
+    width: '100%',
+    display: 'flex',
     alignItems: 'center',
-    height: '100px', 
-    justifyContent: 'space-between', 
-    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)' 
+    height: '100px',
+    justifyContent: 'space-between',
+    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)'
   }
 
   return (
     <Box sx={wrapperStyles}>
-
       <Grid sx={{ display: 'flex', height: '100%', width: '300px', padding: '10px', marginLeft: '20px', gap: '10px' }}>
         {/* <img src='https://webs.rmutl.ac.th/assets/upload/gallery/2016/06/gallery_20160623151701_6936157.jpg' alt="BigCo Inc. logo" /> */}
-        <h1 sx={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>Project-MGT</h1>
-      </Grid>
-      
-      <Grid sx={{ height: '100%', width: '300px', padding: '10px', marginRight: '20px', display:'flex', justifyContent:'center', alignItems:'center' }} >
-        <Button variant='contained'>
-            Login
-        </Button>
+        {/* <h1 sx={{ color: 'white', fontSize: '24px', fontWeight: 'bold' }}>Project-MGT</h1> */}
       </Grid>
 
+      <Grid
+        sx={{
+          height: '100%',
+          width: '300px',
+          padding: '10px',
+          marginRight: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Button variant='contained'>Login</Button>
+      </Grid>
     </Box>
   )
 }
-
 
 export default Header

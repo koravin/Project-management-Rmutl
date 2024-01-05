@@ -52,16 +52,16 @@ const WhiteBlackButton = styled(Button)({
   }
 })
 
-export default function PreprojectFormUpload({ open, handleClose }) {
+export default function PreprojectFormUpload({ open, handleClose, rowData }) {
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
   const router = useRouter() // router สร้าง path
 
+  console.log('data form row', rowData)
+
   // เก็บค่าจาก Props ลงในตัวแปร
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const projectID = projectId
-
-  console.log('รหัสโครงการหน้า Upload', projectID)
 
   const [selectedFile, setSelectedFile] = useState(null) // ตัวแปรเก็บค่าไฟล์ที่อัปโหลด
   const [documentName, setDocumentName] = useState('') // เก็บชื่อเอกสารพร้อมนามสกุลก่อนกดอัปโหลดไฟล์
@@ -71,27 +71,38 @@ export default function PreprojectFormUpload({ open, handleClose }) {
   const [index, setIndex] = useState('') // ตัวนับเอกสาร
   const [refreshFlag, setRefreshFlag] = useState(true) // ตัวแปรรีค่าทีเซตใน useEffect
 
-  // console.log('ค่า refreshFlag:', selectedFile.name)
+  //รีเซ็ตตข้อมูลใหม่ทุกครั้งที่มีการ เปิด/ปิก analog
+  const resetForm = () => {
+    setSelectedFile(null)
+    setDocumentName('')
+    setShowFileDetails(false)
+    setOpenFileDialog(false)
+    setFileInputKey(prevKey => prevKey + 1)
+    setIndex('')
+    setRefreshFlag(prevFlag => !prevFlag)
+  }
+
+  useEffect(() => {
+    if (open) {
+      resetForm()
+    }
+  }, [open])
 
   //-------------------เริ่มการดึงข้อมูล Api มาเซตข้อมูล-------------------------//
 
-  // ดึงข้อมูลโครงงานจาก id
+  // ตั้งชื่อเอกสาร
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${projectID}`
-        )
+    const currentDate = new Date()
 
-        // console.log('ข้อมูลโครงงาน', response.data)
-        setDocumentName('CE01_' + response.data.PreprojectData[0].preproject_name_th)
-      } catch (error) {
-        console.error(error)
-      }
+    if (rowData && rowData.ce_type) {
+      const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`
+
+      const Nametrash = `${rowData.ce_type}_${formattedDate}`
+      setDocumentName(Nametrash)
     }
-
-    fetchData()
-  }, [projectID, documentName])
+  }, [rowData])
 
   // ดึงข้อมูลไฟล์เอกสารในฐานข้อมูล
   useEffect(() => {
@@ -100,10 +111,6 @@ export default function PreprojectFormUpload({ open, handleClose }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttype?preproject_id=${projectID}&document_type=CE01`
         )
-
-        console.log('ข้อมูลเอกสาร', response.data)
-
-        // console.log('ข้อมูลIndex', response.data.index)
         setIndex(response.data.index)
       } catch (error) {
         console.error(error)
@@ -166,16 +173,15 @@ export default function PreprojectFormUpload({ open, handleClose }) {
     setSelectedFile(null)
   }
 
-  // ฟังก์ชันสำหรับ ส่งเอกสาร CE01
+  // ฟังก์ชันสำหรับ ส่งแบบฟอร์มเอกสาร CE
   const handleCE01Upload = async () => {
-    const docType = 'CE01'
+    const docType = rowData.ce_type
     try {
       // ประกอบร่างชื่อใหม่
       const documentNameWithoutSpecialChars = documentName.replace(/[ :]/g, '_') // แทนที่เครื่องหมายพิเศษด้วย _
       const fileExtension = selectedFile.name.split('.').pop() // รับนามสกุลของไฟล์
       //ชื่อไฟล์ใหม่
-      const Countindex = parseInt(index) // รับค่า index เป็นตัวเลขและแปลงเป็นจำนวนเต็ม
-      const newFilename = `${documentNameWithoutSpecialChars}_${Countindex + 1}.${fileExtension}`
+      const newFilename = `${documentNameWithoutSpecialChars}.${fileExtension}`
 
       // ส่วนเซฟไฟล์ลงในเครื่อง
       const body = new FormData()
@@ -185,7 +191,7 @@ export default function PreprojectFormUpload({ open, handleClose }) {
       // ส่งข้อมูลประเภทเอกสารเข้าไปในหน้า Upload
       body.append('docType', docType) //ส่งชื่อเอกสารเข้าไปใน Api
 
-      const uploadResponse = await fetch('/api/upload', {
+      const uploadResponse = await fetch('/api/upload_form_ce', {
         method: 'POST',
         body
       })
@@ -201,25 +207,15 @@ export default function PreprojectFormUpload({ open, handleClose }) {
 
       // ส่วนส่งข้อมูลไปยัง API ภายนอก
       const data = {
-        preproject_id: projectID,
-        document_type: 'CE01',
-        document_name: newFilename,
-        instructor: '',
-        adviser: '',
-        studen_id: '',
-        document_owner: '0',
-        description: '0',
-        committee: '',
-        role: '0'
+        ce_type: rowData?.ce_type,
+        ce_file_name: newFilename
       }
 
-      // console.log(data)
+      console.log('Upload data', data)
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadpreprojectdocuments`,
-          data
-        )
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ce`, data)
         console.log('อัปโหลดไฟล์', response.data)
+        handleClose()
         Swal.fire({
           icon: 'success',
           title: 'อัปโหลดข้อมูลแล้วเสร็จ'
@@ -246,7 +242,6 @@ export default function PreprojectFormUpload({ open, handleClose }) {
   //--------------------------------------------------------------ฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
   // กำหนดตัวแปร
   const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
-  console.log('ข้อมูลแถว', rowdata)
 
   // กำหนดหัว Colum
   const columns = [
@@ -312,8 +307,6 @@ export default function PreprojectFormUpload({ open, handleClose }) {
   const handleDownload = async FileName => {
     const fileName = FileName
     const docType = 'CE01'
-
-    console.log('ชื่อไฟล์', fileName)
 
     try {
       const downloadResponse = await fetch('/api/download', {
@@ -409,8 +402,8 @@ export default function PreprojectFormUpload({ open, handleClose }) {
             <IconButton edge='start' color='inherit' onClick={handleClose} aria-label='close'>
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-              Sound
+            <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
+              Document form {rowData?.ce_type}
             </Typography>
             <Button autoFocus color='inherit' onClick={handleClose}>
               save
@@ -520,7 +513,7 @@ export default function PreprojectFormUpload({ open, handleClose }) {
                   justifyContent: 'center'
                 }}
               >
-                <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร CE 01
+                <PostAddIcon style={{ marginRight: '0.2rem', height: '5vh' }} /> อัปโหลดเอกสาร {rowData?.ce_type}
               </Typography>
               <CardContent align='center'>
                 <Grid container direction='row' justifyContent='center'>
