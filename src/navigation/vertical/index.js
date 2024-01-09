@@ -1,3 +1,6 @@
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+
 // ** Icon imports
 import Login from 'mdi-material-ui/Login'
 import Table from 'mdi-material-ui/Table'
@@ -10,79 +13,94 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
 
-const navigation = () => {
-  return [
-    // {
-    //   title: 'Dashboard',
-    //   icon: HomeOutline,
-    //   path: '/'
-    // },
-    {
-      title: 'BackOffice',
-      icon: GoogleCirclesExtended,
-      path: '/pages/BackOffice/'
-    },
-    {
-      title: 'Instructor',
-      icon: FormatLetterCase,
-      path: '/pages/Instructor/'
+const Navigation = () => {
+  const [jwtToken, setJwtToken] = useState(null)
+  const [jwtRole, setJwtRole] = useState(null)
+
+  // Variable
+  const [role, setRole] = useState('')
+
+  console.log('role:', role)
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        // ดึงค่า jwtToken และ jwtRole จาก localStorage
+        const storedJwtToken = localStorage.getItem('jwtToken')
+        const storedJwtRole = localStorage.getItem('jwtRole')
+
+        if (storedJwtToken && storedJwtRole) {
+          setJwtToken(storedJwtToken)
+          setJwtRole(storedJwtRole)
+
+          // ส่ง token และ role ไปยัง API
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/verifyauthentication`, {
+            token: storedJwtToken,
+            tokenRole: storedJwtRole
+          })
+
+          // console.log('จงไร', response.data)
+          setRole(response.data.stateRole)
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
 
-    // {
-    //   title: 'Account Settings',
-    //   icon: AccountCogOutline,
-    //   path: '/account-settings'
-    // },
-    // {
-    //   sectionTitle: 'Pages'
-    // },
-    // {
-    //   title: 'Login',
-    //   icon: Login,
-    //   path: '/pages/login',
-    //   openInNewTab: true
-    // },
-    // {
-    //   title: 'Register',
-    //   icon: AccountPlusOutline,
-    //   path: '/pages/register',
-    //   openInNewTab: true
-    // },
-    // {
-    //   title: 'Error',
-    //   icon: AlertCircleOutline,
-    //   path: '/pages/error',
-    //   openInNewTab: true
-    // },
-    // {
-    //   sectionTitle: 'User Interface'
-    // },
-    // {
-    //   title: 'Typography',
-    //   icon: FormatLetterCase,
-    //   path: '/typography'
-    // },
-    // {
-    //   title: 'Icons',
-    //   path: '/icons',
-    //   icon: GoogleCirclesExtended
-    // },
-    // {
-    //   title: 'Cards',
-    //   icon: CreditCardOutline,
-    //   path: '/cards'
-    // },
-    // {
-    //   title: 'Tables',
-    //   icon: Table,
-    //   path: '/tables'
-    // },
-    // {
-    //   icon: CubeOutline,
-    //   title: 'Form Layouts',
-    //   path: '/form-layouts'
-    // }
-  ]
+    fetchMenuItems()
+  }, [])
+
+  const getMenuItems = () => {
+    if (role === 'project-teacher') {
+      return [
+        {
+          title: 'BackOffice',
+          icon: GoogleCirclesExtended,
+          path: '/pages/BackOffice/'
+        },
+        {
+          title: 'Section',
+          icon: FormatLetterCase,
+          path: '/pages/Instructor/Section_Mg/'
+        },
+        {
+          title: 'Form upload',
+          icon: FormatLetterCase,
+          path: '/pages/Instructor/Templat_Upload/'
+        },
+        {
+          title: 'Manage Section',
+          icon: FormatLetterCase,
+          path: '/pages/Instructor/Manage/'
+        }
+      ]
+    } else if (role === 'นักศึกษา') {
+      return [
+        {
+          title: 'Kawaii Dessune',
+          icon: GoogleCirclesExtended,
+          path: '/pages/kawaii/'
+        },
+        {
+          title: 'Student',
+          icon: FormatLetterCase,
+          path: '/pages/Student/'
+        }
+      ]
+    } else {
+      return [
+        {
+          title: 'BackOffice',
+          icon: GoogleCirclesExtended,
+          path: '/pages/BackOffice/'
+        }
+      ]
+    }
+  }
+
+  const menuItems = getMenuItems()
+
+  return menuItems
 }
 
-export default navigation
+export default Navigation

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Box from '@mui/material/Box'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
@@ -8,6 +8,10 @@ import { Grid, Typography } from '@mui/material'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
+
+// Component Import
+import Preproject_Detail_Modal from './Preproject_Detail_Modal'
+import Preproject_Chang_status_Modal from './Preproject_Chang_status_Modal'
 
 function DisplayPreProject() {
   const router = useRouter() // router สร้าง path
@@ -20,19 +24,56 @@ function DisplayPreProject() {
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
 
+  //----------------------------dialog control Functions---------------------------------//
+  const [openDetailDialog, setDetailOpenDialog] = React.useState(false)
+  const [openDialogChangStatus, setOpenDialogChangStatus] = React.useState(false)
+  const [selectedRowData, setSelectedRowData] = useState(null)
+
+  // useRef สำหรับเก็บค่า openDialog
+
+  // เก็บ State Dialog Ch form
+  const openDialogDetailRef = useRef(openDetailDialog)
+  openDialogDetailRef.current = openDetailDialog
+
+  // เก็บ State Dialog Chang Status
+  const openDialogChangStatusRef = useRef(openDialogChangStatus)
+  openDialogChangStatusRef.current = openDialogChangStatus
+
+  const handleClickOpenDetailDialog = () => {
+    setDetailOpenDialog(true)
+  }
+
+  const handleCloseDetailDialog = () => {
+    setDetailOpenDialog(false)
+  }
+
+  // dialog Chang Status open
+  const handleClickChangStatusDialog = rowData => {
+    console.log('อัง', rowData)
+    setOpenDialogChangStatus(true)
+    setSelectedRowData(rowData)
+  }
+
+  const handleCloseChangStatusDialog = () => {
+    setOpenDialogChangStatus(false)
+  }
+
+  // dialog Detail open
+  const handleDetailClick = rowData => {
+    handleClickOpenDetailDialog()
+    setSelectedRowData(rowData)
+  }
+
+  //----------------------------End dialog control Functions---------------------------------//
+
   // ส่งค่าจากแถวไปหน้า Edit
   const handleEditClick = projectId => {
     router.push(`/pages/BackOffice/DisplayPreProject/PreprojectEditForm/?id=${projectId}`)
   }
 
   // ส่งค่าจากแถวไปหน้า Detail
-  const handleDetailClick = projectId => {
-    router.push(`/pages/BackOffice/DisplayPreProject/PreprojectDetail/?id=${projectId}`)
-  }
-
-  // ส่งค่าจากแถวไปหน้า Transfer Preproject Data
-  // const handleTransferClick = projectId => {
-  //   router.push(`/pages/BackOffice/DisplayPreProject/ProjectTransferData/?id=${projectId}`)
+  // const handleDetailClick = projectId => {
+  //   router.push(`/pages/BackOffice/DisplayPreProject/PreprojectDetail/?id=${projectId}`)
   // }
 
   // ฟังก์ชันสำหรับ Delete DATA
@@ -165,6 +206,20 @@ function DisplayPreProject() {
         )
       }
     },
+    {
+      field: 'Chang Status',
+      headerName: 'Chang Status',
+      width: 100,
+      sortable: false,
+      filterable: false,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleClickChangStatusDialog(cellValues.row)}>
+            ...
+          </Button>
+        )
+      }
+    },
 
     {
       field: 'Edit',
@@ -218,7 +273,7 @@ function DisplayPreProject() {
       }
     }
     fetchData()
-  }, [])
+  }, [openDialogChangStatus])
 
   return (
     <div>
@@ -277,6 +332,21 @@ function DisplayPreProject() {
           )}
         </Box>
       </Grid>
+      {/*  Detail data Dialog */}
+      <Preproject_Detail_Modal
+        open={openDetailDialog}
+        handleClose={handleCloseDetailDialog}
+        fullWidth
+        rowData={selectedRowData}
+      />
+
+      {/*  Chang Status Dialog */}
+      <Preproject_Chang_status_Modal
+        open={openDialogChangStatus}
+        handleClose={handleCloseChangStatusDialog}
+        fullWidth
+        rowData={selectedRowData}
+      />
     </div>
   )
 }

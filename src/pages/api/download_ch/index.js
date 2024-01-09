@@ -3,8 +3,9 @@ import path from 'path'
 
 export default async function DownloadDocument(req, res) {
   const { fileName, docType } = req.body // รับค่าชื่อตัวแปร กับ ประเภทเอกสาร จาก req
+
   try {
-    const filePath = path.join(process.cwd(), 'public', 'Document', docType, fileName)
+    const filePath = path.join(process.cwd(), 'public', 'Document', 'CH', docType, fileName)
 
     // Stream the file as the response
     const fileStream = fs.createReadStream(filePath)

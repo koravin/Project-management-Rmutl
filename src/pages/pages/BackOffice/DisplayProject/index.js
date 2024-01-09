@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Box from '@mui/material/Box'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
+
+// Component Import
+import Project_Detail_Modal from './Project_Detail_Modal'
+import Project_Chang_status_Modal from './Project_Chang_status_Modal'
 
 function DisplayProject() {
   const router = useRouter() // router สร้าง path
@@ -14,8 +18,57 @@ function DisplayProject() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
 
+  console.log('projectdata', projectdata)
+
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
+
+  //----------------------------dialog control Functions---------------------------------//
+  const [openDetailDialog, setDetailOpenDialog] = React.useState(false)
+  const [openDialogChangStatus, setOpenDialogChangStatus] = React.useState(false)
+  const [selectedRowData, setSelectedRowData] = useState(null)
+
+  // useRef สำหรับเก็บค่า openDialog
+
+  // เก็บ State Dialog Ch form
+  const openDialogDetailRef = useRef(openDetailDialog)
+  openDialogDetailRef.current = openDetailDialog
+
+  // เก็บ State Dialog Chang Status
+  const openDialogChangStatusRef = useRef(openDialogChangStatus)
+  openDialogChangStatusRef.current = openDialogChangStatus
+
+  const handleClickOpenDetailDialog = () => {
+    setDetailOpenDialog(true)
+  }
+
+  const handleCloseDetailDialog = () => {
+    setDetailOpenDialog(false)
+  }
+
+  // dialog Chang Status open
+  const handleClickChangStatusDialog = rowData => {
+    console.log('อัง', rowData)
+    setOpenDialogChangStatus(true)
+    setSelectedRowData(rowData)
+  }
+
+  const handleCloseChangStatusDialog = () => {
+    setOpenDialogChangStatus(false)
+  }
+
+  // dialog Ch open
+  const handleDetailDataClick = rowData => {
+    handleClickOpenDetailDialog()
+    setSelectedRowData(rowData)
+  }
+
+  //----------------------------End dialog control Functions---------------------------------//
+
+  // ส่งค่าจากแถวไปหน้า Edit
+  const handleEditClick = projectId => {
+    router.push(`/pages/BackOffice/DisplayProject/ProjectEditForm/?id=${projectId}`)
+  }
 
   const columns = [
     { field: 'project_code', headerName: 'ID', width: 120 },
@@ -83,8 +136,36 @@ function DisplayProject() {
       width: 100,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.project_id)}>
+          <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
             ...
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'Chang Status',
+      headerName: 'Chang Status',
+      width: 100,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleClickChangStatusDialog(cellValues.row)}>
+            ...
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'Edit',
+      headerName: 'Edit',
+      width: 100,
+      sortable: false,
+      filterable: false,
+      renderCell: cellValues => {
+        const isDisabled = cellValues.row.project_status === '7'
+
+        return (
+          <Button variant='text' onClick={() => handleEditClick(cellValues.row.project_id)} disabled={isDisabled}>
+            {isDisabled ? 'disable' : '...'}
           </Button>
         )
       }
@@ -118,7 +199,7 @@ function DisplayProject() {
       }
     }
     fetchData()
-  }, [])
+  }, [openDialogChangStatus])
 
   // ส่งค่าจากแถวไปหน้า Detail
   const handleDetailClick = projectId => {
@@ -210,7 +291,7 @@ function DisplayProject() {
             <DataGrid
               rows={projectdata}
               columns={columns}
-              getRowId={row => row.preproject_id}
+              getRowId={row => row.project_id}
               initialState={{
                 pagination: {
                   paginationModel: {
@@ -223,6 +304,21 @@ function DisplayProject() {
             />
           )}
         </Box>
+        {/*  Detail data Dialog */}
+        <Project_Detail_Modal
+          open={openDetailDialog}
+          handleClose={handleCloseDetailDialog}
+          fullWidth
+          rowData={selectedRowData}
+        />
+
+        {/*  Chang Status Dialog */}
+        <Project_Chang_status_Modal
+          open={openDialogChangStatus}
+          handleClose={handleCloseChangStatusDialog}
+          fullWidth
+          rowData={selectedRowData}
+        />
       </Grid>
     </div>
   )

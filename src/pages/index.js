@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
@@ -22,9 +25,13 @@ import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
 import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 
+import JwtCheck from './jwtCheck'
+
 const Dashboard = () => {
   return (
     <ApexChartWrapper>
+      {/* ตรวจสอบ Role */}
+      <JwtCheck />
       <Grid container spacing={6}>
         <Grid item xs={12} md={4}>
           <Trophy />
