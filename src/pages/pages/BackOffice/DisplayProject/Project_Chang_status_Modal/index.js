@@ -91,7 +91,7 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
     console.log('data', data)
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/project_status`, data)
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/change_project_status`, data)
       .then(response => {
         console.log(response)
       })
