@@ -8,6 +8,7 @@ import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import PersonIcon from '@mui/icons-material/Person'
+import CardContent from '@mui/material/CardContent'
 
 // Component Import
 import Insert_post from './Insert_post'
@@ -24,7 +25,7 @@ function Teacher_post() {
   const [projectdata, setProjectData] = useState([])
   const [postdata, setPostData] = useState([])
 
-  console.log('postdata', postdata)
+  console.log('postdata99999', postdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -103,7 +104,7 @@ function Teacher_post() {
     { field: 'header_name', headerName: 'Topic Name', width: 200 },
     { field: 'description', headerName: 'Description', width: 350 },
     {
-      field: 'status',
+      field: 'public_relation_status',
       headerName: 'Status',
       width: 120,
       renderCell: params => {
@@ -331,49 +332,51 @@ function Teacher_post() {
           New Post
         </Button>
         <Card sx={{ width: '100%', typography: 'body1', mt: 3 }}>
-          <Box sx={{ height: '100%', width: '100%' }}>
-            {isLoading ? (
-              <Box
-                sx={{
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
-                  position: 'fixed', // ติดตรงกลางหน้าจอ
-                  top: 0,
-                  left: 0,
-                  zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
-                }}
-              >
-                <img
-                  height='150'
-                  src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
-                  alt='Loading...'
-                />
-              </Box>
-            ) : postdata === null || typeof postdata === 'undefined' ? (
-              <p>No Data</p>
-            ) : postdata.length === 0 ? (
-              <p>No Data</p>
-            ) : (
-              <DataGrid
-                rows={postdata}
-                columns={columns}
-                getRowId={row => row.public_relations_id}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10
+          <CardContent>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
+                    position: 'fixed', // ติดตรงกลางหน้าจอ
+                    top: 0,
+                    left: 0,
+                    zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+                  }}
+                >
+                  <img
+                    height='150'
+                    src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
+                    alt='Loading...'
+                  />
+                </Box>
+              ) : postdata === null || typeof postdata === 'undefined' ? (
+                <p>No Data</p>
+              ) : postdata.length === 0 ? (
+                <p>No Data</p>
+              ) : (
+                <DataGrid
+                  rows={postdata}
+                  columns={columns}
+                  getRowId={row => row.public_relations_id}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10
+                      }
                     }
-                  }
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                disableRowSelectionOnClick
-              />
-            )}
-          </Box>
+                  }}
+                  pageSizeOptions={[5, 10, 20]}
+                  disableRowSelectionOnClick
+                />
+              )}
+            </Box>
+          </CardContent>
         </Card>
         {/*  Insert data Dialog */}
         <Insert_post open={openInsertDialog} handleClose={handleCloseInsertDialog} fullWidth />

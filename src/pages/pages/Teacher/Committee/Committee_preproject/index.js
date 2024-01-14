@@ -21,6 +21,8 @@ function Committee_preproject() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
 
+  console.log('ทานวยหัวลูกคิด', projectdata)
+
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
 
@@ -126,14 +128,57 @@ function Committee_preproject() {
       }
     },
     {
+      field: 'can_rigister_status',
+      headerName: 'สถานะลงทะเบียน',
+      width: 150,
+      renderCell: params => {
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        let statusText
+        let statusColor
+        let bgColor
+
+        if (value === 0) {
+          statusText = 'ไม่สามารถลงทะเบียนได้'
+          statusColor = 'white'
+          bgColor = '#f44336'
+        } else if (value === 1) {
+          statusText = 'ลงทะเบียนได้'
+          statusColor = 'white'
+          bgColor = '#4caf50'
+        } else {
+          statusText = value
+          bgColor = value
+        }
+
+        return (
+          <div
+            style={{
+              color: statusColor,
+              backgroundColor: bgColor,
+              paddingLeft: '10px',
+              paddingRight: '10px',
+              paddingTop: '2px',
+              paddingBottom: '2px',
+              fontSize: '11px',
+              borderRadius: '50px'
+            }}
+          >
+            {statusText}
+          </div>
+        )
+      }
+    },
+    {
       field: 'Detail',
       headerName: 'Detail',
       width: 100,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.can_register_status === 0
+
         return (
-          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
+          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)} disabled={isDisabled}>
             ...
           </Button>
         )
