@@ -50,6 +50,7 @@ const LoginPage = () => {
   useEffect(() => {
     localStorage.removeItem('jwtToken')
     localStorage.removeItem('jwtRole')
+    localStorage.removeItem('jwtUser_id')
   }, [])
 
   return (

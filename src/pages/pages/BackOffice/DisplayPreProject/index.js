@@ -137,35 +137,35 @@ function DisplayPreProject() {
         let bgColor
 
         if (value === '0') {
-          statusText = 'ไม่ผ่าน'
+          statusText = '0'
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '1') {
-          statusText = 'โครงงานยังไม่ได้รับการอนุมัติ'
+          statusText = '1'
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+          statusText = '2'
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '3') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = '3'
           statusColor = 'white'
           bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = 'สามารถสอบได้'
+          statusText = '4'
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '5') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = '5'
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = 'ผ่านแล้วแต่ยังไม่ได้โอน'
+          statusText = '6'
           statusColor = 'white'
           bgColor = '#4caf50'
         } else if (value === '7') {
-          statusText = 'โอนแล้ว'
+          statusText = '7'
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {

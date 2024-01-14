@@ -39,7 +39,7 @@ const Navigation = () => {
             tokenRole: storedJwtRole
           })
 
-          // console.log('จงไร', response.data)
+          console.log('จงไร', response.data)
           setRole(response.data.stateRole)
         }
       } catch (error) {
@@ -77,14 +77,42 @@ const Navigation = () => {
     } else if (role === 'นักศึกษา') {
       return [
         {
-          title: 'Kawaii Dessune',
+          title: 'Home',
           icon: GoogleCirclesExtended,
-          path: '/pages/kawaii/'
+          path: '/pages/Student/HomeStudent/'
         },
         {
-          title: 'Student',
+          title: 'Document Form',
           icon: FormatLetterCase,
-          path: '/pages/Student/'
+          path: '/pages/Student/Document_Form/'
+        },
+        {
+          title: 'Recommend Project',
+          icon: FormatLetterCase,
+          path: '/pages/Student/Recommend_Project/'
+        },
+        {
+          title: 'Post form teacher',
+          icon: FormatLetterCase,
+          path: '/pages/Student/Recommend_Project/'
+        }
+      ]
+    } else if (role === 'อาจารย์') {
+      return [
+        {
+          title: 'Teacher Load',
+          icon: GoogleCirclesExtended,
+          path: '/pages/Teacher/Teacher_load/'
+        },
+        {
+          title: 'Post project',
+          icon: GoogleCirclesExtended,
+          path: '/pages/Teacher/Teacher_post'
+        },
+        {
+          title: 'Committee',
+          icon: GoogleCirclesExtended,
+          path: '/pages/Teacher/Committee'
         }
       ]
     } else {

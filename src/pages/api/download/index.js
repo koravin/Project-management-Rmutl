@@ -3,6 +3,9 @@ import path from 'path'
 
 export default async function DownloadDocument(req, res) {
   const { fileName, docType } = req.body // รับค่าชื่อตัวแปร กับ ประเภทเอกสาร จาก req
+
+  console.log('fileName', fileName)
+  console.log('docType', docType)
   try {
     const filePath = path.join(process.cwd(), 'public', 'Document', docType, fileName)
 
@@ -21,5 +24,7 @@ export default async function DownloadDocument(req, res) {
     })
   } catch (err) {
     res.status(500).json({ error: err.message })
+
+    // console.error('Error during file download:', res)
   }
 }

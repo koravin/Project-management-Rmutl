@@ -88,23 +88,27 @@ function DisplayProject() {
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '1') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+          statusText = '1'
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = '2'
           statusColor = 'white'
           bgColor = '#2979ff'
         } else if (value === '3') {
-          statusText = 'สามารถสอบได้'
+          statusText = '3'
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '4') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = '4'
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '5') {
-          statusText = 'ผ่านแล้ว'
+          statusText = '5'
+          statusColor = 'white'
+          bgColor = '#4caf50'
+        } else if (value === '6') {
+          statusText = '6'
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {

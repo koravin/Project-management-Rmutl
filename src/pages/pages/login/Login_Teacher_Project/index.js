@@ -120,6 +120,8 @@ const Login_Teacher_Project = () => {
 
           return
         } else {
+          // console.log('หา Id', response.data)
+
           // เก็บค่า JWT และ JWT Role ใน localStorage
           localStorage.setItem('jwtToken', response.data.jwt)
           localStorage.setItem('jwtRole', response.data.jwtRole)
@@ -127,6 +129,7 @@ const Login_Teacher_Project = () => {
             icon: 'success',
             title: 'Login Success'
           })
+
           router.push('/')
         }
       })
