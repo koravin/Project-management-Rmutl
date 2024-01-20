@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import FileCopyIcon from '@mui/icons-material/FileCopy'
 
 // mui import
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
@@ -113,8 +115,8 @@ const Templat_Upload = () => {
       width: 130,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleCeDataClick(cellValues.row)}>
-            ...
+          <Button variant='text' onClick={() => handleCeDataClick(cellValues.row)} style={{ color: '#FFC107' }}>
+            <FileCopyIcon />
           </Button>
         )
       },
@@ -139,8 +141,8 @@ const Templat_Upload = () => {
       width: 130,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleChDataClick(cellValues.row)}>
-            ...
+          <Button variant='text' onClick={() => handleChDataClick(cellValues.row)} style={{ color: '#FFC107' }}>
+            <FileCopyIcon />
           </Button>
         )
       },
@@ -181,7 +183,15 @@ const Templat_Upload = () => {
 
       {/* Header card */}
       <Grid style={{ width: '100%' }}>
-        <Card style={{ borderRadius: '20px', background: '#00BFFF', margin: 0, padding: 0 }}>
+        <Card
+          style={{
+            borderRadius: '20px',
+            margin: 0,
+            padding: 0,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            background: 'linear-gradient(135deg, #00BFFF 80%, #1E90FF 100%)'
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -223,7 +233,7 @@ const Templat_Upload = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx document form in system
+                  2 Table form in system
                 </Box>
               </Typography>
             }
@@ -244,24 +254,26 @@ const Templat_Upload = () => {
             {/* datagrid content 01 */}
             <Box sx={{ height: '100%', width: '100%' }}>
               <Card style={{ padding: '5px' }}>
-                {ceData && ceData.length > 0 ? (
-                  <DataGrid
-                    rows={ceData}
-                    columns={CE_columns}
-                    getRowId={row => row.ce_doc_id}
-                    initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 10
+                <CardContent>
+                  {ceData && ceData.length > 0 ? (
+                    <DataGrid
+                      rows={ceData}
+                      columns={CE_columns}
+                      getRowId={row => row.ce_doc_id}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10
+                          }
                         }
-                      }
-                    }}
-                    pageSizeOptions={[5, 10, 20]}
-                    disableRowSelectionOnClick
-                  />
-                ) : (
-                  <p>Nodata</p>
-                )}
+                      }}
+                      pageSizeOptions={[5, 10, 20]}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <p>Nodata</p>
+                  )}
+                </CardContent>
               </Card>
             </Box>
           </TabPanel>
@@ -269,24 +281,26 @@ const Templat_Upload = () => {
             {/* datagrid content 02 */}
             <Box sx={{ height: '100%', width: '100%' }}>
               <Card style={{ padding: '5px' }}>
-                {chData && chData.length > 0 ? (
-                  <DataGrid
-                    rows={chData}
-                    columns={CH_columns}
-                    getRowId={row => row.ch_doc_id}
-                    initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 10
+                <CardContent>
+                  {chData && chData.length > 0 ? (
+                    <DataGrid
+                      rows={chData}
+                      columns={CH_columns}
+                      getRowId={row => row.ch_doc_id}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10
+                          }
                         }
-                      }
-                    }}
-                    pageSizeOptions={[5, 10, 20]}
-                    disableRowSelectionOnClick
-                  />
-                ) : (
-                  <p>Nodata</p>
-                )}
+                      }}
+                      pageSizeOptions={[5, 10, 20]}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <p>Nodata</p>
+                  )}
+                </CardContent>
               </Card>
             </Box>
           </TabPanel>

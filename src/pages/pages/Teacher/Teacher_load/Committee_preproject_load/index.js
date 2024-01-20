@@ -6,6 +6,9 @@ import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
@@ -14,8 +17,8 @@ import Swal from 'sweetalert2'
 import Load_committee_preproject_modal from './Load_committee_preproject_modal'
 
 function Committee_preproject_load({ loadCommitteePreprojectData }) {
-  //   console.log('prop data', loadPreprojectData)
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -50,7 +53,6 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -78,40 +80,34 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
       width: 200,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'ไม่ผ่าน'
-          statusColor = 'white'
-          bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'โครงงานยังไม่ได้รับการอนุมัติ'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#f44336'
+          bgColor = 'black'
         } else if (value === '3') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = 'สามารถสอบได้'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#ff9800'
+          bgColor = 'yellow'
         } else if (value === '5') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = 'ผ่านแล้วแต่ยังไม่ได้โอน'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '7') {
-          statusText = 'โอนแล้ว'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -146,7 +142,7 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
-            ...
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -159,7 +155,6 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
       try {
         setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
-        console.log(response.data.data)
 
         const projects = response.data.data.map(project => ({
           ...project,
@@ -173,55 +168,74 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
       }
     }
     fetchData()
-  }, [openDialogChangStatus])
+  }, [openDialogChangStatus, refreshData])
 
   return (
     <div>
+      <Button
+        sx={{
+          marginBottom: '10px',
+          width: '15vh',
+          height: '20',
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> refresh
+      </Button>
       <Card>
-        <Grid>
-          <Box sx={{ height: '100%', width: '100%' }}>
-            {isLoading ? (
-              <Box
-                sx={{
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'fixed', // ติดตรงกลางหน้าจอ
-                  top: 0,
-                  left: 0,
-                  zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
-                }}
-              >
-                <img
-                  height='150'
-                  src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
-                  alt='Loading...'
-                />
-              </Box>
-            ) : !loadCommitteePreprojectData ? (
-              <p>No Data</p>
-            ) : loadCommitteePreprojectData.length === 0 ? (
-              <p>No Data</p>
-            ) : (
-              <DataGrid
-                rows={loadCommitteePreprojectData}
-                columns={columns}
-                getRowId={row => row.preproject_id}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10
+        <CardContent>
+          <Grid>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'fixed', // ติดตรงกลางหน้าจอ
+                    top: 0,
+                    left: 0,
+                    zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+                  }}
+                >
+                  <img
+                    height='150'
+                    src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
+                    alt='Loading...'
+                  />
+                </Box>
+              ) : !loadCommitteePreprojectData ? (
+                <p>No Data</p>
+              ) : loadCommitteePreprojectData.length === 0 ? (
+                <p>No Data</p>
+              ) : (
+                <DataGrid
+                  rows={loadCommitteePreprojectData}
+                  columns={columns}
+                  getRowId={row => row.preproject_id}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10
+                      }
                     }
-                  }
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                disableRowSelectionOnClick
-              />
-            )}
-          </Box>
-        </Grid>
+                  }}
+                  pageSizeOptions={[5, 10, 20]}
+                  disableRowSelectionOnClick
+                />
+              )}
+            </Box>
+          </Grid>
+        </CardContent>
       </Card>
       {/*  Detail data Dialog */}
       <Load_committee_preproject_modal

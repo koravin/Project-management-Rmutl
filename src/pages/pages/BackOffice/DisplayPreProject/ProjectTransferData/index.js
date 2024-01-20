@@ -67,9 +67,7 @@ export default function ProjectTransferData() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
         )
-        console.log(response.data)
 
-        // console.log(response.data.PreprojectData[0].preproject_name_th)
         setProjectNameTh(response.data.PreprojectData[0].preproject_name_th)
         setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
         setProjectStatus(response.data.PreprojectData[0].project_status)
@@ -101,9 +99,7 @@ export default function ProjectTransferData() {
           const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallyearsubjectproject`, {
             params: { preproject_id: requestdata }
           })
-          console.log(response.data)
           const yearData = response.data && response.data.all_years ? response.data.all_years : [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
-          console.log(yearData)
           setAllYearData(yearData)
           setProjectPK(response.data.project_subject_id)
           setHasData(yearData.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
@@ -125,7 +121,6 @@ export default function ProjectTransferData() {
             params: { subject_project_id: projectPK, year: newYearData }
           })
           const termData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
-          console.log(termData)
           setAllTermData(termData)
           setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
@@ -177,8 +172,6 @@ export default function ProjectTransferData() {
       section_id: newTermData,
       preproject_id: projectId
     }
-
-    console.log(data)
 
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/transferproject`, data)

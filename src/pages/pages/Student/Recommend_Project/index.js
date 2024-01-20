@@ -9,6 +9,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import PersonIcon from '@mui/icons-material/Person'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 // Component Import
 import Detail_reccommend_project from './Detail_reccommend_project'
@@ -20,8 +21,6 @@ function Recommend_Project() {
 
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
-
-  console.log('projectdata', projectdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -51,7 +50,6 @@ function Recommend_Project() {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -83,32 +81,34 @@ function Recommend_Project() {
       width: 200,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'ไม่ผ่าน'
-          statusColor = 'white'
-          bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'black'
+        } else if (value === '3') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#2979ff'
-        } else if (value === '3') {
-          statusText = 'สามารถสอบได้'
-          statusColor = 'white'
-          bgColor = '#ff9800'
         } else if (value === '4') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'yellow'
+        } else if (value === '5') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#ff9800'
-        } else if (value === '5') {
-          statusText = 'ผ่านแล้ว'
+        } else if (value === '6') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -141,7 +141,7 @@ function Recommend_Project() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
-            ...
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -159,8 +159,6 @@ function Recommend_Project() {
     }
   }, [])
 
-  console.log('user_id', user_id)
-
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
@@ -170,8 +168,6 @@ function Recommend_Project() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallmyproject?student_id=${user_id}`
         )
-
-        console.log('My projectttt', response.data)
 
         setProjectData(response.data.projectlist)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
@@ -196,8 +192,6 @@ function Recommend_Project() {
         const data = {
           project_id: projectId
         }
-
-        // console.log('ดาต้า', data)
 
         if (projectId !== '') {
           axios
@@ -290,7 +284,7 @@ function Recommend_Project() {
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    xxx Project Reccomend to you
+                    {projectdata && projectdata.length ? projectdata.length : '0'} Project Recommend to you
                   </Box>
                 </Typography>
               }
@@ -310,11 +304,11 @@ function Recommend_Project() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
-                    position: 'fixed', // ติดตรงกลางหน้าจอ
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    position: 'fixed',
                     top: 0,
                     left: 0,
-                    zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+                    zIndex: 9999
                   }}
                 >
                   <img

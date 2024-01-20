@@ -12,15 +12,26 @@ import PersonIcon from '@mui/icons-material/Person'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import SyncIcon from '@mui/icons-material/Sync'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import Checkbox from '@mui/material/Checkbox'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Dialog import
 import InsertSection from '../../Section_Mg/InsertSection'
 import Chang_Preproject_Status from './Chang_Preproject_Status'
+import Preproject_section_detail from './Preproject_section_detail'
 
 const Preproject_In_Section = () => {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   const { rowData } = router.query
   const Swal = require('sweetalert2') // นำเข้าตัวsweetalert2
+
+  // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
+  const [submitted, setSubmitted] = useState(false)
 
   const [secTionData, setsecTionData] = useState([])
 
@@ -46,14 +57,15 @@ const Preproject_In_Section = () => {
   // รับค่าข้อมูล Api
   const sectionID = secTionData.section_id
   const [projectData, setProjectData] = useState([])
-  const [selectedRowData, setSelectedRowData] = useState(null) // ตัวแปรเก็บค่าข้อมูลแต่ละแถวในตารางเพื่อส่งข้อมูลเข้า Cpmponent Chang Status
+  const [selectedRowData, setSelectedRowData] = useState(null) // ตัวแปรเก็บค่าข้อมูลแต่ละแถวในตารางเพื่อส่งข้อมูลเข้า Cmponent Chang Status
 
-  console.log('projectData', projectData)
-  console.log('sectionID', sectionID)
+  // checkbox variable
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } }
 
   // dialog control
   const [openDialog, setOpenDialog] = React.useState(false)
   const [openDialogChangStatus, setOpenDialogChangStatus] = React.useState(false)
+  const [openDialogProjectDetail, setOpenDialogProjectDetail] = React.useState(false)
 
   // useRef สำหรับเก็บค่า openDialog
   // เก็บ State Dialog Insert
@@ -63,6 +75,10 @@ const Preproject_In_Section = () => {
   // เก็บ State Dialog Chang Status
   const openDialogChangStatusRef = useRef(openDialogChangStatus)
   openDialogChangStatusRef.current = openDialogChangStatus
+
+  // เก็บ State Dialog Project detail
+  const openDialogProjectDetailRef = useRef(openDialogProjectDetail)
+  openDialogProjectDetailRef.current = openDialogProjectDetail
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true)
@@ -80,28 +96,75 @@ const Preproject_In_Section = () => {
     setOpenDialogChangStatus(false)
   }
 
+  const handleClickOpenDetailDialog = () => {
+    setOpenDialogProjectDetail(true)
+  }
+
+  const handleCloseDetailDialog = () => {
+    setOpenDialogProjectDetail(false)
+  }
+
+  // dialog Detail open
+  const handleDetailClick = rowData => {
+    handleClickOpenDetailDialog()
+    setSelectedRowData(rowData)
+  }
+
+  const handleCheckDocumentClick = (e, ce01_document_id) => {
+    e.preventDefault()
+    setSubmitted(prevSubmitted => !prevSubmitted)
+
+    // ตรวจสอบค่าว่างใน TextField
+    if (!ce01_document_id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'ขาดข้อมูล...',
+        text: 'ระบบขัดข้อง!'
+      })
+
+      return
+    }
+
+    const data = {
+      document_id: ce01_document_id
+    }
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/approve_preproject_document`, data)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    Swal.fire({
+      icon: 'success',
+      title: 'Update Status Complete'
+    })
+  }
+
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_in_sec?section_id=${sectionID}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_section_data?section_id=${sectionID}`
         )
-        console.log('Api Data respon', response.data)
-        setProjectData(response.data.data)
+
+        // setCe01Options(ce01Options)
+        setProjectData(response.data.document_Result)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
     fetchData()
-  }, [openDialog, openDialogChangStatus, sectionID])
+  }, [openDialog, openDialogChangStatus, sectionID, submitted, refreshData])
 
   // Table colum
   const columns = [
-    { field: 'project_code', headerName: 'Project Code', width: 150 },
-    { field: 'preproject_name_th', headerName: 'Project Name(TH)', width: 280 },
-    { field: 'preproject_name_eng', headerName: 'Project Name(EN)', width: 280 },
+    { field: 'project_code', headerName: 'Project Code', width: 110 },
+    { field: 'preproject_name_th', headerName: 'Project Name(TH)', width: 230 },
     {
       field: 'project_status',
       headerName: 'Project Status',
@@ -110,55 +173,40 @@ const Preproject_In_Section = () => {
       disableColumnMenu: true,
       disableColumnSort: true,
       renderCell: params => {
-        const value = params.value // ค่าในคอลัมน์
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'Status0'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'Status1'
-          statusColor = 'white'
-          bgColor = '#4caf50'
         } else if (value === '2') {
-          statusText = 'Status2'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'black'
         } else if (value === '3') {
-          statusText = 'Status3'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = 'Status4'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'yellow'
         } else if (value === '5') {
-          statusText = 'Status5'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = 'Status6'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '7') {
-          statusText = 'Status7'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '8') {
-          statusText = 'Status8'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '9') {
-          statusText = 'Status9'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
-          statusText = 'Unknow'
-          statusColor = 'white'
-          bgColor = 'gray'
+          statusText = value
+          bgColor = value
         }
 
         return (
@@ -180,16 +228,138 @@ const Preproject_In_Section = () => {
       }
     },
     {
-      field: 'Detail',
-      headerName: 'Detail',
-      width: 150,
+      field: 'State',
+      headerName: 'State',
+      width: 100,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleChangProjectStatusClick(cellValues.row)}>
-            ...
+            <SyncIcon />
           </Button>
         )
       },
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'Detail',
+      headerName: 'Detail',
+      width: 80,
+      sortable: false,
+      filterable: false,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
+            <VisibilityIcon />
+          </Button>
+        )
+      }
+    },
+    {
+      field: 'ce01_document_id',
+      headerName: 'CE01',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce01_document_id)}
+            disabled={cellValues.row.ce01_document_id === 'no' || cellValues.row.ce01_status === '2'}
+            checked={cellValues.row.ce01_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ce02_document_id',
+      headerName: 'CE02',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce02_document_id)}
+            disabled={cellValues.row.ce02_document_id === 'no' || cellValues.row.ce02_status === '2'}
+            checked={cellValues.row.ce02_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ce03_document_id',
+      headerName: 'CE03',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce03_document_id)}
+            disabled={cellValues.row.ce03_document_id === 'no' || cellValues.row.ce03_status === '2'}
+            checked={cellValues.row.ce03_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ce04_document_id',
+      headerName: 'CE04',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce04_document_id)}
+            disabled={cellValues.row.ce04_document_id === 'no' || cellValues.row.ce04_status === '2'}
+            checked={cellValues.row.ce04_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ce05_document_id',
+      headerName: 'CE05',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce05_document_id)}
+            disabled={cellValues.row.ce05_document_id === 'no' || cellValues.row.ce05_status === '2'}
+            checked={cellValues.row.ce05_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ce06_document_id',
+      headerName: 'CE06',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ce06_document_id)}
+            disabled={cellValues.row.ce06_document_id === 'no' || cellValues.row.ce06_status === '2'}
+            checked={cellValues.row.ce06_status === '2'}
+          />
+        </div>
+      ),
       disableColumnFilter: true,
       disableColumnMenu: true,
       disableColumnSort: true
@@ -268,14 +438,39 @@ const Preproject_In_Section = () => {
       </Grid>
       {/* Header card */}
 
+      <Button
+        sx={{
+          marginBottom: '10px',
+          width: '15vh',
+          height: '20',
+          mt: 10,
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> รีเฟรช
+      </Button>
       {/* datagrid content 01 */}
-      <Box sx={{ height: '100%', width: '100%', mt: 10 }}>
+      <Box sx={{ height: '100%', width: '100%' }}>
         <Card style={{ padding: '5px' }}>
           {projectData && projectData.length > 0 ? (
             <DataGrid
               rows={projectData}
               columns={columns}
               getRowId={row => row.preproject_id}
+              sx={
+                {
+                  // '& .MuiDataGrid-virtualScroller': { overflowY: 'scroll', overflowX: 'hidden' }
+                }
+              }
+              autoHeight
+              autoPageSize
               initialState={{
                 pagination: {
                   paginationModel: {
@@ -313,6 +508,14 @@ const Preproject_In_Section = () => {
       <Chang_Preproject_Status
         open={openDialogChangStatus}
         handleClose={handleCloseChangStatusDialog}
+        rowData={selectedRowData}
+      />
+
+      {/*  Detail data Dialog */}
+      <Preproject_section_detail
+        open={openDialogProjectDetail}
+        handleClose={handleCloseDetailDialog}
+        fullWidth
         rowData={selectedRowData}
       />
     </Grid>

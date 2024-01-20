@@ -153,17 +153,11 @@ export default function PreprojectInsert() {
       studen_id: allStudent
     }
 
-    // console.log(data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insertpreproject`, data)
       .then(response => {
         console.log(response)
         handleClose()
-
-        // window.location.reload()
-        // Route.replace(Route.asPath, undefined, { scroll: false })
-        // handleCancel() // รีข้อมูล
       })
       .catch(error => {
         console.log(error)
@@ -600,7 +594,7 @@ export default function PreprojectInsert() {
                 >
                   {curriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_short_name_th}
+                      {curriculum.curriculum_name_th}
                     </MenuItem>
                   ))}
                 </Select>
@@ -945,7 +939,7 @@ export default function PreprojectInsert() {
             color='error'
             variant='outlined'
             onClick={function () {
-              router.push(`/pages/BackOffice/DisplayPreProject`)
+              router.push(`/pages/BackOffice`)
             }}
           >
             ย้อนกลับ

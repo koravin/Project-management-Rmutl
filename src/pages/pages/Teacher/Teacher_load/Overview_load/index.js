@@ -20,8 +20,6 @@ import DataSaverOffIcon from '@mui/icons-material/DataSaverOff'
 import ExtensionIcon from '@mui/icons-material/Extension'
 
 const Overview_load = ({ overviewdata }) => {
-  console.log('จงไร overviewdata', overviewdata)
-
   const salesData = [
     {
       stats: 'Load ' + overviewdata?.adviserCount_preproject + ' Project',

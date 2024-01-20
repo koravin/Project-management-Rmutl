@@ -154,16 +154,11 @@ export default function ProjectEditForm() {
       studen_id: allStudent
     }
 
-    console.log(data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/updateproject`, data)
       .then(response => {
         console.log(response)
         handleClose()
-
-        // window.location.reload()
-        // Route.replace(Route.asPath, undefined, { scroll: false })
       })
       .catch(error => {
         console.log(error)
@@ -174,7 +169,7 @@ export default function ProjectEditForm() {
       title: 'อัปเดทข้อมูลแล้วเสร็จ'
     })
 
-    router.push(`/pages/BackOffice/DisplayProject`)
+    router.push(`/pages/BackOffice`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -196,10 +191,6 @@ export default function ProjectEditForm() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${requestdata}`
         )
-
-        console.log('ข้อมูลเซตค่า', response.data)
-
-        // console.log('ข้อมูลเซตค่าเทอม', response.data.PreprojectData[0].pro_sec_id)
 
         setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
         setSubjectId(response.data.PreprojectData[0].subject_id)
@@ -333,7 +324,7 @@ export default function ProjectEditForm() {
             }
           )
           const termData = response.data.data || [] // ตรวจสอบและกำหนดค่าเป็นอาร์เรย์ว่างหากไม่มีข้อมูล
-          console.log('Term data', termData)
+
           setTermData(termData)
           setHasData(response.data.data.length > 0) // ตรวจสอบว่ามีข้อมูลหรือไม่
         } catch (error) {
@@ -397,7 +388,7 @@ export default function ProjectEditForm() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_status`)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/project_status`)
         const projectStatus = response.data.data || []
         setProjectStatusData(projectStatus)
       } catch (error) {
@@ -694,7 +685,7 @@ export default function ProjectEditForm() {
                 >
                   {curriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_short_name_th}
+                      {curriculum.curriculum_name_th}
                     </MenuItem>
                   ))}
                 </Select>
@@ -1039,7 +1030,7 @@ export default function ProjectEditForm() {
             color='error'
             variant='outlined'
             onClick={function () {
-              router.push(`/pages/BackOffice/DisplayProject`)
+              router.push(`/pages/BackOffice`)
             }}
           >
             ย้อนกลับ

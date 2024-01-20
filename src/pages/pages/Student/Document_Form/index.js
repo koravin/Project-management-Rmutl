@@ -92,7 +92,7 @@ const Document_Form = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx Form Active in system
+                  2 Form Table in system
                 </Box>
               </Typography>
             }

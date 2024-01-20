@@ -57,7 +57,10 @@ export default function Project_Upload_Component({ project_id }) {
 
   const projectID = project_id
 
-  console.log('รหัสโครงการหน้า Upload', projectID)
+  //ตัวแปรเก็บข้อมูลเอกสาร
+  const [getDocType, setGetDocTypeData] = useState('') // รับค่าข้อมูลประเภทเอกสาร
+  const [getCHType, setGetCHData] = useState('CH01') // รับค่าข้อมูลประเภทเอกสาร CH
+  const [getStudentName, setGetStudentNameData] = useState('') // รับค่าข้อมูลชื่อของนักศึกษา
 
   const [selectedFile, setSelectedFile] = useState(null) // ตัวแปรเก็บค่าไฟล์ที่อัปโหลด
   const [documentName, setDocumentName] = useState('') // เก็บชื่อเอกสารพร้อมนามสกุลก่อนกดอัปโหลดไฟล์
@@ -79,7 +82,6 @@ export default function Project_Upload_Component({ project_id }) {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${projectID}`
         )
 
-        console.log('ข้อมูลโครงงาน', response.data)
         setDocumentName(`${response.data.PreprojectData[0].preproject_name_th}`)
       } catch (error) {
         console.error(error)
@@ -97,9 +99,6 @@ export default function Project_Upload_Component({ project_id }) {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttypeproject?project_id=${projectID}&document_type=[${getCHType}]`
         )
 
-        console.log('ข้อมูลเอกสาร', response)
-
-        // console.log('ข้อมูลIndex', response.data.index)
         setIndex(response.data.index)
       } catch (error) {
         console.error(error)
@@ -186,8 +185,6 @@ export default function Project_Upload_Component({ project_id }) {
       const formattedTime = `${hours}_${minutes}_${seconds}`
       const newFilename = `${getCHType}_${documentNameWithoutSpecialChars}_${formattedTime}.${fileExtension}`
 
-      console.log('newFilename', newFilename)
-
       // ส่วนเซฟไฟล์ลงในเครื่อง
       const body = new FormData()
       body.append('file', selectedFile) //ส่งไฟล์เข้า Api
@@ -223,7 +220,6 @@ export default function Project_Upload_Component({ project_id }) {
         document_type: getCHType,
         document_name: newFilename
       }
-      console.log('data send api', data)
 
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadprojectdocuments`, data)
@@ -247,7 +243,6 @@ export default function Project_Upload_Component({ project_id }) {
   //--------------------------------------------------------------ฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
   // กำหนดตัวแปร
   const [rowdata, setRowData] = useState([]) // ตัวแปรเก็บค่า Row
-  console.log('ข้อมูลแถว', rowdata)
 
   // กำหนดหัว Colum
   const columns = [
@@ -289,8 +284,6 @@ export default function Project_Upload_Component({ project_id }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallonedocumenttypeproject?project_id=${projectID}&document_type=${getCHType}`
         )
-
-        console.log('ข้อมูล CH จงราย', response.data.documentList)
 
         setRowData(response.data.documentList)
       } catch (error) {
@@ -388,21 +381,13 @@ export default function Project_Upload_Component({ project_id }) {
   const [advisor, setAdvisorData] = useState('') // เก็บค่าข้อมูลอาจารที่ปรึกษา
   const [instructor, setInstructorData] = useState([]) // เก็บค่าข้อมูลอาจารย์
 
-  //   console.log('ควยลอก', advisor)
-
   //ตัวแปรรับข้อมูล
   const [getStudentData, setGetStudentData] = useState('') // รับค่าข้อมูลนักศึกษา
   const [getAdvisor, setGetAdvisorData] = useState('') // รับค่าข้อมูลอาจารที่ปรึกษา
   const [getInstructor, setGetInstructorData] = useState([]) // รับค่าข้อมูลอาจารย์
 
-  //ตัวแปรเก็บข้อมูลเอกสาร
-  const [getDocType, setGetDocTypeData] = useState('') // รับค่าข้อมูลประเภทเอกสาร
-  const [getCHType, setGetCHData] = useState('') // รับค่าข้อมูลประเภทเอกสาร CH
-  const [getStudentName, setGetStudentNameData] = useState('') // รับค่าข้อมูลชื่อของนักศึกษา
-
   // ตัวแปรเก็บค่า description
   const [description, setDescriptionData] = useState('')
-  console.log('ประเภทเอกจง', getCHType)
 
   // เก็บข้อมูลลง Api
   useEffect(() => {

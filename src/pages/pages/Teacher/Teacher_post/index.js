@@ -9,6 +9,11 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import PersonIcon from '@mui/icons-material/Person'
 import CardContent from '@mui/material/CardContent'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import SyncIcon from '@mui/icons-material/Sync'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Component Import
 import Insert_post from './Insert_post'
@@ -18,14 +23,13 @@ import Edit_post from './Edit_post'
 
 function Teacher_post() {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
   const [postdata, setPostData] = useState([])
-
-  console.log('postdata99999', postdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -147,8 +151,8 @@ function Teacher_post() {
       width: 100,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleClickDetailDialog(cellValues.row)}>
-            ...
+          <Button variant='text' onClick={() => handleClickDetailDialog(cellValues.row)} style={{ color: '#4CAF50' }}>
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -159,8 +163,12 @@ function Teacher_post() {
       width: 100,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleClickChangStatusDialog(cellValues.row)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleClickChangStatusDialog(cellValues.row)}
+            style={{ color: '#2196F3' }}
+          >
+            <SyncIcon />
           </Button>
         )
       }
@@ -172,11 +180,9 @@ function Teacher_post() {
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
-        const isDisabled = cellValues.row.project_status === '7'
-
         return (
-          <Button variant='text' onClick={() => handleClickEditDialog(cellValues.row)} disabled={isDisabled}>
-            {isDisabled ? 'disable' : '...'}
+          <Button variant='text' onClick={() => handleClickEditDialog(cellValues.row)} style={{ color: '#FFC107' }}>
+            <EditIcon />
           </Button>
         )
       }
@@ -187,8 +193,12 @@ function Teacher_post() {
       width: 100,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleDeleteSubmit(cellValues.row.public_relations_id)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleDeleteSubmit(cellValues.row.public_relations_id)}
+            style={{ color: '#F44336' }}
+          >
+            <DeleteIcon />
           </Button>
         )
       }
@@ -201,7 +211,6 @@ function Teacher_post() {
       try {
         setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallpost`)
-        console.log('post dddddd', response.data.allpost)
         setPostData(response.data.allpost)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
       } catch (error) {
@@ -210,7 +219,7 @@ function Teacher_post() {
       }
     }
     fetchData()
-  }, [openInsertDialog, openDialogChangStatus])
+  }, [openInsertDialog, openDialogChangStatus, refreshData])
 
   // ฟังก์ชันสำหรับ Delete DATA
   const handleDeleteSubmit = public_relations_id => {
@@ -225,8 +234,6 @@ function Teacher_post() {
         const data = {
           public_relations_id: public_relations_id
         }
-
-        console.log('ดาต้า', data)
 
         if (public_relations_id !== '') {
           axios
@@ -319,7 +326,7 @@ function Teacher_post() {
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    xxx topic in system
+                    {postdata && postdata.length ? postdata.length : '0'} topic in system
                   </Box>
                 </Typography>
               }
@@ -330,6 +337,23 @@ function Teacher_post() {
         {/* Insert New Post */}
         <Button sx={{ height: '20', marginTop: '5vh' }} variant='contained' onClick={handleClickOpenInsertDialog}>
           New Post
+        </Button>
+        <Button
+          sx={{
+            height: '20',
+            marginTop: '5vh',
+            marginLeft: '5px',
+            backgroundColor: '#FFC107',
+            '&:hover': {
+              backgroundColor: '#FFD600'
+            }
+          }}
+          variant='contained'
+          onClick={() => {
+            setRefreshData(prevSubmitted => !prevSubmitted)
+          }}
+        >
+          <RefreshIcon /> refresh
         </Button>
         <Card sx={{ width: '100%', typography: 'body1', mt: 3 }}>
           <CardContent>

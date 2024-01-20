@@ -58,8 +58,6 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
   const router = useRouter() // router สร้าง path
   const DocumentType = rowData?.ch_type || 'CH01'
 
-  console.log('rowData', rowData)
-
   // เก็บค่าจาก Props ลงในตัวแปร
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const projectID = projectId
@@ -71,8 +69,6 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
   const [fileInputKey, setFileInputKey] = useState(0) // ตัวแปร state สำหรับ key ของ input(ทำให้ input รีค่าใหม่ทึกครั้งที่มีการ อัปโหลดไฟล์)
   const [index, setIndex] = useState('') // ตัวนับเอกสาร
   const [refreshFlag, setRefreshFlag] = useState(true) // ตัวแปรรีค่าทีเซตใน useEffect
-
-  console.log('documentName', documentName)
 
   //รีเซ็ตตข้อมูลใหม่ทุกครั้งที่มีการ เปิด/ปิก analog
   const resetForm = () => {
@@ -109,7 +105,7 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
         .padStart(2, '0')}`
 
       const Nametrash = `${rowData.ch_type}_${formattedDate}`
-      console.log('Nametrash', Nametrash)
+
       setDocumentName(Nametrash)
     }
   }, [rowData])
@@ -205,10 +201,9 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
         ch_file_name: newFilename
       }
 
-      console.log('Upload data', data)
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ch`, data)
-        console.log('อัปโหลดไฟล์', response.data)
+
         alert('Success')
 
         // Swal.fire({
@@ -347,7 +342,6 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getall_GD_documenttemplate?document_type=${DocumentType}`
         )
-        console.log('นํ้าแข็งไส', response.data.data)
 
         setDocumentData(response.data.data)
       } catch (error) {
@@ -364,9 +358,6 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
   const handleDownload = async FileName => {
     const fileName = FileName
     const docType = DocumentType
-
-    console.log('ชื่อใหม่', fileName)
-    console.log('ประเภทเอกสาร', docType)
 
     try {
       const downloadResponse = await fetch('/api/download_form_ch', {
@@ -442,9 +433,6 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
   //----------------------------จบฟังก์พรีวิวเอกสาร--------------------------//
 
   //--------------------------------------------------------------จบฟังก์ชันดาวน์โหลดเอกสาร--------------------------------------------------//
-
-  console.log('Document type', DocumentType)
-  console.log('Document dataxxxx', documentData)
 
   //---------------------------------------------------------------//
   // ฟังชัน Active Document

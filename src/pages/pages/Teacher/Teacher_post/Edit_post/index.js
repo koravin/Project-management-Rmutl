@@ -33,8 +33,6 @@ export default function Edit_post({ open, handleClose, rowData }) {
   // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
   const [submitted, setSubmitted] = useState(false)
 
-  console.log('rowData Edit modal', rowData)
-
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -96,8 +94,6 @@ export default function Edit_post({ open, handleClose, rowData }) {
       topicname: topic,
       description: postdata
     }
-
-    console.log('send data', data)
 
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/post_interest`, data)

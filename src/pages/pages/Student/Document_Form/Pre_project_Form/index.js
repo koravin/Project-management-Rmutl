@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import DownloadIcon from '@mui/icons-material/Download'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
@@ -83,7 +84,7 @@ function Pre_project_Form() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDownload(cellValues.row.ce_file_name, cellValues.row.ce_type)}>
-            ...
+            <DownloadIcon />
           </Button>
         )
       }
@@ -97,8 +98,6 @@ function Pre_project_Form() {
         setIsLoading(true) // เริ่มต้น loading
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallformdocument_ce`)
-
-        console.log('My My My', response.data.data)
 
         setProjectData(response.data.data)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
@@ -114,9 +113,6 @@ function Pre_project_Form() {
   const handleDownload = async (FileName, DocumentType) => {
     const fileName = FileName
     const docType = DocumentType
-
-    console.log('fileName', fileName)
-    console.log('docType', docType)
 
     try {
       const downloadResponse = await fetch('/api/download_form_ce', {

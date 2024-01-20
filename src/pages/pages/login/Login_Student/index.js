@@ -126,6 +126,13 @@ const Login_Student = () => {
           localStorage.setItem('jwtToken', response.data.jwt)
           localStorage.setItem('jwtRole', response.data.jwtRole)
           localStorage.setItem('jwtUser_id', response.data.studentId)
+
+          setTimeout(() => {
+            localStorage.removeItem('jwtToken')
+            localStorage.removeItem('jwtRole')
+            localStorage.removeItem('jwtUser_id')
+          }, 3600 * 1000)
+
           Swal.fire({
             icon: 'success',
             title: 'Login Success'
@@ -259,7 +266,13 @@ const Login_Student = () => {
             >
               <FormControlLabel control={<Checkbox />} label='Remember Me' />
               <Link passHref href='/'>
-                <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
+                <LinkStyled
+                  onClick={() => {
+                    router.push('/')
+                  }}
+                >
+                  guest login
+                </LinkStyled>
               </Link>
             </Box>
             <Button fullWidth size='large' variant='contained' sx={{ marginBottom: 7 }} onClick={handleInsertSubmit}>

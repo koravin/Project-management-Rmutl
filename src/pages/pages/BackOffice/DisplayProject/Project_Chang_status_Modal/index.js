@@ -32,8 +32,6 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
   // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
   const [submitted, setSubmitted] = useState(false)
 
-  //   console.log('rowdata section', rowData)
-
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -87,8 +85,6 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
       project_id: rowData.project_id,
       project_status: statusId
     }
-
-    console.log('data', data)
 
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/change_project_status`, data)

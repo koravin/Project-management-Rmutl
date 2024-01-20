@@ -42,8 +42,6 @@ export default function Detail_teacher_post({ open, handleClose, rowData }) {
   const [postId, setPostId] = useState('')
   const [postData, setPostData] = useState('')
 
-  console.log('postId', postId)
-
   // เก็บค่า id post
   useEffect(() => {
     if (rowData && rowData.public_relations_id) {
@@ -66,7 +64,7 @@ export default function Detail_teacher_post({ open, handleClose, rowData }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/get_post_detail?public_relations_id=${postId}`
         )
-        console.log('post AAAAAAAA', response.data.Data[0])
+
         setPostData(response.data.Data[0])
       } catch (error) {
         console.error(error)

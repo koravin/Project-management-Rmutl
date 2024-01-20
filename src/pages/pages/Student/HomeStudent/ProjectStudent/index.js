@@ -7,19 +7,20 @@ import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Component Import
 import StudentProjectFinalDetail from './StudentProjectFinalDetail'
 
 function ProjectStudent() {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
-
-  console.log('projectdata', projectdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -49,7 +50,6 @@ function ProjectStudent() {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -81,32 +81,34 @@ function ProjectStudent() {
       width: 200,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'ไม่ผ่าน'
-          statusColor = 'white'
-          bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'black'
+        } else if (value === '3') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#2979ff'
-        } else if (value === '3') {
-          statusText = 'สามารถสอบได้'
-          statusColor = 'white'
-          bgColor = '#ff9800'
         } else if (value === '4') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'yellow'
+        } else if (value === '5') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#ff9800'
-        } else if (value === '5') {
-          statusText = 'ผ่านแล้ว'
+        } else if (value === '6') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -139,7 +141,7 @@ function ProjectStudent() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
-            ...
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -157,8 +159,6 @@ function ProjectStudent() {
     }
   }, [])
 
-  console.log('user_id', user_id)
-
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
@@ -169,8 +169,6 @@ function ProjectStudent() {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallmyproject?student_id=${user_id}`
         )
 
-        console.log('My projectttt', response.data)
-
         setProjectData(response.data.projectlist)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
       } catch (error) {
@@ -179,7 +177,7 @@ function ProjectStudent() {
       }
     }
     fetchData()
-  }, [openDialogChangStatus, user_id])
+  }, [openDialogChangStatus, user_id, refreshData])
 
   // ฟังก์ชันสำหรับ Delete DATA
   const handleDeleteSubmit = projectId => {
@@ -194,8 +192,6 @@ function ProjectStudent() {
         const data = {
           project_id: projectId
         }
-
-        // console.log('ดาต้า', data)
 
         if (projectId !== '') {
           axios
@@ -232,6 +228,23 @@ function ProjectStudent() {
   return (
     <div>
       <Grid>
+        <Button
+          sx={{
+            marginBottom: '10px',
+            width: '15vh',
+            height: '20',
+            backgroundColor: '#FFC107',
+            '&:hover': {
+              backgroundColor: '#FFD600'
+            }
+          }}
+          variant='contained'
+          onClick={() => {
+            setRefreshData(prevSubmitted => !prevSubmitted)
+          }}
+        >
+          <RefreshIcon /> refresh
+        </Button>
         <Card>
           <CardContent>
             <Box sx={{ height: '100%', width: '100%' }}>

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 
 // mui import
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
@@ -11,6 +12,8 @@ import Grid from '@mui/material/Grid'
 import PersonIcon from '@mui/icons-material/Person'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
+import SyncIcon from '@mui/icons-material/Sync'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Dialog import
 import InsertSection from './InsertSection'
@@ -18,6 +21,7 @@ import ChangStatus from './ChangStatus'
 
 const Section_Mg = () => {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
 
   // รับค่าข้อมูล Api
   const [sectionData, setSectionData] = useState([])
@@ -66,7 +70,7 @@ const Section_Mg = () => {
     if (openDialog) {
       fetchData()
     }
-  }, [openDialog, openDialogChangStatus])
+  }, [openDialog, openDialogChangStatus, refreshData])
 
   // Table colum
   const columns = [
@@ -126,8 +130,12 @@ const Section_Mg = () => {
       width: 150,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleChangSectionStatusClick(cellValues.row)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleChangSectionStatusClick(cellValues.row)}
+            style={{ color: '#2196F3' }}
+          >
+            <SyncIcon />
           </Button>
         )
       },
@@ -156,7 +164,15 @@ const Section_Mg = () => {
 
       {/* Header card */}
       <Grid style={{ width: '100%' }}>
-        <Card style={{ borderRadius: '20px', background: '#00BFFF', margin: 0, padding: 0 }}>
+        <Card
+          style={{
+            borderRadius: '20px',
+            margin: 0,
+            padding: 0,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            background: 'linear-gradient(135deg, #00BFFF 80%, #1E90FF 100%)'
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -198,7 +214,7 @@ const Section_Mg = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx Section in system
+                  {sectionData && sectionData.length ? sectionData.length : '0'} Section in system
                 </Box>
               </Typography>
             }
@@ -216,27 +232,48 @@ const Section_Mg = () => {
         New Section
       </Button>
 
+      <Button
+        sx={{
+          marginBottom: '10px',
+          height: '20',
+          marginTop: '5vh',
+          marginLeft: '5px',
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> refresh
+      </Button>
+
       {/* datagrid content 01 */}
       <Box sx={{ height: '100%', width: '100%' }}>
         <Card style={{ padding: '5px' }}>
-          {sectionData && sectionData.length > 0 ? (
-            <DataGrid
-              rows={sectionData}
-              columns={columns}
-              getRowId={row => row.section_id}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 10
+          <CardContent>
+            {sectionData && sectionData.length > 0 ? (
+              <DataGrid
+                rows={sectionData}
+                columns={columns}
+                getRowId={row => row.section_id}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
                   }
-                }
-              }}
-              pageSizeOptions={[5, 10, 20]}
-              disableRowSelectionOnClick
-            />
-          ) : (
-            <p>Nodata</p>
-          )}
+                }}
+                pageSizeOptions={[5, 10, 20]}
+                disableRowSelectionOnClick
+              />
+            ) : (
+              <p>Nodata</p>
+            )}
+          </CardContent>
         </Card>
       </Box>
 

@@ -40,8 +40,6 @@ export default function Detail_post({ open, handleClose, rowData }) {
   // ตัวแปร เก็บ ค่า เพื่อส่งไปในฟอร์ม
   const [statusId, setStatusId] = useState('')
 
-  console.log('rowDatarowData', rowData)
-
   // ล้างค่าข้อมูลเมื่อ Modal เปิดหรือปิด
   useEffect(() => {
     if (!open) {
@@ -72,10 +70,10 @@ export default function Detail_post({ open, handleClose, rowData }) {
           <Typography style={{ color: 'grey' }}>Topic Name: {rowData?.header_name || 'N/A'} </Typography>
           <Typography style={{ color: 'grey' }}>
             Topic Status:{' '}
-            {rowData?.status
-              ? rowData.status === '1'
+            {rowData?.public_relation_status
+              ? rowData.public_relation_status === '1'
                 ? 'Active'
-                : rowData.status === '2'
+                : rowData.public_relation_status === '2'
                 ? 'Unactive'
                 : 'N/A'
               : 'N/A'}
@@ -90,9 +88,6 @@ export default function Detail_post({ open, handleClose, rowData }) {
             </CardContent>
           </Card>
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleChangStatus}>Update Status</Button>
-        </DialogActions> */}
       </BootstrapDialog>
     </React.Fragment>
   )

@@ -85,8 +85,6 @@ export default function Transfer_project({ open, handleClose, section }) {
       preproject_list: selectedProject
     }
 
-    // console.log('send data', data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/transferproject_many`, data)
       .then(response => {
@@ -115,37 +113,35 @@ export default function Transfer_project({ open, handleClose, section }) {
       disableColumnMenu: true,
       disableColumnSort: true,
       renderCell: params => {
-        const value = params.value // ค่าในคอลัมน์
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'Status0'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'Status1'
-          statusColor = 'white'
-          bgColor = '#4caf50'
         } else if (value === '2') {
-          statusText = 'Status2'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'black'
         } else if (value === '3') {
-          statusText = 'Status3'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = 'Status4'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'yellow'
         } else if (value === '5') {
-          statusText = 'Status5'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = 'Pass'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {

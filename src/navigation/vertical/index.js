@@ -12,6 +12,17 @@ import CreditCardOutline from 'mdi-material-ui/CreditCardOutline'
 import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
+import { AddCircle, Edit, Delete, Visibility, Settings } from '@mui/icons-material'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import PublicIcon from '@mui/icons-material/Public'
+import PostAddIcon from '@mui/icons-material/PostAdd'
+import AssignmentIcon from '@mui/icons-material/Assignment'
+import HomeIcon from '@mui/icons-material/Home'
+import RecommendIcon from '@mui/icons-material/Recommend'
+import Diversity1Icon from '@mui/icons-material/Diversity1'
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt'
+import LocalPostOfficeIcon from '@mui/icons-material/LocalPostOffice'
 
 const Navigation = () => {
   const [jwtToken, setJwtToken] = useState(null)
@@ -19,8 +30,6 @@ const Navigation = () => {
 
   // Variable
   const [role, setRole] = useState('')
-
-  console.log('role:', role)
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -39,7 +48,6 @@ const Navigation = () => {
             tokenRole: storedJwtRole
           })
 
-          console.log('จงไร', response.data)
           setRole(response.data.stateRole)
         }
       } catch (error) {
@@ -55,63 +63,68 @@ const Navigation = () => {
       return [
         {
           title: 'BackOffice',
-          icon: GoogleCirclesExtended,
+          icon: Settings,
           path: '/pages/BackOffice/'
         },
         {
           title: 'Section',
-          icon: FormatLetterCase,
+          icon: OpenInNewIcon,
           path: '/pages/Instructor/Section_Mg/'
         },
         {
           title: 'Form upload',
-          icon: FormatLetterCase,
+          icon: PostAddIcon,
           path: '/pages/Instructor/Templat_Upload/'
         },
         {
-          title: 'Manage Section',
-          icon: FormatLetterCase,
+          title: 'Study Management',
+          icon: Visibility,
           path: '/pages/Instructor/Manage/'
+        },
+        {
+          title: 'Public Document',
+          icon: PublicIcon,
+          path: '/pages/Instructor/Public_Document_Upload/'
         }
       ]
     } else if (role === 'นักศึกษา') {
       return [
         {
           title: 'Home',
-          icon: GoogleCirclesExtended,
+          icon: HomeIcon,
           path: '/pages/Student/HomeStudent/'
         },
         {
           title: 'Document Form',
-          icon: FormatLetterCase,
+          icon: AssignmentIcon,
           path: '/pages/Student/Document_Form/'
         },
         {
           title: 'Recommend Project',
-          icon: FormatLetterCase,
+          icon: RecommendIcon,
           path: '/pages/Student/Recommend_Project/'
         },
         {
           title: 'Post form teacher',
-          icon: FormatLetterCase,
-          path: '/pages/Student/Recommend_Project/'
+          icon: Diversity1Icon,
+          path: '/pages/Student/Post_Teacher/'
         }
       ]
     } else if (role === 'อาจารย์') {
       return [
         {
           title: 'Teacher Load',
-          icon: GoogleCirclesExtended,
+          icon: HomeRepairServiceIcon,
           path: '/pages/Teacher/Teacher_load/'
         },
         {
           title: 'Post project',
-          icon: GoogleCirclesExtended,
+          icon: LocalPostOfficeIcon,
           path: '/pages/Teacher/Teacher_post'
         },
         {
           title: 'Committee',
-          icon: GoogleCirclesExtended,
+          icon: PeopleAltIcon,
           path: '/pages/Teacher/Committee'
         }
       ]

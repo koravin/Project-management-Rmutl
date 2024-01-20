@@ -93,8 +93,6 @@ export default function Insert_post({ open, handleClose }) {
       description: postdata
     }
 
-    console.log('send data', data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/post_interest`, data)
       .then(response => {

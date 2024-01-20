@@ -6,19 +6,21 @@ import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Component Import
 import Load_committee_project_modal from './Load_committee_project_modal'
 
 function Committee_project_load({ loadCommitteeProjectData }) {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
-
-  console.log('projectdata', projectdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -48,7 +50,6 @@ function Committee_project_load({ loadCommitteeProjectData }) {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -80,32 +81,34 @@ function Committee_project_load({ loadCommitteeProjectData }) {
       width: 200,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'ไม่ผ่าน'
-          statusColor = 'white'
-          bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'ยังไม่ได้ดำเนินการ'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = 'อยู่ระหว่างการดำเนินการ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'black'
+        } else if (value === '3') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#2979ff'
-        } else if (value === '3') {
-          statusText = 'สามารถสอบได้'
-          statusColor = 'white'
-          bgColor = '#ff9800'
         } else if (value === '4') {
-          statusText = 'ยังไม่ผ่านการสอบ'
+          statusText = statusName
+          statusColor = 'white'
+          bgColor = 'yellow'
+        } else if (value === '5') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#ff9800'
-        } else if (value === '5') {
-          statusText = 'ผ่านแล้ว'
+        } else if (value === '6') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -138,7 +141,7 @@ function Committee_project_load({ loadCommitteeProjectData }) {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
-            ...
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -151,7 +154,6 @@ function Committee_project_load({ loadCommitteeProjectData }) {
       try {
         setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallprojects`)
-        console.log(response.data.data)
         setProjectData(response.data.data)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
       } catch (error) {
@@ -160,7 +162,7 @@ function Committee_project_load({ loadCommitteeProjectData }) {
       }
     }
     fetchData()
-  }, [openDialogChangStatus])
+  }, [openDialogChangStatus, refreshData])
 
   // ส่งค่าจากแถวไปหน้า Detail
   const handleDetailClick = projectId => {
@@ -180,8 +182,6 @@ function Committee_project_load({ loadCommitteeProjectData }) {
         const data = {
           project_id: projectId
         }
-
-        // console.log('ดาต้า', data)
 
         if (projectId !== '') {
           axios
@@ -217,59 +217,78 @@ function Committee_project_load({ loadCommitteeProjectData }) {
 
   return (
     <div>
+      <Button
+        sx={{
+          marginBottom: '10px',
+          width: '15vh',
+          height: '20',
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> refresh
+      </Button>
       <Card>
-        <Grid>
-          <Box sx={{ height: '100%', width: '100%' }}>
-            {isLoading ? (
-              <Box
-                sx={{
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
-                  position: 'fixed', // ติดตรงกลางหน้าจอ
-                  top: 0,
-                  left: 0,
-                  zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
-                }}
-              >
-                <img
-                  height='150'
-                  src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
-                  alt='Loading...'
-                />
-              </Box>
-            ) : loadCommitteeProjectData === null || typeof projectdata === 'undefined' ? (
-              <p>No Data</p>
-            ) : loadCommitteeProjectData.length === 0 ? (
-              <p>No Data</p>
-            ) : (
-              <DataGrid
-                rows={loadCommitteeProjectData}
-                columns={columns}
-                getRowId={row => row.project_id}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10
+        <CardContent>
+          <Grid>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0, 0, 0, 0.5)', // สีพื้นหลังทึบ
+                    position: 'fixed', // ติดตรงกลางหน้าจอ
+                    top: 0,
+                    left: 0,
+                    zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+                  }}
+                >
+                  <img
+                    height='150'
+                    src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
+                    alt='Loading...'
+                  />
+                </Box>
+              ) : loadCommitteeProjectData === null || typeof projectdata === 'undefined' ? (
+                <p>No Data</p>
+              ) : loadCommitteeProjectData.length === 0 ? (
+                <p>No Data</p>
+              ) : (
+                <DataGrid
+                  rows={loadCommitteeProjectData}
+                  columns={columns}
+                  getRowId={row => row.project_id}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10
+                      }
                     }
-                  }
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                disableRowSelectionOnClick
-              />
-            )}
-          </Box>
-          {/*  Detail data Dialog */}
-          <Load_committee_project_modal
-            open={openDetailDialog}
-            handleClose={handleCloseDetailDialog}
-            fullWidth
-            rowData={selectedRowData}
-          />
-        </Grid>
+                  }}
+                  pageSizeOptions={[5, 10, 20]}
+                  disableRowSelectionOnClick
+                />
+              )}
+            </Box>
+            {/*  Detail data Dialog */}
+            <Load_committee_project_modal
+              open={openDetailDialog}
+              handleClose={handleCloseDetailDialog}
+              fullWidth
+              rowData={selectedRowData}
+            />
+          </Grid>
+        </CardContent>
       </Card>
     </div>
   )

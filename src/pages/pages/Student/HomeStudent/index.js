@@ -88,7 +88,7 @@ const Committee = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx Project Active in system
+                  2 Project Table in system
                 </Box>
               </Typography>
             }

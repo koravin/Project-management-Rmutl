@@ -22,6 +22,7 @@ export default function Load_committee_project_detail({ project_id }) {
   const [projectNameTh, setProjectNameTh] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาไทย)
   const [projectNameEn, setProjectNameEn] = useState('') // เก็บข้อมูลชื่อโครงงาน (ภาษาอังกฤษ)
   const [projectstatus, setProjectStatus] = useState('') // รับข้อมูล สถานะของโครงงาน
+  const [projectstatusname, setProjectStatusName] = useState('')
   const [year, setYear] = useState('') // เก็บข้อมูลปี
   const [Term, setTerm] = useState('') // เก็บข้อมูล Term
   const [Sec, setSec] = useState('') // เก็บข้อมูล Sec
@@ -38,8 +39,6 @@ export default function Load_committee_project_detail({ project_id }) {
   const router = useRouter() // router สร้าง path
   const requestdata = project_id
 
-  //   console.log('Love Love', requestdata)
-
   // ดึงข้อมูล Api มา Set
   useEffect(() => {
     const fetcData = async () => {
@@ -48,17 +47,23 @@ export default function Load_committee_project_detail({ project_id }) {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${requestdata}`
         )
 
-        // console.log(response.data.PreprojectData[0].preproject_name_th)
+        // ชื่อ advisor
+        const prefix = response.data.PreprojectData[0].prefix
+        const first_name = response.data.PreprojectData[0].first_name
+        const last_name = response.data.PreprojectData[0].last_name
+        const fullNameAdvisor = `${prefix} ${first_name} ${last_name}`
+
         setProjectNameTh(response.data.PreprojectData[0].project_name_th)
         setProjectNameEn(response.data.PreprojectData[0].project_name_eng)
         setProjectStatus(response.data.PreprojectData[0].project_status)
+        setProjectStatusName(response.data.PreprojectData[0].status_name)
         setYear(response.data.PreprojectData[0].sem_year)
         setTerm(response.data.PreprojectData[0].semester_order)
         setSec(response.data.PreprojectData[0].section_name)
         setProjectCode(response.data.PreprojectData[0].project_code)
-        setCurriculums(response.data.PreprojectData[0].curriculum_name)
+        setCurriculums(response.data.PreprojectData[0].curriculum)
         setProjectType(response.data.PreprojectData[0].project_type)
-        setAdvisor(response.data.PreprojectData[0].instructors_name)
+        setAdvisor(fullNameAdvisor)
         setSubAdvisor(response.data.PreprojectSubAdviser)
         setCommittee(response.data.PreprojectCommittee)
         setStudent(response.data.PreprojectStudent)
@@ -127,7 +132,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    ไม่ผ่าน
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '1' && (
@@ -136,7 +141,7 @@ export default function Load_committee_project_detail({ project_id }) {
                     style={{
                       color: 'white',
                       fontWeight: 'bold',
-                      backgroundColor: '#f44336',
+                      backgroundColor: 'black',
                       paddingLeft: '10px',
                       paddingRight: '10px',
                       paddingTop: '2px',
@@ -145,7 +150,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    โครงงานยังไม่ได้รับการอนุมัติ
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '2' && (
@@ -154,7 +159,7 @@ export default function Load_committee_project_detail({ project_id }) {
                     style={{
                       color: 'white',
                       fontWeight: 'bold',
-                      backgroundColor: '#f44336',
+                      backgroundColor: 'black',
                       paddingLeft: '10px',
                       paddingRight: '10px',
                       paddingTop: '2px',
@@ -163,7 +168,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    ยังไม่ได้ดำเนินการ
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '3' && (
@@ -181,7 +186,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    อยู่ระหว่างการดำเนินการ
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '4' && (
@@ -199,7 +204,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    สามารถสอบได้
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '5' && (
@@ -217,7 +222,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    ยังไม่ผ่านการสอบ
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '6' && (
@@ -235,7 +240,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    ผ่านแล้วแต่ยังไม่ได้โอน
+                    {projectstatusname}
                   </Box>
                 )}
                 {projectstatus === '7' && (
@@ -253,7 +258,7 @@ export default function Load_committee_project_detail({ project_id }) {
                       borderRadius: '50px'
                     }}
                   >
-                    โอนแล้ว
+                    {projectstatusname}
                   </Box>
                 )}
               </Typography>
@@ -341,11 +346,6 @@ export default function Load_committee_project_detail({ project_id }) {
                 ))}
               </Typography>
             </CardContent>
-            {/* <CardActions className='card-action-dense'>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button onClick={() => handleEditClick(requestdata)}>แก้ไขข้อมูล</Button>
-              </Box>
-            </CardActions> */}
           </Grid>
         </Grid>
       </Card>

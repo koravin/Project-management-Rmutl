@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 
 // mui import
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
@@ -23,7 +24,6 @@ const Active_Section = () => {
 
   // รับค่าข้อมูล Api
   const [sectionData, setSectionData] = useState([])
-  console.log('sectionData', sectionData)
 
   // รับค่าข้อมูลจาก Api Active Section
   useEffect(() => {
@@ -188,24 +188,26 @@ const Active_Section = () => {
           </Grid>
           <Box sx={{ height: '100%', width: '100%' }}>
             <Card style={{ padding: '5px' }}>
-              {sectionData && sectionData.length > 0 ? (
-                <DataGrid
-                  rows={sectionData.filter(row => row.subject_type === '1')}
-                  columns={Preproject_columns}
-                  getRowId={row => row.section_id}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 10
+              <CardContent>
+                {sectionData && sectionData.length > 0 ? (
+                  <DataGrid
+                    rows={sectionData.filter(row => row.subject_type === '1')}
+                    columns={Preproject_columns}
+                    getRowId={row => row.section_id}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 10
+                        }
                       }
-                    }
-                  }}
-                  pageSizeOptions={[5, 10, 20]}
-                  disableRowSelectionOnClick
-                />
-              ) : (
-                <p>Nodata</p>
-              )}
+                    }}
+                    pageSizeOptions={[5, 10, 20]}
+                    disableRowSelectionOnClick
+                  />
+                ) : (
+                  <p>Nodata</p>
+                )}
+              </CardContent>
             </Card>
           </Box>
         </Box>
@@ -219,24 +221,26 @@ const Active_Section = () => {
           </Grid>
           <Box sx={{ height: '100%', width: '100%' }}>
             <Card style={{ padding: '5px' }}>
-              {sectionData && sectionData.length > 0 ? (
-                <DataGrid
-                  rows={sectionData.filter(row => row.subject_type === '2')}
-                  columns={Project_columns}
-                  getRowId={row => row.section_id}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 10
+              <CardContent>
+                {sectionData && sectionData.length > 0 ? (
+                  <DataGrid
+                    rows={sectionData.filter(row => row.subject_type === '2')}
+                    columns={Project_columns}
+                    getRowId={row => row.section_id}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 10
+                        }
                       }
-                    }
-                  }}
-                  pageSizeOptions={[5, 10, 20]}
-                  disableRowSelectionOnClick
-                />
-              ) : (
-                <p>Nodata</p>
-              )}
+                    }}
+                    pageSizeOptions={[5, 10, 20]}
+                    disableRowSelectionOnClick
+                  />
+                ) : (
+                  <p>Nodata</p>
+                )}
+              </CardContent>
             </Card>
           </Box>
         </Box>

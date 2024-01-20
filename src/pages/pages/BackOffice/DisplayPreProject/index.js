@@ -5,6 +5,13 @@ import axios from 'axios'
 import Button from '@mui/material/Button'
 import { useRouter } from 'next/router'
 import { Grid, Typography } from '@mui/material'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import SyncIcon from '@mui/icons-material/Sync'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
@@ -15,6 +22,7 @@ import Preproject_Chang_status_Modal from './Preproject_Chang_status_Modal'
 
 function DisplayPreProject() {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 
@@ -49,7 +57,6 @@ function DisplayPreProject() {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -125,47 +132,41 @@ function DisplayPreProject() {
   // ประกาศ Colum DataGrid
   const columns = [
     { field: 'project_code', headerName: 'ID', width: 120 },
-    { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
+    { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 280 },
     {
       field: 'project_status',
       headerName: 'สถานะโครงงาน',
       width: 200,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = '0'
-          statusColor = 'white'
-          bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = '1'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
         } else if (value === '2') {
-          statusText = '2'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#f44336'
+          bgColor = 'black'
         } else if (value === '3') {
-          statusText = '3'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = '4'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#ff9800'
+          bgColor = 'yellow'
         } else if (value === '5') {
-          statusText = '5'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = '6'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '7') {
-          statusText = '7'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -191,31 +192,39 @@ function DisplayPreProject() {
         )
       }
     },
-    { field: 'YearColum', headerName: 'ปีการศึกษา / เทอม / Sec', width: 200 },
+    { field: 'YearColum', headerName: 'ปีการศึกษา/เทอม/Sec', width: 150 },
     {
       field: 'Detail',
       headerName: 'Detail',
-      width: 100,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleDetailClick(cellValues.row.preproject_id)}
+            style={{ color: '#4CAF50' }}
+          >
+            <VisibilityIcon />
           </Button>
         )
       }
     },
     {
       field: 'Chang Status',
-      headerName: 'Chang Status',
-      width: 100,
+      headerName: 'Status',
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleClickChangStatusDialog(cellValues.row)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleClickChangStatusDialog(cellValues.row)}
+            style={{ color: '#2196F3' }}
+          >
+            <SyncIcon />
           </Button>
         )
       }
@@ -224,15 +233,20 @@ function DisplayPreProject() {
     {
       field: 'Edit',
       headerName: 'Edit',
-      width: 100,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
         const isDisabled = cellValues.row.project_status === '7'
 
         return (
-          <Button variant='text' onClick={() => handleEditClick(cellValues.row.preproject_id)} disabled={isDisabled}>
-            {isDisabled ? 'disable' : '...'}
+          <Button
+            variant='text'
+            onClick={() => handleEditClick(cellValues.row.preproject_id)}
+            disabled={isDisabled}
+            style={{ color: '#FFC107' }}
+          >
+            {isDisabled ? 'disable' : <EditIcon />}
           </Button>
         )
       }
@@ -240,13 +254,17 @@ function DisplayPreProject() {
     {
       field: 'Delete',
       headerName: 'Delete',
-      width: 100,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
         return (
-          <Button variant='text' onClick={() => handleDeleteSubmit(cellValues.row.preproject_id)}>
-            ...
+          <Button
+            variant='text'
+            onClick={() => handleDeleteSubmit(cellValues.row.preproject_id)}
+            style={{ color: '#F44336' }}
+          >
+            <DeleteIcon />
           </Button>
         )
       }
@@ -259,7 +277,6 @@ function DisplayPreProject() {
       try {
         setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
-        console.log(response.data.data)
 
         const projects = response.data.data.map(project => ({
           ...project,
@@ -273,14 +290,14 @@ function DisplayPreProject() {
       }
     }
     fetchData()
-  }, [openDialogChangStatus])
+  }, [openDialogChangStatus, refreshData])
 
   return (
     <div>
       <Grid>
-        <Typography variant='h6' align='center' sx={{ mb: 10, fontWeight: 'bold' }}>
+        {/* <Typography variant='h6' align='center' sx={{ mb: 10, fontWeight: 'bold' }}>
           ตารางแสดงรายชื่อหัวข้อโครงงาน - วิชาพรีโปรเจค
-        </Typography>
+        </Typography> */}
         {/* ปุ่ม Insert project */}
         <Button
           sx={{ marginBottom: '10px', width: '15vh', height: '20' }}
@@ -291,46 +308,70 @@ function DisplayPreProject() {
         >
           เพิ่มข้อมูล
         </Button>
-        <Box sx={{ height: '100%', width: '100%' }}>
-          {isLoading ? (
-            <Box
-              sx={{
-                height: '100%',
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'fixed', // ติดตรงกลางหน้าจอ
-                top: 0,
-                left: 0,
-                zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
-              }}
-            >
-              <img
-                height='150'
-                src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
-                alt='Loading...'
-              />
+
+        {/* ปุ่ม Refresh */}
+        <Button
+          sx={{
+            marginBottom: '10px',
+            marginLeft: '5px',
+            width: '15vh',
+            height: '20',
+            backgroundColor: '#FFC107',
+            '&:hover': {
+              backgroundColor: '#FFD600'
+            }
+          }}
+          variant='contained'
+          onClick={() => {
+            setRefreshData(prevSubmitted => !prevSubmitted)
+          }}
+        >
+          <RefreshIcon /> รีเฟรช
+        </Button>
+        <Card>
+          <CardContent>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'fixed', // ติดตรงกลางหน้าจอ
+                    top: 0,
+                    left: 0,
+                    zIndex: 9999 // ให้แสดงหน้าทับทุกอย่าง
+                  }}
+                >
+                  <img
+                    height='150'
+                    src='https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif'
+                    alt='Loading...'
+                  />
+                </Box>
+              ) : projectdata.length === 0 ? (
+                <p>No Data</p>
+              ) : (
+                <DataGrid
+                  rows={projectdata}
+                  columns={columns}
+                  getRowId={row => row.preproject_id}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10
+                      }
+                    }
+                  }}
+                  pageSizeOptions={[5, 10, 20]}
+                  disableRowSelectionOnClick
+                />
+              )}
             </Box>
-          ) : projectdata.length === 0 ? (
-            <p>No Data</p>
-          ) : (
-            <DataGrid
-              rows={projectdata}
-              columns={columns}
-              getRowId={row => row.preproject_id}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 10
-                  }
-                }
-              }}
-              pageSizeOptions={[5, 10, 20]}
-              disableRowSelectionOnClick
-            />
-          )}
-        </Box>
+          </CardContent>
+        </Card>
       </Grid>
       {/*  Detail data Dialog */}
       <Preproject_Detail_Modal

@@ -24,7 +24,6 @@ const ManageDocuments = ({ documentStatus, requestdata }) => {
   // เก็บค่าจาก Props ลงในตัวแปร
   const DocState = documentStatus
   const ProjectID = requestdata
-  console.log('รหัสโครงการ', ProjectID)
 
   return (
     <Card>

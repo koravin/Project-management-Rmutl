@@ -9,6 +9,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import PersonIcon from '@mui/icons-material/Person'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 // Component Import
 import Detail_teacher_post from './Detail_teacher_post'
@@ -21,8 +22,6 @@ function Post_Teacher() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
   const [postdata, setPostData] = useState([])
-
-  console.log('postdata', postdata)
 
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
@@ -145,7 +144,7 @@ function Post_Teacher() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleClickDetailDialog(cellValues.row)}>
-            ...
+            <VisibilityIcon />
           </Button>
         )
       }
@@ -227,7 +226,7 @@ function Post_Teacher() {
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    xxx topic in system
+                    {postdata && postdata.length ? postdata.length : '0'} topic in system
                   </Box>
                 </Typography>
               }

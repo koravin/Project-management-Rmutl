@@ -149,8 +149,6 @@ export default function RegisNewProject() {
       committee: allCommitteeValues
     }
 
-    console.log('ข้อมูลส่ง', data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/register_newpreproject`, data)
       .then(response => {
@@ -251,7 +249,6 @@ export default function RegisNewProject() {
     const fetchStudentData = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/secs_active`)
-        console.log('ข้อมูล Section', response.data.data)
 
         // กรองข้อมูลเฉพาะที่มี subject_id เป็น 1
         const filteredSectionData = response.data.data.filter(section => section.subject_id === 1)

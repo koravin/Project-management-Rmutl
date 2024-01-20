@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import SyncIcon from '@mui/icons-material/Sync'
 
 // mui import
 import Card from '@mui/material/Card'
@@ -13,22 +15,29 @@ import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import AddIcon from '@mui/icons-material/Add'
+import Checkbox from '@mui/material/Checkbox'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Dialog import
 import Transfer_project from './Transfer_project'
 import Chang_Project_Status from './Chang_Project_Status'
+import Project_section_detail from './Project_section_detail'
 
 const Project_In_Section = () => {
   const router = useRouter() // router สร้าง path
+  const [refreshData, setRefreshData] = useState(false) // รีตาราง
   const { rowData } = router.query
   const Swal = require('sweetalert2') // นำเข้าตัวsweetalert2
+  // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
+  const [submitted, setSubmitted] = useState(false)
 
   // รับค่าข้อมูล Api
   const [projectData, setProjectData] = useState([])
   const [secData, setSecData] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
 
-  console.log('projectData', projectData)
+  // checkbox variable
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } }
 
   // รับข้อมูล Section จาก page ก่อนหน้า
   useEffect(() => {
@@ -54,6 +63,7 @@ const Project_In_Section = () => {
   // dialog control
   const [openDialog, setOpenDialog] = React.useState(false)
   const [openDialogChangStatus, setOpenDialogChangStatus] = React.useState(false)
+  const [openDetailDialog, setDetailOpenDialog] = React.useState(false)
 
   // useRef สำหรับเก็บค่า openDialog
   // เก็บ State Dialog Insert
@@ -63,6 +73,10 @@ const Project_In_Section = () => {
   // เก็บ State Dialog Chang Status
   const openDialogChangStatusRef = useRef(openDialogChangStatus)
   openDialogChangStatusRef.current = openDialogChangStatus
+
+  // เก็บ State Dialog Ch form
+  const openDialogDetailRef = useRef(openDetailDialog)
+  openDialogDetailRef.current = openDetailDialog
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true)
@@ -80,14 +94,28 @@ const Project_In_Section = () => {
     setOpenDialogChangStatus(false)
   }
 
+  const handleClickOpenDetailDialog = () => {
+    setDetailOpenDialog(true)
+  }
+
+  const handleCloseDetailDialog = () => {
+    setDetailOpenDialog(false)
+  }
+
+  // dialog Ch open
+  const handleDetailDataClick = rowData => {
+    handleClickOpenDetailDialog()
+    setSelectedRowData(rowData)
+  }
+
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/project_in_sec?section_id=${secData}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/project_section_data?section_id=${secData}`
         )
-        setProjectData(response.data.data)
+        setProjectData(response.data.document_Result)
       } catch (error) {
         console.error(error)
       }
@@ -96,13 +124,45 @@ const Project_In_Section = () => {
     if (openDialog) {
       fetchData()
     }
-  }, [openDialog, openDialogChangStatus, secData])
+  }, [openDialog, openDialogChangStatus, secData, submitted, refreshData])
+
+  const handleCheckDocumentClick = (e, ch01_document_id) => {
+    e.preventDefault()
+    setSubmitted(prevSubmitted => !prevSubmitted)
+
+    // ตรวจสอบค่าว่างใน TextField
+    if (!ch01_document_id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'ขาดข้อมูล...',
+        text: 'ระบบขัดข้อง!'
+      })
+
+      return
+    }
+
+    const data = {
+      document_id: ch01_document_id
+    }
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/approve_project_document`, data)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    Swal.fire({
+      icon: 'success',
+      title: 'Update Status Complete'
+    })
+  }
 
   // Table colum
   const columns = [
-    { field: 'project_code', headerName: 'Project Code', width: 150 },
-    { field: 'project_name_th', headerName: 'Project Name(TH)', width: 280 },
-    { field: 'project_name_eng', headerName: 'Project Name(EN)', width: 280 },
+    { field: 'project_code', headerName: 'Project Code', width: 110 },
+    { field: 'project_name_th', headerName: 'Project Name(TH)', width: 250 },
     {
       field: 'project_status',
       headerName: 'Project Status',
@@ -111,49 +171,35 @@ const Project_In_Section = () => {
       disableColumnMenu: true,
       disableColumnSort: true,
       renderCell: params => {
-        const value = params.value // ค่าในคอลัมน์
+        const value = params.value // ค่าในคอลัมน์ 'project_status'
+        const statusName = params.row.status_name
+
         let statusText
         let statusColor
         let bgColor
 
-        if (value === '0') {
-          statusText = 'Status0'
+        if (value === '1') {
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#f44336'
-        } else if (value === '1') {
-          statusText = 'Status1'
-          statusColor = 'white'
-          bgColor = '#4caf50'
         } else if (value === '2') {
-          statusText = 'Status2'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'black'
         } else if (value === '3') {
-          statusText = 'Status3'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#2979ff'
         } else if (value === '4') {
-          statusText = 'Status4'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = 'yellow'
         } else if (value === '5') {
-          statusText = 'Status5'
+          statusText = statusName
           statusColor = 'white'
-          bgColor = '#4caf50'
+          bgColor = '#ff9800'
         } else if (value === '6') {
-          statusText = 'Status6'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '7') {
-          statusText = 'Status7'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '8') {
-          statusText = 'Status8'
-          statusColor = 'white'
-          bgColor = '#4caf50'
-        } else if (value === '9') {
-          statusText = 'Status9'
+          statusText = statusName
           statusColor = 'white'
           bgColor = '#4caf50'
         } else {
@@ -180,16 +226,121 @@ const Project_In_Section = () => {
       }
     },
     {
-      field: 'Chang_status',
-      headerName: 'Chang Status',
-      width: 150,
+      field: 'State',
+      headerName: 'State',
+      width: 80,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleChangProjectStatusClick(cellValues.row)}>
-            ...
+            <SyncIcon />
           </Button>
         )
       },
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'Detail',
+      headerName: 'Detail',
+      width: 100,
+      renderCell: cellValues => {
+        return (
+          <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
+            <VisibilityIcon />
+          </Button>
+        )
+      },
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ch01_document_id',
+      headerName: 'CH01',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ch01_document_id)}
+            disabled={cellValues.row.ch01_document_id === 'no' || cellValues.row.ch01_status === '2'}
+            checked={cellValues.row.ch01_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ch02_document_id',
+      headerName: 'CH02',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ch02_document_id)}
+            disabled={cellValues.row.ch02_document_id === 'no' || cellValues.row.ch02_status === '2'}
+            checked={cellValues.row.ch02_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ch03_document_id',
+      headerName: 'CH03',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ch03_document_id)}
+            disabled={cellValues.row.ch03_document_id === 'no' || cellValues.row.ch03_status === '2'}
+            checked={cellValues.row.ch03_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ch04_document_id',
+      headerName: 'CH04',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ch04_document_id)}
+            disabled={cellValues.row.ch04_document_id === 'no' || cellValues.row.ch04_status === '2'}
+            checked={cellValues.row.ch04_status === '2'}
+          />
+        </div>
+      ),
+      disableColumnFilter: true,
+      disableColumnMenu: true,
+      disableColumnSort: true
+    },
+    {
+      field: 'ch05_document_id',
+      headerName: 'CH05',
+      width: 80,
+      renderCell: cellValues => (
+        <div>
+          <Checkbox
+            {...label}
+            onChange={e => handleCheckDocumentClick(e, cellValues.row.ch05_document_id)}
+            disabled={cellValues.row.ch05_document_id === 'no' || cellValues.row.ch05_status === '2'}
+            checked={cellValues.row.ch05_status === '2'}
+          />
+        </div>
+      ),
       disableColumnFilter: true,
       disableColumnMenu: true,
       disableColumnSort: true
@@ -283,6 +434,25 @@ const Project_In_Section = () => {
       >
         Transfer
       </Button>
+      <Button
+        sx={{
+          marginBottom: '10px',
+          width: '15vh',
+          height: '20',
+          marginTop: '5vh',
+          marginLeft: '5px',
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> refresh
+      </Button>
 
       {/* datagrid content 01 */}
       <Box sx={{ height: '100%', width: '100%' }}>
@@ -329,6 +499,14 @@ const Project_In_Section = () => {
       <Chang_Project_Status
         open={openDialogChangStatus}
         handleClose={handleCloseChangStatusDialog}
+        rowData={selectedRowData}
+      />
+
+      {/*  Detail data Dialog */}
+      <Project_section_detail
+        open={openDetailDialog}
+        handleClose={handleCloseDetailDialog}
+        fullWidth
         rowData={selectedRowData}
       />
     </Grid>

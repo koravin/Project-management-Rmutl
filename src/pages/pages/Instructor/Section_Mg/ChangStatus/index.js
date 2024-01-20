@@ -32,8 +32,6 @@ export default function ChangStatus({ open, handleClose, rowData }) {
   // ตัวแปรสเช็คค่าสถานะปุ่ม Submit
   const [submitted, setSubmitted] = useState(false)
 
-  //   console.log('rowdata section', rowData)
-
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
 

@@ -154,16 +154,11 @@ export default function PreprojectEdit() {
       studen_id: allStudent
     }
 
-    console.log(data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/updatepreproject`, data)
       .then(response => {
         console.log(response)
         handleClose()
-
-        // window.location.reload()
-        // Route.replace(Route.asPath, undefined, { scroll: false })
       })
       .catch(error => {
         console.log(error)
@@ -174,7 +169,7 @@ export default function PreprojectEdit() {
       title: 'อัปเดทข้อมูลแล้วเสร็จ'
     })
 
-    router.push(`/pages/BackOffice/DisplayPreProject`)
+    router.push(`/pages/BackOffice`)
   }
 
   // ตัวแปรเช็คว่ามีข้อมูลให้ Map หรือไม่
@@ -196,9 +191,7 @@ export default function PreprojectEdit() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject?preproject_id=${requestdata}`
         )
-        console.log('ข้อมูลเซตค่า', response.data)
 
-        // console.log(response.data.PreprojectData[0].semester_order)
         setCurriculumsId(response.data.PreprojectData[0].curriculum_id)
         setSubjectId(response.data.PreprojectData[0].subject_id)
         setYearId(response.data.PreprojectData[0].sem_year)
@@ -593,8 +586,6 @@ export default function PreprojectEdit() {
   const [selectStudent, setSelectStudent] = useState([])
   const [additionalStudentForms, setAdditionalStudentForms] = useState([])
 
-  console.log('student data', selectStudent)
-
   //ตัวรี Input
   const autocompleteRef = useRef()
 
@@ -693,7 +684,7 @@ export default function PreprojectEdit() {
                 >
                   {curriculumsData.map(curriculum => (
                     <MenuItem key={curriculum.curriculum_id} value={curriculum.curriculum_id}>
-                      {curriculum.curriculum_short_name_th}
+                      {curriculum.curriculum_name_th}
                     </MenuItem>
                   ))}
                 </Select>
@@ -1038,7 +1029,7 @@ export default function PreprojectEdit() {
             color='error'
             variant='outlined'
             onClick={function () {
-              router.push(`/pages/BackOffice/DisplayPreProject`)
+              router.push(`/pages/BackOffice`)
             }}
           >
             ย้อนกลับ

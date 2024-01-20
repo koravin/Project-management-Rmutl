@@ -1,4 +1,5 @@
 // ** React Imports
+import * as React from 'react'
 import { useState } from 'react'
 
 // ** MUI Imports
@@ -11,127 +12,108 @@ import TabContext from '@mui/lab/TabContext'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
+import PersonIcon from '@mui/icons-material/Person'
+import CardHeader from '@mui/material/CardHeader'
+import Box from '@mui/material/Box'
 import { Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 
+// Component Import
+import DisplayPreProject from './DisplayPreProject'
+import DisplayProject from './DisplayProject'
+
 const BackOffice = () => {
   const router = useRouter() // router สร้าง path
-  // ** State
-  const [value, setValue] = useState('1')
-  const [value2, setValue2] = useState('3')
+  // ** Tab Control
+  const [value, setValue] = React.useState('1')
 
-  const handleChange1 = (event, newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
-  const handleChange2 = (event, newValue) => {
-    setValue2(newValue)
-  }
-
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} sx={{ mt: 5 }}>
-        <Typography variant='h5'>เลือกตาราง</Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12} sx={{ paddingBottom: 4 }}>
+        <Typography variant='h5'>BackOffice</Typography>
       </Grid>
-      {/* การ์ด 1 */}
-      <Grid item xs={12} md={6}>
-        <Card>
-          <TabContext value={value}>
-            <TabList centered onChange={handleChange1} aria-label='card navigation example'>
-              <Tab value='1' label='Pre Project' />
-              <Tab value='2' label='Project' />
-            </TabList>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <TabPanel value='1' sx={{ p: 0 }}>
-                <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                  Pre-project Table
-                </Typography>
-                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
-                  <CardMedia
-                    component='img'
-                    sx={{ height: '10rem', width: '10rem' }}
-                    image='https://cdn-icons-png.flaticon.com/512/1087/1087815.png'
-                    alt='glass-house'
-                  />
-                </Typography>
-                <Button
-                  variant='contained'
-                  onClick={function () {
-                    router.push(`/pages/BackOffice/DisplayPreProject/`)
-                  }}
-                >
-                  Select
-                </Button>
-              </TabPanel>
-              <TabPanel value='2' sx={{ p: 0 }}>
-                <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                  Project Table
-                </Typography>
-                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
-                  <CardMedia
-                    component='img'
-                    sx={{ height: '10rem', width: '10rem' }}
-                    image='https://cdn-icons-png.flaticon.com/512/2683/2683272.png'
-                    alt='glass-house'
-                  />
-                </Typography>
-                <Button
-                  variant='contained'
-                  onClick={function () {
-                    router.push(`/pages/BackOffice/DisplayProject/`)
-                  }}
-                >
-                  Select
-                </Button>
-              </TabPanel>
-            </CardContent>
-          </TabContext>
-        </Card>
-      </Grid>
-      {/* จบ การ์ด 1 */}
 
-      {/* การ์ด 2 */}
-      <Grid item xs={12} md={6}>
-        <Card>
-          <TabContext value={value2}>
-            <TabList centered onChange={handleChange2} aria-label='card navigation example'>
-              <Tab value='3' label='Contain 01' />
-              <Tab value='4' label='Contain 02' />
-            </TabList>
-            <CardContent sx={{ textAlign: 'center' }}>
-              <TabPanel value='3' sx={{ p: 0 }}>
-                <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                  Contain 01
+      {/* Header card */}
+      <Grid style={{ width: '100%', marginBottom: '25px' }}>
+        <Card
+          style={{
+            borderRadius: '20px',
+            margin: 0,
+            padding: 0,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            background: 'linear-gradient(135deg, #00BFFF 80%, #1E90FF 100%)'
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              padding: '10px',
+              borderRadius: '20px',
+              margin: 0,
+              padding: 0
+            }}
+          >
+            <PersonIcon
+              style={{
+                fontSize: '2.5rem',
+                marginTop: '21px',
+                marginLeft: '20px',
+                backgroundColor: '#28c7fc',
+                borderRadius: '10px',
+                padding: '5px'
+              }}
+            />
+            <CardHeader
+              title='CE-Reform'
+              subheader={
+                <Typography variant='body2'>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    Project-MGT
+                  </Box>
+                  <br />
+                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    Rmutl
+                  </Box>
                 </Typography>
-                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
-                  <CardMedia
-                    component='img'
-                    sx={{ height: '10rem', width: '10rem' }}
-                    image='https://cdn-icons-png.flaticon.com/512/1048/1048950.png'
-                    alt='glass-house'
-                  />
-                </Typography>
-                <Button variant='contained'>Button One</Button>
-              </TabPanel>
-              <TabPanel value='4' sx={{ p: 0 }}>
-                <Typography variant='h6' sx={{ marginBottom: 2 }}>
-                  Contain 02
-                </Typography>
-                <Typography variant='body2' sx={{ marginBottom: 4, display: 'flex', justifyContent: 'center' }}>
-                  <CardMedia
-                    component='img'
-                    sx={{ height: '10rem', width: '10rem' }}
-                    image='https://cdn-icons-png.flaticon.com/512/354/354637.png'
-                    alt='glass-house'
-                  />
-                </Typography>
-                <Button variant='contained'>Button Two</Button>
-              </TabPanel>
-            </CardContent>
-          </TabContext>
+              }
+            />
+          </div>
+
+          <CardHeader
+            title='Manage Preproject and Project'
+            subheader={
+              <Typography variant='body2'>
+                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  2 table in system
+                </Box>
+              </Typography>
+            }
+          />
         </Card>
       </Grid>
-      {/* จบ การ์ด 2 */}
+      {/* Header card */}
+
+      <Box sx={{ width: '100%', typography: 'body1' }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label='lab API tabs example'>
+              <Tab label='Pre-project' value='1' />
+              <Tab label='Project' value='2' />
+            </TabList>
+          </Box>
+          <TabPanel value='1'>
+            <DisplayPreProject />
+          </TabPanel>
+          <TabPanel value='2'>
+            <DisplayProject />
+          </TabPanel>
+        </TabContext>
+      </Box>
     </Grid>
   )
 }

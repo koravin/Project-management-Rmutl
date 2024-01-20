@@ -125,6 +125,11 @@ const Login_Teacher_Project = () => {
           // เก็บค่า JWT และ JWT Role ใน localStorage
           localStorage.setItem('jwtToken', response.data.jwt)
           localStorage.setItem('jwtRole', response.data.jwtRole)
+
+          setTimeout(() => {
+            localStorage.removeItem('jwtToken')
+            localStorage.removeItem('jwtRole')
+          }, 3600 * 1000)
           Swal.fire({
             icon: 'success',
             title: 'Login Success'
@@ -258,7 +263,13 @@ const Login_Teacher_Project = () => {
             >
               <FormControlLabel control={<Checkbox />} label='Remember Me' />
               <Link passHref href='/'>
-                <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
+                <LinkStyled
+                  onClick={() => {
+                    router.push('/')
+                  }}
+                >
+                  guest login
+                </LinkStyled>
               </Link>
             </Box>
             <Button fullWidth size='large' variant='contained' sx={{ marginBottom: 7 }} onClick={handleInsertSubmit}>

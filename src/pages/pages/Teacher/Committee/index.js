@@ -87,7 +87,7 @@ const Committee = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx Section Active in system
+                  Select a project to register committee
                 </Box>
               </Typography>
             }
@@ -97,18 +97,6 @@ const Committee = () => {
       {/* Header card */}
 
       <Box sx={{ width: '100%', typography: 'body1', mt: 10 }}>
-        {/* <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleTabChange} aria-label='lab API tabs example'>
-              <Tab label='Pre-project' value='1' />
-              <Tab label='Project' value='2' />
-            </TabList>
-          </Box>
-          <TabPanel value='1'>
-            <Committee_preproject />
-          </TabPanel>
-          <TabPanel value='2'>Table2</TabPanel>
-        </TabContext> */}
         <Committee_preproject />
       </Box>
     </Grid>

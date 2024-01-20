@@ -62,9 +62,6 @@ export default function Chang_Preproject_Status({ open, handleClose, rowData }) 
     fetchData()
   }, [])
 
-  console.log('rowdata Chang Status', rowData)
-  console.log('Status ID', statusId)
-
   // ฟังก์ชันจัดการการเปลี่ยนแปลงของค่าใน Select dropdown
   const handleStatusChange = event => {
     setStatusId(event.target.value)
@@ -91,7 +88,6 @@ export default function Chang_Preproject_Status({ open, handleClose, rowData }) 
       preproject_status: statusId
     }
 
-    console.log('send data', data)
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/change_preproject_status`, data)
       .then(response => {

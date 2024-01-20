@@ -67,8 +67,6 @@ export default function ChangStatus_post({ open, handleClose, rowData }) {
       status: statusId
     }
 
-    console.log('มาเลเนียจัง', data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/post_update_status`, data)
       .then(response => {
@@ -106,10 +104,10 @@ export default function ChangStatus_post({ open, handleClose, rowData }) {
           <Typography style={{ color: 'grey' }}>Topic Name: {rowData?.header_name || 'N/A'} </Typography>
           <Typography style={{ color: 'grey' }}>
             Topic Status:{' '}
-            {rowData?.status
-              ? rowData.status === '1'
+            {rowData?.public_relation_status
+              ? rowData.public_relation_status === '1'
                 ? 'Active'
-                : rowData.status === '2'
+                : rowData.public_relation_status === '2'
                 ? 'Unactive'
                 : 'N/A'
               : 'N/A'}

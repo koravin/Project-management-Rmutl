@@ -86,8 +86,6 @@ export default function Preproject_Chang_status_Modal({ open, handleClose, rowDa
       preproject_status: statusId
     }
 
-    console.log('มาเลเนียจัง', data)
-
     axios
       .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/change_preproject_status`, data)
       .then(response => {

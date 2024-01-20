@@ -75,7 +75,6 @@ export default function ProjectDetail() {
   const router = useRouter() // router สร้าง path
   const projectId = router.query.id // อ่านค่า query parameter "id" จาก URL
   const requestdata = projectId // หากไม่เก็บค่าลงตัวแปรใหม่ Additional Select จะมีการเปลี่ยนแปลงค่า Id ตลอดเวลาตัวเลือกจะปิดเองอัตโนมัติ
-  console.log('ID โปรเจค', requestdata)
 
   // เซตค่า TabPanel
   const [valueTabPanel, setValueTabPanel] = React.useState(0)
@@ -94,7 +93,6 @@ export default function ProjectDetail() {
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${requestdata}`
         )
 
-        console.log('ข้อมูลโครงงาน', response.data)
         setProjectNameTh(response.data.PreprojectData[0].project_name_th)
         setProjectNameEn(response.data.PreprojectData[0].project_name_eng)
         setProjectStatus(response.data.PreprojectData[0].project_status)

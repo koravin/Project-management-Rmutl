@@ -26,9 +26,6 @@ const Manage = () => {
   // รับค่าข้อมูล Api
   // const [sectionData, setSectionData] = useState([])
 
-  // console.log('ce data:', ceData)
-  // console.log('ch data:', chData)
-
   // Tab panel control
   const [value, setValue] = React.useState('1')
 
@@ -44,7 +41,15 @@ const Manage = () => {
 
       {/* Header card */}
       <Grid style={{ width: '100%' }}>
-        <Card style={{ borderRadius: '20px', background: '#00BFFF', margin: 0, padding: 0 }}>
+        <Card
+          style={{
+            borderRadius: '20px',
+            margin: 0,
+            padding: 0,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            background: 'linear-gradient(135deg, #00BFFF 80%, #1E90FF 100%)'
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -86,7 +91,7 @@ const Manage = () => {
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx section in system
+                  2 section Table in system
                 </Box>
               </Typography>
             }

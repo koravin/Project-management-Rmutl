@@ -216,10 +216,9 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
         ce_file_name: newFilename
       }
 
-      console.log('Upload data', data)
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ce`, data)
-        console.log('อัปโหลดไฟล์', response.data)
+
         alert('Success')
 
         // Swal.fire({
