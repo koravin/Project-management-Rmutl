@@ -64,27 +64,27 @@ const Navigation = () => {
         {
           title: 'BackOffice',
           icon: Settings,
-          path: '/pages/BackOffice/'
+          path: '/pages/BackOffice'
         },
         {
           title: 'Section',
           icon: OpenInNewIcon,
-          path: '/pages/Instructor/Section_Mg/'
+          path: '/pages/Instructor/Section_Mg'
         },
         {
           title: 'Form upload',
           icon: PostAddIcon,
-          path: '/pages/Instructor/Templat_Upload/'
+          path: '/pages/Instructor/Templat_Upload'
         },
         {
           title: 'Study Management',
           icon: Visibility,
-          path: '/pages/Instructor/Manage/'
+          path: '/pages/Instructor/Manage'
         },
         {
           title: 'Public Document',
           icon: PublicIcon,
-          path: '/pages/Instructor/Public_Document_Upload/'
+          path: '/pages/Instructor/Public_Document_Upload'
         }
       ]
     } else if (role === 'นักศึกษา') {
@@ -92,22 +92,22 @@ const Navigation = () => {
         {
           title: 'Home',
           icon: HomeIcon,
-          path: '/pages/Student/HomeStudent/'
+          path: '/pages/Student/HomeStudent'
         },
         {
           title: 'Document Form',
           icon: AssignmentIcon,
-          path: '/pages/Student/Document_Form/'
+          path: '/pages/Student/Document_Form'
         },
         {
           title: 'Recommend Project',
           icon: RecommendIcon,
-          path: '/pages/Student/Recommend_Project/'
+          path: '/pages/Student/Recommend_Project'
         },
         {
           title: 'Post form teacher',
           icon: Diversity1Icon,
-          path: '/pages/Student/Post_Teacher/'
+          path: '/pages/Student/Post_Teacher'
         }
       ]
     } else if (role === 'อาจารย์') {
@@ -115,7 +115,7 @@ const Navigation = () => {
         {
           title: 'Teacher Load',
           icon: HomeRepairServiceIcon,
-          path: '/pages/Teacher/Teacher_load/'
+          path: '/pages/Teacher/Teacher_load'
         },
         {
           title: 'Post project',
@@ -133,7 +133,7 @@ const Navigation = () => {
         {
           title: 'BackOffice',
           icon: GoogleCirclesExtended,
-          path: '/pages/BackOffice/'
+          path: '/pages/BackOffice'
         }
       ]
     }
