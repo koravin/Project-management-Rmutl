@@ -34,6 +34,7 @@ export default function Reccomment_project_detail({ project_id }) {
   const [committee, setCommittee] = useState([]) // เก็บข้อมูลคณะกรรมการ
   const [student, setStudent] = useState([]) // เก็บข้อมูลนักศึกษา
   const [documentStatus, setDocumentStatus] = useState([]) // เก็บข้อมูลสถานะเอกสาร
+  const [reccommentData, setReccommentData] = useState([]) // เก็บข้อมูลโปรเจคแนะนำ
 
   //----------------------------ตัวแปร Routers ------------------------//
   const router = useRouter() // router สร้าง path
@@ -46,6 +47,10 @@ export default function Reccomment_project_detail({ project_id }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/project?project_id=${requestdata}`
         )
+
+        console.log('ข้อมูลที่ดือ', response.data.Projectpotential)
+
+        setReccommentData(response.data.Projectpotential)
 
         // ชื่อ advisor
         const prefix = response.data.PreprojectData[0].prefix
@@ -344,6 +349,20 @@ export default function Reccomment_project_detail({ project_id }) {
                     }`}{' '}
                   </span>
                 ))}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
+                <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
+                  วิชาที่ต้องเรียนเพื่อจะทำโปรเจคนี้
+                  <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
+                    {reccommentData.map((reccommentData, index) => (
+                      <span key={index}>
+                        {index > 0 && <br />} {/* ให้ใช้ <br /> เมื่อไม่ได้เป็นลำดับแรก */}
+                        {`วิชาที่ ${index + 1}: ${reccommentData.subject_name_th}`}{' '}
+                      </span>
+                    ))}
+                  </Typography>
+                </Box>
               </Typography>
             </CardContent>
             {/* <CardActions className='card-action-dense'>

@@ -12,8 +12,6 @@ const Root = styled('footer')({
   padding: '20px',
   textAlign: 'left',
   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-  borderRadius: '5px',
-  margin: '10px',
 
   transition: 'background-color 0.3s ease-in-out',
   '&:hover': {

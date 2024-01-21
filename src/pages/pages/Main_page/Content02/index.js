@@ -16,7 +16,7 @@ const ImageContainer = styled('div')({
 
 const Image = styled('img')({
   width: '50vh',
-  height: '65vh',
+  height: '30vh',
   borderRadius: '10px 10px 10px 10px',
   boxShadow: '10px 10px 20px rgba(0, 0, 0, 0.4)'
 })

@@ -62,7 +62,7 @@ const UserNavigateTopbar = () => {
   }, [])
 
   return (
-    <AppBar position='static' style={{ padding: '5px', borderRadius: '15px', margin: '5px' }}>
+    <AppBar position='static' style={{ padding: '5px' }}>
       <Toolbar>
         {/* Logo  */}
         <Typography
