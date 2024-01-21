@@ -133,7 +133,7 @@ const UserNavigateTopbar = () => {
                 handleMenuClose()
               }}
             >
-              Login
+              {role ? 'Logout' : 'Login'}
             </MenuItem>
           </Menu>
         </div>

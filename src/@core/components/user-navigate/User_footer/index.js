@@ -61,7 +61,7 @@ const User_footer = () => {
             ระบบจัดการและบริหารโครงงาน
           </Typography>
           <Typography variant='body2' color='inherit' paragraph>
-            create by: @พลทหาร พีรพัฒร์ คนยศสูงมีและตำแหน่ง @2023
+            create by: @Project Management Web Application for Computer Engineering @2024
           </Typography>
 
           <AdditionalInfo>

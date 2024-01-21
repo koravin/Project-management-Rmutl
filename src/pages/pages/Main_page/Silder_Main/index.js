@@ -33,7 +33,7 @@ const imgStyle = {
 
 const slideImages = [
   {
-    url: 'https://c4.wallpaperflare.com/wallpaper/88/22/573/arduino-open-source-wallpaper-preview.jpg',
+    url: 'https://webs.rmutl.ac.th/assets/upload/logo/website_logo_th_20230602105958.png',
     caption: 'ชอบตื่นเช้าอ่ะ เพราะไม่อยากรักเธอในวันที่สายเกินไป'
   },
   {
@@ -53,7 +53,7 @@ const Slider_Main = () => {
         {slideImages.map((slideImage, index) => (
           <div key={index}>
             <div style={{ ...divStyle, backgroundImage: `url(${slideImage.url})` }}>
-              <img src={slideImage.url} alt={slideImage.caption} style={imgStyle} />
+              {/* <img src={slideImage.url} alt={slideImage.caption} style={imgStyle} /> */}
               {/* <span style={spanStyle}>{slideImage.caption}</span> */}
             </div>
           </div>
