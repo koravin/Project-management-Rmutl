@@ -69,7 +69,7 @@ export default function Preproject_Detail_Modal({ open, handleClose, rowData }) 
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-              Project Detail
+              ช้อมูลโครงงาน
             </Typography>
           </Toolbar>
         </AppBar>
@@ -78,8 +78,8 @@ export default function Preproject_Detail_Modal({ open, handleClose, rowData }) 
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} aria-label='lab API tabs example'>
-                <Tab label='Project Detail' value='1' />
-                <Tab label='Document Upload' value='2' />
+                <Tab label='รายละเอียดโครงงาน' value='1' />
+                <Tab label='อัปโหลดเอกสาร' value='2' />
               </TabList>
             </Box>
             <TabPanel value='1'>

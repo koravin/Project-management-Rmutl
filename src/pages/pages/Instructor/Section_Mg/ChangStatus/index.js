@@ -125,7 +125,7 @@ export default function ChangStatus({ open, handleClose, rowData }) {
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Change Project Status
+          เปลี่ยนสถานะเช็คชัน
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -140,13 +140,13 @@ export default function ChangStatus({ open, handleClose, rowData }) {
           <CloseIcon />
         </IconButton>
         <DialogContentText id='alert-dialog-slide-description' style={{ marginLeft: '15px', marginBottom: '10px' }}>
-          <Typography style={{ color: 'grey' }}>Curruculum Name: {rowData?.curriculum_name_en || 'N/A'} </Typography>
-          <Typography style={{ color: 'grey' }}>Subject Code: {rowData?.subject_code || 'N/A'}</Typography>
+          <Typography style={{ color: 'grey' }}>ชื่อหลักสูตร: {rowData?.curriculum_name_en || 'N/A'} </Typography>
+          <Typography style={{ color: 'grey' }}>รหัสวิชา: {rowData?.subject_code || 'N/A'}</Typography>
           <Typography style={{ color: 'grey' }}>
-            Subject Type:{' '}
+            ประเภทวิชา:{' '}
             {rowData?.subject_type === '1' ? 'preproject' : rowData?.subject_type === '2' ? 'project' : 'Unknown'}
           </Typography>
-          <Typography style={{ color: 'grey' }}>Subject Name: {rowData?.subject_name_en || 'N/A'}</Typography>
+          <Typography style={{ color: 'grey' }}>ชื่อวิชา: {rowData?.subject_name_en || 'N/A'}</Typography>
         </DialogContentText>
         <DialogContent dividers>
           {/* Status Select */}
@@ -170,7 +170,7 @@ export default function ChangStatus({ open, handleClose, rowData }) {
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={statusId === '1' ? handleActive : handleUnactive}>
-            Update Status
+            อัปเดทสถานะ
           </Button>
         </DialogActions>
       </BootstrapDialog>

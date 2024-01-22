@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import PersonIcon from '@mui/icons-material/Person'
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import Tab from '@mui/material/Tab'
@@ -61,25 +61,26 @@ const Document_Form = () => {
               padding: 0
             }}
           >
-            <PersonIcon
+            <AssignmentIcon
               style={{
                 fontSize: '2.5rem',
                 marginTop: '21px',
                 marginLeft: '20px',
                 backgroundColor: '#28c7fc',
                 borderRadius: '10px',
-                padding: '5px'
+                padding: '5px',
+                color: '#FFFFFF'
               }}
             />
             <CardHeader
-              title='CE-Reform'
+              title={<span style={{ color: 'white' }}>CE-Reform</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Project-MGT
                   </Box>
                   <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Rmutl
                   </Box>
                 </Typography>
@@ -88,10 +89,10 @@ const Document_Form = () => {
           </div>
 
           <CardHeader
-            title='All Document Form'
+            title={<span style={{ color: 'white' }}>All Document Form</span>}
             subheader={
               <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                   2 Form Table in system
                 </Box>
               </Typography>

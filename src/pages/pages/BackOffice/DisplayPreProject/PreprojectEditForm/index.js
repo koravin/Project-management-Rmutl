@@ -203,6 +203,25 @@ export default function PreprojectEdit() {
         setProjectNameEn(response.data.PreprojectData[0].preproject_name_eng)
         setAdvisorId(response.data.PreprojectData[0].teacher_id)
 
+        //--------------------------------------เซตค่าเริ่มต้นให้ Student--------------------------------------------//
+
+        setSelectedValueStudent(response.data.PreprojectStudent[0].student_id)
+
+        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
+        const StudentFromSecondElement = response.data.PreprojectStudent.slice(1)
+
+        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
+        const initialStudent = StudentFromSecondElement.map(student => student.student_id)
+        setAdditionalStudentForms(initialStudent)
+
+        // นำค่าที่เซตเริ่มต้นทั้งหมดไปเก็บใน allStudentValues
+        const allStudentData = [response.data.PreprojectStudent[0].student_id, ...initialStudent].filter(
+          value => value !== ''
+        )
+        setAllStudent(allStudentData)
+
+        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Student--------------------------------------------//
+
         //--------------------------------------เซตค่าเริ่มต้นให้ Sub Advisors--------------------------------------------//
 
         // เช็คว่ามีข้อมูล Sub Advisors มากกว่า 0 ค่าหรือไม่
@@ -231,25 +250,6 @@ export default function PreprojectEdit() {
         setAdditionalCommitteeForms(initialCommittee)
 
         //--------------------------------------จบการเซตค่าเริ่มต้นให้ Committee--------------------------------------------//
-
-        //--------------------------------------เซตค่าเริ่มต้นให้ Student--------------------------------------------//
-
-        setSelectedValueStudent(response.data.PreprojectStudent[0].student_id)
-
-        // ใช้ slice() เพื่อเลือกข้อมูลใน Array ตั้งแต่ช่องที่ 1 เป็นต้นไป
-        const StudentFromSecondElement = response.data.PreprojectStudent.slice(1)
-
-        // เซ็ตค่าเริ่มต้นให้กับ state additionalSubAdvisorForms
-        const initialStudent = StudentFromSecondElement.map(student => student.student_id)
-        setAdditionalStudentForms(initialStudent)
-
-        // นำค่าที่เซตเริ่มต้นทั้งหมดไปเก็บใน allStudentValues
-        const allStudentData = [response.data.PreprojectStudent[0].student_id, ...initialStudent].filter(
-          value => value !== ''
-        )
-        setAllStudent(allStudentData)
-
-        //--------------------------------------จบการเซตค่าเริ่มต้นให้ Student--------------------------------------------//
       } catch (error) {
         console.error(error)
       }

@@ -40,11 +40,11 @@ const Unactive_Section = () => {
 
   // Table preproject colum
   const Preproject_columns = [
-    { field: 'subject_code', headerName: 'Subject Code', width: 120 },
-    { field: 'section_name', headerName: 'Section Name', width: 150 },
+    { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
+    { field: 'section_name', headerName: 'ชื่อเช็คชัน', width: 150 },
     {
       field: 'sec_status',
-      headerName: 'Sec Status',
+      headerName: 'สถานะเช็คชัน',
       width: 120,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์
@@ -85,12 +85,12 @@ const Unactive_Section = () => {
     },
     {
       field: 'Upload_Document',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 130,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleViewPreprojectInSectinData(cellValues.row)}>
-            view
+            รายละเอียด
           </Button>
         )
       },
@@ -102,11 +102,11 @@ const Unactive_Section = () => {
 
   // Table project colum
   const Project_columns = [
-    { field: 'subject_code', headerName: 'Subject Code', width: 120 },
-    { field: 'section_name', headerName: 'Section Name', width: 150 },
+    { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
+    { field: 'section_name', headerName: 'ชื่อเช็คชัน', width: 150 },
     {
       field: 'sec_status',
-      headerName: 'Sec Status',
+      headerName: 'สถานะเช็คชัน',
       width: 120,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์
@@ -147,12 +147,12 @@ const Unactive_Section = () => {
     },
     {
       field: 'Upload_Document',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 130,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleViewProjectInSectinData(cellValues.row)}>
-            view
+            รายละเอียด
           </Button>
         )
       },
@@ -184,7 +184,7 @@ const Unactive_Section = () => {
         <Box sx={{ width: '100%', typography: 'body1', mt: 10 }}>
           {/* datagrid content 01 */}
           <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-            <Typography variant='h6'>Pre project section</Typography>
+            <Typography variant='h6'>วิชาเตรียมโครงการ</Typography>
           </Grid>
           <Box sx={{ height: '100%', width: '100%' }}>
             <Card style={{ padding: '5px' }}>
@@ -217,7 +217,7 @@ const Unactive_Section = () => {
         <Box sx={{ width: '100%', typography: 'body1', mt: 10 }}>
           {/* datagrid content 02 */}
           <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-            <Typography variant='h6'>Project section</Typography>
+            <Typography variant='h6'>วิชาโครงการ</Typography>
           </Grid>
           <Box sx={{ height: '100%', width: '100%' }}>
             <Card style={{ padding: '5px' }}>

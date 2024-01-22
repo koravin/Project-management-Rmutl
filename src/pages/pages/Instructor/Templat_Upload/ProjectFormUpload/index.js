@@ -187,10 +187,7 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
       })
 
       if (!uploadResponse.ok) {
-        Swal.fire({
-          icon: 'error',
-          title: 'มีข้อผิดพลาดเกิดขึ้นนะจ๊ะคนดี'
-        })
+        alert('มีข้อผิดพลาด')
 
         return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
       }
@@ -204,7 +201,7 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ch`, data)
 
-        alert('Success')
+        alert('สำเร็จ')
 
         // Swal.fire({
         //   icon: 'success',
@@ -493,11 +490,11 @@ export default function ProjectFormUpload({ open, handleClose, rowData }) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-              Document form {rowData?.ch_type}
+              แบบฟอร์มเอกสาร {rowData?.ch_type}
             </Typography>
-            <Button autoFocus color='inherit' onClick={handleClose}>
+            {/* <Button autoFocus color='inherit' onClick={handleClose}>
               save
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
 

@@ -99,7 +99,7 @@ export default function Project_Detail_Component({ project_id }) {
           >
             <CardContent>
               <Typography variant='h6' sx={{ marginBottom: 2, textAlign: 'center' }}>
-                Project Detail
+                ข้อมูลโครงงาน
               </Typography>
               <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
                 <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>

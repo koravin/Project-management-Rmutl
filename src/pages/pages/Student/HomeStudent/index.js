@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import PersonIcon from '@mui/icons-material/Person'
+import HomeIcon from '@mui/icons-material/Home'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import Tab from '@mui/material/Tab'
@@ -57,25 +57,26 @@ const Committee = () => {
               padding: 0
             }}
           >
-            <PersonIcon
+            <HomeIcon
               style={{
                 fontSize: '2.5rem',
                 marginTop: '21px',
                 marginLeft: '20px',
                 backgroundColor: '#28c7fc',
                 borderRadius: '10px',
-                padding: '5px'
+                padding: '5px',
+                color: 'white'
               }}
             />
             <CardHeader
-              title='CE-Reform'
+              title={<span style={{ color: 'white' }}>CE-Reform</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Project-MGT
                   </Box>
                   <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Rmutl
                   </Box>
                 </Typography>
@@ -84,10 +85,10 @@ const Committee = () => {
           </div>
 
           <CardHeader
-            title='My project'
+            title={<span style={{ color: 'white' }}>My project</span>}
             subheader={
               <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                   2 Project Table in system
                 </Box>
               </Typography>

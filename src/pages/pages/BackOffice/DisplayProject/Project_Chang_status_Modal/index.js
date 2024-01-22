@@ -105,7 +105,7 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Change Project Status
+          เปลี่ยนสถานะโครงงาน
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -120,9 +120,9 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
           <CloseIcon />
         </IconButton>
         <DialogContentText id='alert-dialog-slide-description' style={{ marginLeft: '15px', marginBottom: '10px' }}>
-          <Typography style={{ color: 'grey' }}>Project Name: {rowData?.project_name_eng || 'N/A'} </Typography>
+          <Typography style={{ color: 'grey' }}>ชื่อโครงงาน: {rowData?.project_name_eng || 'N/A'} </Typography>
           <Typography style={{ color: 'grey' }}>
-            Project Status:{' '}
+            สถานะโครงงาน:{' '}
             {rowData?.project_status
               ? rowData.project_status === '1'
                 ? 'Status1'
@@ -151,9 +151,9 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel id='statuslabel'>Section status</InputLabel>
+                <InputLabel id='statuslabel'>สถานะโครงงาน</InputLabel>
                 <Select
-                  label='Status'
+                  label='สถานะ'
                   value={statusId}
                   onChange={handleStatusChange}
                   labelId='Status-label'
@@ -174,7 +174,7 @@ export default function Project_Chang_status_Modal({ open, handleClose, rowData 
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleChangStatus}>Update Status</Button>
+          <Button onClick={handleChangStatus}>อัปเดทสถานะ</Button>
         </DialogActions>
       </BootstrapDialog>
     </React.Fragment>

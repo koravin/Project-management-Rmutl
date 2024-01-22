@@ -93,7 +93,7 @@ function Committee_preproject() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'

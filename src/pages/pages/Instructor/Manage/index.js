@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import PersonIcon from '@mui/icons-material/Person'
+import { AddCircle, Edit, Delete, Visibility, Settings } from '@mui/icons-material'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import Tab from '@mui/material/Tab'
@@ -36,7 +36,7 @@ const Manage = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Instructor Main Feature</Typography>
+        <Typography variant='h5'>จัดการโครงงานในเช็คชัน</Typography>
       </Grid>
 
       {/* Header card */}
@@ -60,25 +60,26 @@ const Manage = () => {
               padding: 0
             }}
           >
-            <PersonIcon
+            <Visibility
               style={{
                 fontSize: '2.5rem',
                 marginTop: '21px',
                 marginLeft: '20px',
                 backgroundColor: '#28c7fc',
                 borderRadius: '10px',
-                padding: '5px'
+                padding: '5px',
+                color: 'white'
               }}
             />
             <CardHeader
-              title='CE-Reform'
+              title={<span style={{ color: 'white' }}>CE-Reform</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Project-MGT
                   </Box>
                   <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Rmutl
                   </Box>
                 </Typography>
@@ -87,11 +88,11 @@ const Manage = () => {
           </div>
 
           <CardHeader
-            title='All Section'
+            title={<span style={{ color: 'white' }}>เช็คชันทั้งหมด</span>}
             subheader={
               <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  2 section Table in system
+                <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
+                  2 ตารางในระบบ
                 </Box>
               </Typography>
             }
@@ -104,8 +105,8 @@ const Manage = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleTabChange} aria-label='lab API tabs example'>
-              <Tab label='Active Section' value='1' />
-              <Tab label='Unactive Section' value='2' />
+              <Tab label='เช็คชันที่เปิด' value='1' />
+              <Tab label='เช็คชันที่ปิด' value='2' />
             </TabList>
           </Box>
           <TabPanel value='1'>

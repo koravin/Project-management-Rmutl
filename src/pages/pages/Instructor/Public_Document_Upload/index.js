@@ -9,7 +9,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import CardHeader from '@mui/material/CardHeader'
-import PersonIcon from '@mui/icons-material/Person'
+import PublicIcon from '@mui/icons-material/Public'
 import SyncIcon from '@mui/icons-material/Sync'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -76,7 +76,7 @@ function Public_Document_Upload() {
   }
 
   const columns = [
-    { field: 'project_code', headerName: 'ID', width: 120 },
+    { field: 'project_code', headerName: 'รหัสโครงงาน', width: 120 },
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'project_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
 
@@ -141,7 +141,7 @@ function Public_Document_Upload() {
     },
     {
       field: 'Upload',
-      headerName: 'Upload',
+      headerName: 'อัปโหลด',
       width: 60,
       renderCell: cellValues => {
         return (
@@ -224,7 +224,7 @@ function Public_Document_Upload() {
     <div>
       <Grid>
         <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-          <Typography variant='h5'>Public Document</Typography>
+          <Typography variant='h5'>เอกสารเผยแพร่</Typography>
         </Grid>
 
         {/* Header card */}
@@ -248,25 +248,26 @@ function Public_Document_Upload() {
                 padding: 0
               }}
             >
-              <PersonIcon
+              <PublicIcon
                 style={{
                   fontSize: '2.5rem',
                   marginTop: '21px',
                   marginLeft: '20px',
                   backgroundColor: '#28c7fc',
                   borderRadius: '10px',
-                  padding: '5px'
+                  padding: '5px',
+                  color: 'white'
                 }}
               />
               <CardHeader
-                title='CE-Reform'
+                title={<span style={{ color: 'white' }}>CE-Reform</span>}
                 subheader={
                   <Typography variant='body2'>
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Project-MGT
                     </Box>
                     <br />
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Rmutl
                     </Box>
                   </Typography>
@@ -275,11 +276,11 @@ function Public_Document_Upload() {
             </div>
 
             <CardHeader
-              title='Public Document Upload'
+              title={<span style={{ color: 'white' }}>อัปโหลดเอกสารสารธารณะ</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    {projectdata && projectdata.length ? projectdata.length : '0'} project in system
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
+                    {projectdata && projectdata.length ? projectdata.length : '0'} โครงงานในระบบ
                   </Box>
                 </Typography>
               }

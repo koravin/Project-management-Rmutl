@@ -106,7 +106,7 @@ function DisplayProject() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -156,8 +156,8 @@ function DisplayProject() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
-      width: 60,
+      headerName: 'รายละเอียด',
+      width: 100,
       renderCell: cellValues => {
         return (
           <Button
@@ -172,7 +172,7 @@ function DisplayProject() {
     },
     {
       field: 'Status',
-      headerName: 'Chang Status',
+      headerName: 'สถานะ',
       width: 60,
       renderCell: cellValues => {
         return (
@@ -188,7 +188,7 @@ function DisplayProject() {
     },
     {
       field: 'Edit',
-      headerName: 'Edit',
+      headerName: 'แก้ไข',
       width: 60,
       sortable: false,
       filterable: false,
@@ -209,7 +209,7 @@ function DisplayProject() {
     },
     {
       field: 'Delete',
-      headerName: 'Delete',
+      headerName: 'ลบ',
       width: 60,
       renderCell: cellValues => {
         return (

@@ -12,7 +12,7 @@ import TabContext from '@mui/lab/TabContext'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
-import PersonIcon from '@mui/icons-material/Person'
+import { AddCircle, Edit, Delete, Visibility, Settings } from '@mui/icons-material'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
 import { Grid } from '@mui/material'
@@ -34,7 +34,7 @@ const BackOffice = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>BackOffice</Typography>
+        <Typography variant='h5'>ระบบหลังบ้าน</Typography>
       </Grid>
 
       {/* Header card */}
@@ -58,25 +58,26 @@ const BackOffice = () => {
               padding: 0
             }}
           >
-            <PersonIcon
+            <Settings
               style={{
                 fontSize: '2.5rem',
                 marginTop: '21px',
                 marginLeft: '20px',
                 backgroundColor: '#28c7fc',
                 borderRadius: '10px',
-                padding: '5px'
+                padding: '5px',
+                color: 'white'
               }}
             />
             <CardHeader
-              title='CE-Reform'
+              title={<span style={{ color: 'white' }}>CE-Reform</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary', color: 'white' }}>
                     Project-MGT
                   </Box>
                   <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Rmutl
                   </Box>
                 </Typography>
@@ -85,11 +86,11 @@ const BackOffice = () => {
           </div>
 
           <CardHeader
-            title='Manage Preproject and Project'
+            title={<span style={{ color: 'white' }}>ตารางจัดการวิชาเตรียมโครงการ และ โครงการ</span>}
             subheader={
               <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  2 table in system
+                <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
+                  2 ตารางในระบบ
                 </Box>
               </Typography>
             }
@@ -102,8 +103,8 @@ const BackOffice = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label='lab API tabs example'>
-              <Tab label='Pre-project' value='1' />
-              <Tab label='Project' value='2' />
+              <Tab label='วิชาเตรียมโครงการ' value='1' />
+              <Tab label='วิชาโครงการ' value='2' />
             </TabList>
           </Box>
           <TabPanel value='1'>

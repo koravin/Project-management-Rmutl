@@ -8,7 +8,7 @@ import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
-import PersonIcon from '@mui/icons-material/Person'
+import RecommendIcon from '@mui/icons-material/Recommend'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 
 // Component Import
@@ -253,25 +253,26 @@ function Recommend_Project() {
                 padding: 0
               }}
             >
-              <PersonIcon
+              <RecommendIcon
                 style={{
                   fontSize: '2.5rem',
                   marginTop: '21px',
                   marginLeft: '20px',
                   backgroundColor: '#28c7fc',
                   borderRadius: '10px',
-                  padding: '5px'
+                  padding: '5px',
+                  color: '#FFFFFF'
                 }}
               />
               <CardHeader
-                title='CE-Reform'
+                title={<span style={{ color: 'white' }}>CE-Reform</span>}
                 subheader={
                   <Typography variant='body2'>
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Project-MGT
                     </Box>
                     <br />
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Rmutl
                     </Box>
                   </Typography>
@@ -280,10 +281,10 @@ function Recommend_Project() {
             </div>
 
             <CardHeader
-              title='Project Recommend'
+              title={<span style={{ color: 'white' }}>Project Recommend</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     {projectdata && projectdata.length ? projectdata.length : '0'} Project Recommend to you
                   </Box>
                 </Typography>

@@ -78,7 +78,7 @@ const UserNavigateTopbar = () => {
         <Button
           color='inherit'
           onClick={() => {
-            router.push('/pages/User/Public_project_data/')
+            router.push('/')
           }}
         >
           ค้นหาโครงงาน
@@ -87,11 +87,11 @@ const UserNavigateTopbar = () => {
           color='inherit'
           onClick={() => {
             if (role === 'project-teacher') {
-              router.push('/pages/MainMenu/InstructorMenu')
+              router.push('/pages/BackOffice')
             } else if (role === 'นักศึกษา') {
-              router.push('/pages/MainMenu/StudentMenu')
+              router.push('/pages/Student/HomeStudent')
             } else if (role === 'อาจารย์') {
-              router.push('/pages/MainMenu/TeacherMenu')
+              router.push('/pages/Teacher/Teacher_load')
             }
           }}
           style={{ display: role ? 'inline-block' : 'none' }}

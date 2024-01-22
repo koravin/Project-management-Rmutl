@@ -200,7 +200,7 @@ export default function InsertSection({ open, handleClose }) {
       })
     Swal.fire({
       icon: 'success',
-      title: 'เพิ่มข้อมูลแล้วเสร็จ'
+      title: 'เพิ่มข้อมูลเสร็จสิ้น'
     })
     handleClose()
   }
@@ -209,7 +209,7 @@ export default function InsertSection({ open, handleClose }) {
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Add New Section
+          เปิดเซ็คชันใหม่
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -325,8 +325,8 @@ export default function InsertSection({ open, handleClose }) {
               <TextField
                 fullWidth
                 type='text'
-                label='Section Name'
-                placeholder='Section Name'
+                label='ชื่อเซ็คชั่น'
+                placeholder='ระบุชื่อ'
                 error={submitted && !SectionName} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                 value={SectionName}
                 onChange={e => {
@@ -339,7 +339,7 @@ export default function InsertSection({ open, handleClose }) {
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleInsertSubmit}>
-            Add
+            เพิ่ม
           </Button>
         </DialogActions>
       </BootstrapDialog>

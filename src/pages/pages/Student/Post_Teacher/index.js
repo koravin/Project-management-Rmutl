@@ -8,8 +8,9 @@ import { Grid, Typography } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
-import PersonIcon from '@mui/icons-material/Person'
+import Diversity1Icon from '@mui/icons-material/Diversity1'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import HomeIcon from '@mui/icons-material/Home'
 
 // Component Import
 import Detail_teacher_post from './Detail_teacher_post'
@@ -195,25 +196,26 @@ function Post_Teacher() {
                 padding: 0
               }}
             >
-              <PersonIcon
+              <Diversity1Icon
                 style={{
                   fontSize: '2.5rem',
                   marginTop: '21px',
                   marginLeft: '20px',
                   backgroundColor: '#28c7fc',
                   borderRadius: '10px',
-                  padding: '5px'
+                  padding: '5px',
+                  color: '#FFFFFF'
                 }}
               />
               <CardHeader
-                title='CE-Reform'
+                title={<span style={{ color: 'white' }}>CE-Reform</span>}
                 subheader={
                   <Typography variant='body2'>
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Project-MGT
                     </Box>
                     <br />
-                    <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                       Rmutl
                     </Box>
                   </Typography>
@@ -222,10 +224,10 @@ function Post_Teacher() {
             </div>
 
             <CardHeader
-              title='Post Topic Form Teacher'
+              title={<span style={{ color: 'white' }}>Post Topic Form Teacher</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     {postdata && postdata.length ? postdata.length : '0'} topic in system
                   </Box>
                 </Typography>

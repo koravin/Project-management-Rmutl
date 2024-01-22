@@ -200,10 +200,7 @@ export default function Sec_pre_doc({ project_id }) {
       })
 
       if (!uploadResponse.ok) {
-        Swal.fire({
-          icon: 'error',
-          title: 'มีข้อผิดพลาดเกิดขึ้นนะจ๊ะคนดี'
-        })
+        alert('มีข้อผิดพลาด')
 
         return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
       }
@@ -236,7 +233,7 @@ export default function Sec_pre_doc({ project_id }) {
           data
         )
 
-        alert('เยส!!!! สำเร็จ')
+        alert('สำเร็จ')
 
         // เมื่ออัปโหลดเสร็จ ให้เปลี่ยนค่า refreshFlag เพื่อให้ useEffect ทำงานใหม่
         setRefreshFlag(prevFlag => !prevFlag) // สลับค่า refreshFlag

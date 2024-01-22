@@ -202,10 +202,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       })
 
       if (!uploadResponse.ok) {
-        Swal.fire({
-          icon: 'error',
-          title: 'มีข้อผิดพลาดเกิดขึ้นนะจ๊ะคนดี'
-        })
+        alert('มีข้อผิดพลาด')
 
         return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
       }
@@ -219,12 +216,7 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/insert_new_document_ce`, data)
 
-        alert('Success')
-
-        // Swal.fire({
-        //   icon: 'success',
-        //   title: 'อัปโหลดข้อมูลแล้วเสร็จ'
-        // })
+        alert('สำเร็จ')
 
         // เมื่ออัปโหลดเสร็จ ให้เปลี่ยนค่า refreshFlag เพื่อให้ useEffect ทำงานใหม่
         setRefreshFlag(prevFlag => !prevFlag) // สลับค่า refreshFlag
@@ -508,11 +500,11 @@ export default function PreprojectFormUpload({ open, handleClose, rowData }) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-              Document form {rowData?.ce_type}
+              แบบฟอร์มเอกสาร {rowData?.ce_type}
             </Typography>
-            <Button autoFocus color='inherit' onClick={handleClose}>
+            {/* <Button autoFocus color='inherit' onClick={handleClose}>
               save
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
 

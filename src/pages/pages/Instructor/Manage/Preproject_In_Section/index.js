@@ -163,11 +163,11 @@ const Preproject_In_Section = () => {
 
   // Table colum
   const columns = [
-    { field: 'project_code', headerName: 'Project Code', width: 110 },
-    { field: 'preproject_name_th', headerName: 'Project Name(TH)', width: 230 },
+    { field: 'project_code', headerName: 'รหัสโครงงาน', width: 110 },
+    { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน', width: 230 },
     {
       field: 'project_status',
-      headerName: 'Project Status',
+      headerName: 'สถานะโครงงาน',
       width: 150,
       disableColumnFilter: true,
       disableColumnMenu: true,
@@ -229,7 +229,7 @@ const Preproject_In_Section = () => {
     },
     {
       field: 'State',
-      headerName: 'State',
+      headerName: 'เปลี่ยนสถานะ',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -244,7 +244,7 @@ const Preproject_In_Section = () => {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 80,
       sortable: false,
       filterable: false,
@@ -382,7 +382,7 @@ const Preproject_In_Section = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Section Preproject</Typography>
+        <Typography variant='h5'>วิชาเตรียมโครงการ</Typography>
       </Grid>
 
       {/* Header card */}
@@ -425,11 +425,11 @@ const Preproject_In_Section = () => {
           </div>
 
           <CardHeader
-            title='All Project In Section'
+            title='โปรเจคทั้งหมด'
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx Project In Section
+                  โปรเจ็คในเช็คชัน
                 </Box>
               </Typography>
             }
@@ -499,7 +499,7 @@ const Preproject_In_Section = () => {
         startIcon={<ArrowBackIcon />}
         onClick={handleBackpage}
       >
-        Back
+        กลับ
       </Button>
       {/* InsertSection Dialog */}
       <InsertSection open={openDialog} handleClose={handleCloseDialog} />

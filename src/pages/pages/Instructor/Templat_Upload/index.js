@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import PersonIcon from '@mui/icons-material/Person'
+import PostAddIcon from '@mui/icons-material/PostAdd'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
 import Tab from '@mui/material/Tab'
@@ -101,17 +101,17 @@ const Templat_Upload = () => {
 
   // Table colum
   const CE_columns = [
-    { field: 'ce_type', headerName: 'Document type', width: 120 },
-    { field: 'ce_file_name', headerName: 'Document Name', width: 150 },
+    { field: 'ce_type', headerName: 'ประเภทเอกสาร', width: 120 },
+    { field: 'ce_file_name', headerName: 'ชื่อเอกสาร', width: 150 },
     {
       field: 'last_updated',
-      headerName: 'Last update',
+      headerName: 'อัปเดทล่าสุด',
       width: 300,
       valueGetter: params => formatLastUpdated(params.value)
     },
     {
       field: 'Upload_Document',
-      headerName: 'Form',
+      headerName: 'แบบฟอร์มเอกสาร',
       width: 130,
       renderCell: cellValues => {
         return (
@@ -127,17 +127,17 @@ const Templat_Upload = () => {
   ]
 
   const CH_columns = [
-    { field: 'ch_type', headerName: 'Document type', width: 120 },
-    { field: 'ch_file_name', headerName: 'Document Name', width: 150 },
+    { field: 'ch_type', headerName: 'ประเภทเอกสาร', width: 120 },
+    { field: 'ch_file_name', headerName: 'ชื่อเอกสาร', width: 150 },
     {
       field: 'last_updated',
-      headerName: 'Last update',
+      headerName: 'อัปเดทล่าสุด',
       width: 300,
       valueGetter: params => formatLastUpdated(params.value)
     },
     {
       field: 'Upload_Document',
-      headerName: 'Form',
+      headerName: 'แบบฟอร์ม',
       width: 130,
       renderCell: cellValues => {
         return (
@@ -178,7 +178,7 @@ const Templat_Upload = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Document Templat</Typography>
+        <Typography variant='h5'>แบบฟอร์มเอกสาร</Typography>
       </Grid>
 
       {/* Header card */}
@@ -202,25 +202,26 @@ const Templat_Upload = () => {
               padding: 0
             }}
           >
-            <PersonIcon
+            <PostAddIcon
               style={{
                 fontSize: '2.5rem',
                 marginTop: '21px',
                 marginLeft: '20px',
                 backgroundColor: '#28c7fc',
                 borderRadius: '10px',
-                padding: '5px'
+                padding: '5px',
+                color: 'white'
               }}
             />
             <CardHeader
-              title='CE-Reform'
+              title={<span style={{ color: 'white' }}>CE-Reform</span>}
               subheader={
                 <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Project-MGT
                   </Box>
                   <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
                     Rmutl
                   </Box>
                 </Typography>
@@ -229,11 +230,11 @@ const Templat_Upload = () => {
           </div>
 
           <CardHeader
-            title='All Document Form'
+            title={<span style={{ color: 'white' }}>แสดงแบบฟอร์มเอกสารทั้งหมดในระบบ</span>}
             subheader={
               <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  2 Table form in system
+                <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
+                  2 ตารางในระบบ
                 </Box>
               </Typography>
             }
@@ -246,8 +247,8 @@ const Templat_Upload = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleTabChange} aria-label='lab API tabs example'>
-              <Tab label='Pre-project Form' value='1' />
-              <Tab label='Project Form' value='2' />
+              <Tab label='วิชาเตรียมโครงการ' value='1' />
+              <Tab label='วิชาโครงการ' value='2' />
             </TabList>
           </Box>
           <TabPanel value='1'>

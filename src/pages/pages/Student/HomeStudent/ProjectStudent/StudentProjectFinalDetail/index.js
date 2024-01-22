@@ -32,6 +32,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import Detail_project_student from './Detail_project_student'
 import Document_project_student from './Document_project_student'
 import Importance_value from './Importance_value'
+import Document_project_status from './Document_project_status'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />
@@ -81,7 +82,8 @@ export default function StudentProjectFinalDetail({ open, handleClose, rowData }
               <TabList onChange={handleChange} aria-label='lab API tabs example'>
                 <Tab label='Project Detail' value='1' />
                 <Tab label='Document Upload' value='2' />
-                <Tab label='ระบุวิชาที่เกี่ยวข้อง' value='3' />
+                <Tab label='สถานะเอกสาร' value='3' />
+                <Tab label='ระบุวิชาที่เกี่ยวข้อง' value='4' />
               </TabList>
             </Box>
             <TabPanel value='1'>
@@ -93,6 +95,9 @@ export default function StudentProjectFinalDetail({ open, handleClose, rowData }
               <Document_project_student project_id={project_id} />
             </TabPanel>
             <TabPanel value='3'>
+              <Document_project_status project_id={project_id} />
+            </TabPanel>
+            <TabPanel value='4'>
               <Importance_value project_id={project_id} />
             </TabPanel>
           </TabContext>

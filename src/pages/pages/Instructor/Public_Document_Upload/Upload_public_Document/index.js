@@ -68,7 +68,7 @@ export default function Upload_public_Document({ open, handleClose, rowData }) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-              Public Document Upload
+              อัปโหลดเอกสารสารธารณะ
             </Typography>
           </Toolbar>
         </AppBar>
