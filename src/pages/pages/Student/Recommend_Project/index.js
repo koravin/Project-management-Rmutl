@@ -72,7 +72,7 @@ function Recommend_Project() {
   }
 
   const columns = [
-    { field: 'project_code', headerName: 'ID', width: 120 },
+    { field: 'project_code', headerName: 'รหัสโครงการ', width: 120 },
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'project_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
@@ -165,9 +165,7 @@ function Recommend_Project() {
       try {
         setIsLoading(true) // เริ่มต้น loading
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallmyproject?student_id=${user_id}`
-        )
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/getallprojectrecommend`)
 
         setProjectData(response.data.projectlist)
         setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
