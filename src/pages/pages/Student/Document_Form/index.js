@@ -37,7 +37,7 @@ const Document_Form = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Document Form</Typography>
+        <Typography variant='h5'>แบบฟอร์มเอกสาร</Typography>
       </Grid>
 
       {/* Header card */}
@@ -89,11 +89,11 @@ const Document_Form = () => {
           </div>
 
           <CardHeader
-            title={<span style={{ color: 'white' }}>All Document Form</span>}
+            title={<span style={{ color: 'white' }}>แบบฟอร์มเอกสารทั้งหมด</span>}
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
-                  2 Form Table in system
+                  2 ตารางในระบบ
                 </Box>
               </Typography>
             }
@@ -106,8 +106,8 @@ const Document_Form = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleTabChange} aria-label='lab API tabs example'>
-              <Tab label='Pre-project' value='1' />
-              <Tab label='Project' value='2' />
+              <Tab label='วิชาเตรียมโครงการ' value='1' />
+              <Tab label='วิชาโครงการ' value='2' />
             </TabList>
           </Box>
           <TabPanel value='1'>

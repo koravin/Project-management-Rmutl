@@ -71,7 +71,7 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
 
   // ประกาศ Colum DataGrid
   const columns = [
-    { field: 'project_code', headerName: 'Pre-project Code', width: 140 },
+    { field: 'project_code', headerName: 'รหัสโครงงาน', width: 140 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
@@ -101,7 +101,7 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -135,7 +135,7 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       sortable: false,
       filterable: false,
@@ -187,7 +187,7 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
           setRefreshData(prevSubmitted => !prevSubmitted)
         }}
       >
-        <RefreshIcon /> refresh
+        <RefreshIcon /> รีเฟรช
       </Button>
       <Card>
         <CardContent>

@@ -105,11 +105,11 @@ function Teacher_post() {
   }
 
   const columns = [
-    { field: 'header_name', headerName: 'Topic Name', width: 200 },
-    { field: 'description', headerName: 'Description', width: 350 },
+    { field: 'header_name', headerName: 'หัวข้อ', width: 200 },
+    { field: 'description', headerName: 'คำบรรยาย', width: 350 },
     {
       field: 'public_relation_status',
-      headerName: 'Status',
+      headerName: 'สถานะ',
       width: 120,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
@@ -147,7 +147,7 @@ function Teacher_post() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -159,7 +159,7 @@ function Teacher_post() {
     },
     {
       field: 'Chang Status',
-      headerName: 'Chang Status',
+      headerName: 'เปลี่ยนสถานะ',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -175,7 +175,7 @@ function Teacher_post() {
     },
     {
       field: 'Edit',
-      headerName: 'Edit',
+      headerName: 'แก้ไข',
       width: 100,
       sortable: false,
       filterable: false,
@@ -189,7 +189,7 @@ function Teacher_post() {
     },
     {
       field: 'Delete',
-      headerName: 'Delete',
+      headerName: 'ลบ',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -271,7 +271,7 @@ function Teacher_post() {
     <div>
       <Grid>
         <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-          <Typography variant='h5'>Instructor Main Feature</Typography>
+          <Typography variant='h5'>โพสหัวข้อโครงงาน</Typography>
         </Grid>
 
         {/* Header card */}
@@ -323,11 +323,11 @@ function Teacher_post() {
             </div>
 
             <CardHeader
-              title={<span style={{ color: 'white' }}>Post Topic</span>}
+              title={<span style={{ color: 'white' }}>โพสหัวข้อ</span>}
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
-                    {postdata && postdata.length ? postdata.length : '0'} topic in system
+                    {postdata && postdata.length ? postdata.length : '0'} หัวข้อในระบบ
                   </Box>
                 </Typography>
               }
@@ -337,7 +337,7 @@ function Teacher_post() {
         {/* Header card */}
         {/* Insert New Post */}
         <Button sx={{ height: '20', marginTop: '5vh' }} variant='contained' onClick={handleClickOpenInsertDialog}>
-          New Post
+          โพสใหม่
         </Button>
         <Button
           sx={{
@@ -354,7 +354,7 @@ function Teacher_post() {
             setRefreshData(prevSubmitted => !prevSubmitted)
           }}
         >
-          <RefreshIcon /> refresh
+          <RefreshIcon /> รีเฟรช
         </Button>
         <Card sx={{ width: '100%', typography: 'body1', mt: 3 }}>
           <CardContent>

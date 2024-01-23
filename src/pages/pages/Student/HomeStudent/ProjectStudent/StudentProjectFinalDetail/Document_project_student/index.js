@@ -198,10 +198,7 @@ export default function Document_project_student({ project_id }) {
       })
 
       if (!uploadResponse.ok) {
-        Swal.fire({
-          icon: 'error',
-          title: 'มีข้อผิดพลาดเกิดขึ้นนะจ๊ะคนดี'
-        })
+        alert('มีข้อผิดพลาด')
 
         return // ออกจากฟังก์ชันหลังจากแสดงข้อผิดพลาด
       }
@@ -224,7 +221,7 @@ export default function Document_project_student({ project_id }) {
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/uploadprojectdocuments`, data)
 
-        alert('เยส!!!! สำเร็จ')
+        alert('สำเร็จ')
 
         // ResetData()
 

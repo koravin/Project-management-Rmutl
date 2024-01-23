@@ -77,7 +77,7 @@ const Teacher_load = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Teacher Main Feature</Typography>
+        <Typography variant='h5'>อาจารย์</Typography>
       </Grid>
 
       {/* Header card */}
@@ -139,10 +139,10 @@ const Teacher_load = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleTabChange} aria-label='lab API tabs example'>
-              <Tab label='Pre-Project' value='1' />
-              <Tab label='Project' value='2' />
-              <Tab label='Committee Pre-project' value='3' />
-              <Tab label='Committee Project' value='4' />
+              <Tab label='วิชาเตรียมโครงการ' value='1' />
+              <Tab label='วิชาโครงการ' value='2' />
+              <Tab label='กรรมการ วิชาเตรียมโครงการ' value='3' />
+              <Tab label='กรรมการ วิชาโครงการ' value='4' />
             </TabList>
           </Box>
           <TabPanel value='1'>

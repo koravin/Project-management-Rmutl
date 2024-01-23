@@ -55,11 +55,11 @@ function Pre_project_Form() {
 
   // ประกาศ Colum DataGrid
   const columns = [
-    { field: 'ce_type', headerName: 'Document Type', width: 120 },
-    { field: 'ce_file_name', headerName: 'Document Name', width: 300 },
+    { field: 'ce_type', headerName: 'ประเภทเอกสาร', width: 120 },
+    { field: 'ce_file_name', headerName: 'ชื่อเอกสาร', width: 300 },
     {
       field: 'last_updated',
-      headerName: 'last updated',
+      headerName: 'อัปเดทล่าสุด',
       width: 300,
       renderCell: params => (
         <span>
@@ -77,7 +77,7 @@ function Pre_project_Form() {
 
     {
       field: 'Download',
-      headerName: 'Download',
+      headerName: 'ดาวน์โหลด',
       width: 100,
       sortable: false,
       filterable: false,

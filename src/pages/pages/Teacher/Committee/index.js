@@ -32,7 +32,7 @@ const Committee = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-        <Typography variant='h5'>Teacher</Typography>
+        <Typography variant='h5'>กรรมการ</Typography>
       </Grid>
 
       {/* Header card */}
@@ -84,11 +84,11 @@ const Committee = () => {
           </div>
 
           <CardHeader
-            title={<span style={{ color: 'white' }}>All Project And Pre-project Ready To Test</span>}
+            title={<span style={{ color: 'white' }}>หัวข้อโครงงานทั้หมดที่พร้อมสอบ</span>}
             subheader={
               <Typography variant='body2'>
                 <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
-                  Select a project to register committee
+                  เลือกหัวข้อโครงงานที่จะลงทะเบียนกรรมการ
                 </Box>
               </Typography>
             }

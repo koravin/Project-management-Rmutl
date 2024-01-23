@@ -77,7 +77,7 @@ export default function Detail_teacher_post({ open, handleClose, rowData }) {
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Change Topic Status
+          หัวข้อ
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -92,9 +92,9 @@ export default function Detail_teacher_post({ open, handleClose, rowData }) {
           <CloseIcon />
         </IconButton>
         <DialogContentText id='alert-dialog-slide-description' style={{ marginLeft: '15px', marginBottom: '10px' }}>
-          <Typography style={{ color: 'grey' }}>Topic Name: {postData?.header_name || 'N/A'} </Typography>
+          <Typography style={{ color: 'grey' }}>ชื่อหัวข้อ : {postData?.header_name || 'N/A'} </Typography>
           <Typography style={{ color: 'grey' }}>
-            Topic Status:{' '}
+            สถานะ :{' '}
             {postData?.status
               ? postData.public_relation_status === '1'
                 ? 'Active'
@@ -106,7 +106,7 @@ export default function Detail_teacher_post({ open, handleClose, rowData }) {
         </DialogContentText>
         <DialogContent dividers>
           {/* Content */}
-          <Typography>Topic Content</Typography>
+          {/* <Typography>Topic Content</Typography> */}
           <Card>
             <CardContent>
               <Typography style={{ color: 'grey' }}> {rowData?.description || 'N/A'} </Typography>

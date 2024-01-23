@@ -71,7 +71,7 @@ function PreprojectStudent() {
 
   // ประกาศ Colum DataGrid
   const columns = [
-    { field: 'project_code', headerName: 'Project Code', width: 120 },
+    { field: 'project_code', headerName: 'รหัสโครงการ', width: 120 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(อังกฤษ)', width: 300 },
     {
@@ -101,7 +101,7 @@ function PreprojectStudent() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -135,7 +135,7 @@ function PreprojectStudent() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       sortable: false,
       filterable: false,
@@ -191,7 +191,7 @@ function PreprojectStudent() {
             router.push(`/pages/Student/HomeStudent/PreprojectStudent/RegisNewProject`)
           }}
         >
-          Register
+          ลงทะเบียน
         </Button>
         <Button
           sx={{
@@ -209,7 +209,7 @@ function PreprojectStudent() {
             setRefreshData(prevSubmitted => !prevSubmitted)
           }}
         >
-          <RefreshIcon /> refresh
+          <RefreshIcon /> รีเฟรช
         </Button>
         <Card>
           <CardContent>

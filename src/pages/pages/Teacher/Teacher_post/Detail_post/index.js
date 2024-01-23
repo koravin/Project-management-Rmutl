@@ -52,7 +52,7 @@ export default function Detail_post({ open, handleClose, rowData }) {
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Change Topic Status
+          รายละเอียด
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -67,9 +67,9 @@ export default function Detail_post({ open, handleClose, rowData }) {
           <CloseIcon />
         </IconButton>
         <DialogContentText id='alert-dialog-slide-description' style={{ marginLeft: '15px', marginBottom: '10px' }}>
-          <Typography style={{ color: 'grey' }}>Topic Name: {rowData?.header_name || 'N/A'} </Typography>
+          <Typography style={{ color: 'grey' }}>หัวข้อ: {rowData?.header_name || 'N/A'} </Typography>
           <Typography style={{ color: 'grey' }}>
-            Topic Status:{' '}
+            สถานะ:{' '}
             {rowData?.public_relation_status
               ? rowData.public_relation_status === '1'
                 ? 'Active'
@@ -81,7 +81,7 @@ export default function Detail_post({ open, handleClose, rowData }) {
         </DialogContentText>
         <DialogContent dividers>
           {/* Content */}
-          <Typography>Topic Content</Typography>
+          {/* <Typography>Topic Content</Typography> */}
           <Card>
             <CardContent>
               <Typography style={{ color: 'grey' }}> {rowData?.description || 'N/A'} </Typography>

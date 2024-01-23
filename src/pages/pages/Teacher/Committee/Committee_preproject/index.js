@@ -63,7 +63,7 @@ function Committee_preproject() {
 
   // ประกาศ Colum DataGrid
   const columns = [
-    { field: 'project_code', headerName: 'Pre-project Code', width: 140 },
+    { field: 'project_code', headerName: 'รหัสโครงการ', width: 140 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
@@ -168,7 +168,7 @@ function Committee_preproject() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       sortable: false,
       filterable: false,
@@ -218,7 +218,7 @@ function Committee_preproject() {
           setRefreshData(prevSubmitted => !prevSubmitted)
         }}
       >
-        <RefreshIcon /> refresh
+        <RefreshIcon /> รีเฟรช
       </Button>
 
       <Card>

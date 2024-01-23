@@ -102,7 +102,7 @@ function Recommend_Project() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -136,7 +136,7 @@ function Recommend_Project() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -229,7 +229,7 @@ function Recommend_Project() {
     <div>
       <Grid>
         <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-          <Typography variant='h5'>Student</Typography>
+          <Typography variant='h5'>โครงงานแนะนำ</Typography>
         </Grid>
 
         {/* Header card */}
@@ -281,11 +281,11 @@ function Recommend_Project() {
             </div>
 
             <CardHeader
-              title={<span style={{ color: 'white' }}>Project Recommend</span>}
+              title={<span style={{ color: 'white' }}>โครงงานแนะนำ</span>}
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
-                    {projectdata && projectdata.length ? projectdata.length : '0'} Project Recommend to you
+                    {projectdata && projectdata.length ? projectdata.length : '0'} โครงงานแนะนำสำหรับคุณ
                   </Box>
                 </Typography>
               }

@@ -181,7 +181,7 @@ function Dashboard() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -215,8 +215,8 @@ function Dashboard() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
-      width: 60,
+      headerName: 'รายละเอียด',
+      width: 150,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>

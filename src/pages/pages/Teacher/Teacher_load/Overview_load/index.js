@@ -22,27 +22,27 @@ import ExtensionIcon from '@mui/icons-material/Extension'
 const Overview_load = ({ overviewdata }) => {
   const salesData = [
     {
-      stats: 'Load ' + overviewdata?.adviserCount_preproject + ' Project',
-      title: 'Pre-project',
+      stats: 'ภาระ ' + overviewdata?.adviserCount_preproject + ' โครงงาน',
+      title: 'เตรียมโครงการ',
       color: 'primary',
       icon: <CoPresentIcon sx={{ fontSize: '1.75rem' }} />
     },
     {
-      stats: 'Load ' + overviewdata?.adviserCount_project + ' Project',
-      title: 'Project',
+      stats: 'ภาระ ' + overviewdata?.adviserCount_project + ' โครงงาน',
+      title: 'โครงการ',
       color: 'success',
       icon: <Diversity3Icon sx={{ fontSize: '1.75rem' }} />
     },
     {
-      stats: 'Load ' + overviewdata?.committeeCount_preproject + ' Project',
+      stats: 'ภาระ ' + overviewdata?.committeeCount_preproject + ' โครงงาน',
       color: 'warning',
-      title: 'Committee Pre-project',
+      title: 'กรรมการ วิชาเตรียมโครงการ',
       icon: <DataSaverOffIcon sx={{ fontSize: '1.75rem' }} />
     },
     {
-      stats: 'Load ' + overviewdata?.committeeCount_project + ' Project',
+      stats: 'ภาระ ' + overviewdata?.committeeCount_project + ' โครงงาน',
       color: 'info',
-      title: 'Committee Project',
+      title: 'กรรมการ วิชาโครงการ',
       icon: <ExtensionIcon sx={{ fontSize: '1.75rem' }} />
     }
   ]
@@ -76,7 +76,7 @@ const Overview_load = ({ overviewdata }) => {
   return (
     <Card>
       <CardHeader
-        title='All Your Load'
+        title='ภาระทั้งหมด'
         action={
           <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
             <DotsVertical />
@@ -85,9 +85,8 @@ const Overview_load = ({ overviewdata }) => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              All {overviewdata?.allLoadCount} Your Load
+              คุณมี {overviewdata?.allLoadCount} ภาระโครงงานต้องจัดการ
             </Box>{' '}
-            😎 you are so cool
           </Typography>
         }
         titleTypographyProps={{

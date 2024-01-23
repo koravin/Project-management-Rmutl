@@ -36,7 +36,7 @@ const Document_project_status = ({ project_id }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/myprojectdocument?preproject_id=${project_id}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/myprojectdocument?project_id=${project_id}`
         )
         console.log('Auuuuu', response.data)
         setCeData(response.data.documentlist[0])

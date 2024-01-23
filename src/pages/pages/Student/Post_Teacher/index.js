@@ -98,11 +98,11 @@ function Post_Teacher() {
   }
 
   const columns = [
-    { field: 'header_name', headerName: 'Topic Name', width: 200 },
-    { field: 'description', headerName: 'Description', width: 350 },
+    { field: 'header_name', headerName: 'หัวข้อ', width: 200 },
+    { field: 'description', headerName: 'รายละเอียด', width: 350 },
     {
       field: 'public_relation_status',
-      headerName: 'Status',
+      headerName: 'สถานะ',
       width: 120,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
@@ -140,7 +140,7 @@ function Post_Teacher() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -172,7 +172,7 @@ function Post_Teacher() {
     <div>
       <Grid>
         <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-          <Typography variant='h5'>Student</Typography>
+          <Typography variant='h5'>หัวข้อโครงงานจากอาจารย์</Typography>
         </Grid>
 
         {/* Header card */}
@@ -224,11 +224,11 @@ function Post_Teacher() {
             </div>
 
             <CardHeader
-              title={<span style={{ color: 'white' }}>Post Topic Form Teacher</span>}
+              title={<span style={{ color: 'white' }}>โพสหัวข้อโครงงานจากอาจารย์</span>}
               subheader={
                 <Typography variant='body2'>
                   <Box component='span' sx={{ fontWeight: 600, color: 'white' }}>
-                    {postdata && postdata.length ? postdata.length : '0'} topic in system
+                    {postdata && postdata.length ? postdata.length : '0'} หัวข้อโครงงานในระบบ
                   </Box>
                 </Typography>
               }

@@ -98,7 +98,6 @@ export default function RegisNewProject() {
       !projectCode ||
       !projecttype ||
       !selectedTerm ||
-      allCommitteeValues.length === 0 ||
       allStudent.length === 0
     ) {
       Swal.fire({
@@ -146,7 +145,7 @@ export default function RegisNewProject() {
       section_id: selectedTerm,
       studen_id: allStudent,
       subadviser: allAdvisorSubValues,
-      committee: allCommitteeValues
+      committee: ''
     }
 
     axios
@@ -672,7 +671,7 @@ export default function RegisNewProject() {
             </Grid>
 
             {/* Committee Select */}
-            <Grid item xs={12} sm={12}>
+            {/* <Grid item xs={12} sm={12}>
               <Typography variant='body2' sx={{ fontWeight: 600 }}>
                 ชื่อคณะกรรมการ**
               </Typography>
@@ -711,7 +710,7 @@ export default function RegisNewProject() {
               {additionalCommitteeForms.map((_, index) => (
                 <AdditionalCommitteeForm key={index} formIndex={index} selectedOptions={additionalCommitteeForms} />
               ))}
-            </Grid>
+            </Grid> */}
 
             {/* Student Select */}
             <Grid item xs={12} sm={12}>

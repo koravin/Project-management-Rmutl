@@ -112,7 +112,7 @@ export default function Insert_post({ open, handleClose }) {
     <React.Fragment>
       <BootstrapDialog fullWidth onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id='customized-dialog-title'>
-          Post detail
+          หัวข้อโพส
         </DialogTitle>
         <IconButton
           aria-label='close'
@@ -135,8 +135,8 @@ export default function Insert_post({ open, handleClose }) {
               <FormControl fullWidth>
                 <TextField
                   type='text'
-                  label='Topic Name'
-                  placeholder='Topic Name'
+                  label='หัวข้อ'
+                  placeholder='หัวข้อ'
                   value={topic}
                   onChange={e => handleTopicNameChange(e)}
                   variant='outlined'
@@ -147,7 +147,7 @@ export default function Insert_post({ open, handleClose }) {
             <Grid item xs={12} sm={12}>
               <TextareaAutosize
                 aria-label='minimum height'
-                placeholder='Type in here…'
+                placeholder='ระบุข้อความ'
                 value={postdata}
                 onChange={event => handlePostDataChange(event)}
                 style={{

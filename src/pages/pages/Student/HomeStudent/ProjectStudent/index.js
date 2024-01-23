@@ -72,7 +72,7 @@ function ProjectStudent() {
   }
 
   const columns = [
-    { field: 'project_code', headerName: 'ID', width: 120 },
+    { field: 'project_code', headerName: 'รหัสโครงงาน', width: 120 },
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'project_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
@@ -102,7 +102,7 @@ function ProjectStudent() {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'
@@ -136,7 +136,7 @@ function ProjectStudent() {
     },
     {
       field: 'Detail',
-      headerName: 'Detail',
+      headerName: 'รายละเอียด',
       width: 100,
       renderCell: cellValues => {
         return (
@@ -243,7 +243,7 @@ function ProjectStudent() {
             setRefreshData(prevSubmitted => !prevSubmitted)
           }}
         >
-          <RefreshIcon /> refresh
+          <RefreshIcon /> รีเฟรช
         </Button>
         <Card>
           <CardContent>
