@@ -76,17 +76,27 @@ const Section_Mg = () => {
   const columns = [
     { field: 'curriculum_name_en', headerName: 'หลักสูตร', width: 300 },
     { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
-    { field: 'subject_name_en', headerName: 'ชื่อวิชา', width: 300 },
+    { field: 'subject_name_en', headerName: 'ชื่อวิชา', width: 250 },
+    {
+      field: 'semester_order',
+      headerName: 'ปี/เทอม',
+      width: 90,
+      renderCell: params => (
+        <span>
+          {params.row.sem_year}/{params.row.semester_order}
+        </span>
+      )
+    },
     {
       field: 'subject_type',
       headerName: 'ประเภทวิชา',
       width: 100,
-      renderCell: params => <span>{params.value === '1' ? 'pre-project' : params.value === '2' ? 'project' : ''}</span>
+      renderCell: params => <span>{params.value === '1' ? 'Pre-project' : params.value === '2' ? 'Project' : ''}</span>
     },
     {
       field: 'sec_status',
       headerName: 'สถานะเซ็ค',
-      width: 120,
+      width: 90,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์
         let statusText

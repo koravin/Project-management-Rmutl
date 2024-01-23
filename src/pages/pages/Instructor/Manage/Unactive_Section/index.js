@@ -43,6 +43,16 @@ const Unactive_Section = () => {
     { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
     { field: 'section_name', headerName: 'ชื่อเช็คชัน', width: 150 },
     {
+      field: 'semester_order',
+      headerName: 'ปี/เทอม',
+      width: 90,
+      renderCell: params => (
+        <span>
+          {params.row.sem_year}/{params.row.semester_order}
+        </span>
+      )
+    },
+    {
       field: 'sec_status',
       headerName: 'สถานะเช็คชัน',
       width: 120,
@@ -104,6 +114,16 @@ const Unactive_Section = () => {
   const Project_columns = [
     { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
     { field: 'section_name', headerName: 'ชื่อเช็คชัน', width: 150 },
+    {
+      field: 'semester_order',
+      headerName: 'ปี/เทอม',
+      width: 90,
+      renderCell: params => (
+        <span>
+          {params.row.sem_year}/{params.row.semester_order}
+        </span>
+      )
+    },
     {
       field: 'sec_status',
       headerName: 'สถานะเช็คชัน',
