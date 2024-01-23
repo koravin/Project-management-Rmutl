@@ -82,6 +82,16 @@ const Navigation = () => {
           path: '/pages/Instructor/Manage'
         },
         {
+          title: 'Committee',
+          icon: PeopleAltIcon,
+          path: '/pages/Teacher/Committee'
+        },
+        {
+          title: 'Post form teacher',
+          icon: Diversity1Icon,
+          path: '/pages/Student/Post_Teacher'
+        },
+        {
           title: 'Public Document',
           icon: PublicIcon,
           path: '/pages/Instructor/Public_Document_Upload'

@@ -91,6 +91,8 @@ function Dashboard() {
   const [projectdata, setProjectData] = useState([])
   const [projectTypeData, setprojectTypeData] = useState([])
 
+  // console.log('projectdata', projectdata)
+
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
 
@@ -153,11 +155,23 @@ function Dashboard() {
   const columns = [
     { field: 'project_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'project_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
+    {
+      field: 'semester_order',
+      headerName: 'ปี/เทอม',
+      width: 90,
+      renderCell: params => (
+        <span>
+          {params.row.sem_year}/{params.row.semester_order}
+        </span>
+      )
+    },
+
+    { field: 'type_name', headerName: 'ประเภทโครงงาน', width: 120 },
 
     {
       field: 'project_status',
-      headerName: 'สถานะโครงงาน',
-      width: 180,
+      headerName: 'สถานะ',
+      width: 100,
       renderCell: params => {
         const value = params.value // ค่าในคอลัมน์ 'project_status'
         const statusName = params.row.status_name
@@ -173,7 +187,7 @@ function Dashboard() {
         } else if (value === '2') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'black'
+          bgColor = '#2979ff'
         } else if (value === '3') {
           statusText = statusName
           statusColor = 'white'
@@ -216,7 +230,7 @@ function Dashboard() {
     {
       field: 'Detail',
       headerName: 'รายละเอียด',
-      width: 150,
+      width: 130,
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>

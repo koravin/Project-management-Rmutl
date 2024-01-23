@@ -307,15 +307,9 @@ export default function InsertSection({ open, handleClose }) {
                   error={submitted && !selectedTerm} // แสดงสีแดงเมื่อกดส่งและค่าว่าง
                   disabled={!yearId || !hasData}
                 >
-                  {termData && termData.length > 0 ? (
-                    termData.map(term => (
-                      <MenuItem key={term.section_id} value={term.section_id}>
-                        เทอม{term.semester_order} {term.section_name}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
-                  )}
+                  <MenuItem value={1}>เทอม 1</MenuItem>
+                  <MenuItem value={2}>เทอม 2</MenuItem>
+                  <MenuItem value={3}>เทอม 3</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
