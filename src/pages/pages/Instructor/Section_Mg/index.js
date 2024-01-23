@@ -26,6 +26,7 @@ const Section_Mg = () => {
   // รับค่าข้อมูล Api
   const [sectionData, setSectionData] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null) // ตัวแปรเก็บค่าข้อมูลแต่ละแถวในตารางเพื่อส่งข้อมูลเข้า Cpmponent Chang Status
+  console.log('sectionData', sectionData)
 
   // dialog control
   const [openDialog, setOpenDialog] = React.useState(false)
@@ -74,7 +75,8 @@ const Section_Mg = () => {
 
   // Table colum
   const columns = [
-    { field: 'curriculum_name_en', headerName: 'หลักสูตร', width: 300 },
+    { field: 'curriculum_name_en', headerName: 'หลักสูตร', width: 250 },
+    { field: 'section_name', headerName: 'ชื่อเช็ค', width: 100 },
     { field: 'subject_code', headerName: 'รหัสวิชา', width: 120 },
     { field: 'subject_name_en', headerName: 'ชื่อวิชา', width: 250 },
     {

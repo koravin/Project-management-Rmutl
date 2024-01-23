@@ -234,7 +234,7 @@ function Dashboard() {
       renderCell: cellValues => {
         return (
           <Button variant='text' onClick={() => handleDetailDataClick(cellValues.row.project_id)}>
-            <InfoIcon />
+            <SearchIcon />
           </Button>
         )
       }
