@@ -99,6 +99,16 @@ function Post_Teacher() {
 
   const columns = [
     { field: 'header_name', headerName: 'หัวข้อ', width: 200 },
+    {
+      field: 'first_name',
+      headerName: 'ผู้โพส',
+      width: 120,
+      renderCell: params => {
+        const fullName = `${params.row.first_name} ${params.row.last_name}`
+
+        return <div>{fullName}</div>
+      }
+    },
     { field: 'description', headerName: 'รายละเอียด', width: 350 },
     {
       field: 'public_relation_status',
