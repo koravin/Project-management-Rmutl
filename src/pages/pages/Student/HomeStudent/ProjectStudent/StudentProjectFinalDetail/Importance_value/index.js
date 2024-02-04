@@ -166,6 +166,20 @@ function Importance_value({ project_id }) {
 
       console.log(responses)
 
+      let hasError = false
+
+      responses.forEach(response => {
+        if (!hasError && response.data.message === "Can't Add New Potentials In This Project") {
+          alert('ไม่สามารถเพิ่มข้อมูลได้')
+          hasError = true
+
+          return
+        }
+      })
+
+      if (hasError) {
+        return
+      }
       alert('ส่งข้อมูลเสร็จสิ้น')
     } catch (error) {
       console.error(error)

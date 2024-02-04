@@ -41,6 +41,27 @@ function Teacher_post() {
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
 
+  //---------------------------- เก็บค่า id อาจารย์ -----------------------------------//
+  // Variable
+  const [user_id, setUser_Id] = useState('')
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        // ดึงค่า jwtToken และ jwtRole จาก localStorage
+        const storedJwtUserId = localStorage.getItem('jwtUser_id')
+
+        setUser_Id(storedJwtUserId)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchMenuItems()
+  }, [])
+
+  //-----------------------------------------------------------------------------//
+
   // useRef สำหรับเก็บค่า openDialog
 
   // เก็บ State Dialog Insert form
@@ -51,7 +72,7 @@ function Teacher_post() {
   const openDialogChangStatusRef = useRef(openDialogChangStatus)
   openDialogChangStatusRef.current = openDialogChangStatus
 
-  // เก็บ State Dialog Detail
+  // เก็บ State Dialog Detaillog
   const openDialogDetailRef = useRef(openDialogDetail)
   openDialogDetailRef.current = openDialogDetail
 
@@ -104,8 +125,20 @@ function Teacher_post() {
     router.push(`/pages/BackOffice/DisplayProject/ProjectEditForm/?id=${projectId}`)
   }
 
+  console.log('postdata', postdata)
+
   const columns = [
     { field: 'header_name', headerName: 'หัวข้อ', width: 200 },
+    {
+      field: 'first_name',
+      headerName: 'ผู้โพส',
+      width: 120,
+      renderCell: params => {
+        const fullName = `${params.row.first_name} ${params.row.last_name}`
+
+        return <div>{fullName}</div>
+      }
+    },
     { field: 'description', headerName: 'คำบรรยาย', width: 350 },
     {
       field: 'public_relation_status',
@@ -162,11 +195,14 @@ function Teacher_post() {
       headerName: 'เปลี่ยนสถานะ',
       width: 100,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.teacher_id !== parseInt(user_id, 10)
+
         return (
           <Button
             variant='text'
             onClick={() => handleClickChangStatusDialog(cellValues.row)}
-            style={{ color: '#2196F3' }}
+            style={{ color: isDisabled ? 'grey' : '#2196F3' }}
+            disabled={isDisabled}
           >
             <SyncIcon />
           </Button>
@@ -180,8 +216,15 @@ function Teacher_post() {
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.teacher_id !== parseInt(user_id, 10)
+
         return (
-          <Button variant='text' onClick={() => handleClickEditDialog(cellValues.row)} style={{ color: '#FFC107' }}>
+          <Button
+            variant='text'
+            onClick={() => handleClickEditDialog(cellValues.row)}
+            style={{ color: isDisabled ? 'grey' : '#FFC107' }}
+            disabled={isDisabled}
+          >
             <EditIcon />
           </Button>
         )
@@ -192,11 +235,18 @@ function Teacher_post() {
       headerName: 'ลบ',
       width: 100,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.teacher_id !== parseInt(user_id, 10)
+
+        // console.log('isDisabled:', isDisabled)
+        // console.log('Type of x:', typeof cellValues.row.teacher_id)
+        // console.log('Type of y:', typeof user_id)
+
         return (
           <Button
             variant='text'
             onClick={() => handleDeleteSubmit(cellValues.row.public_relations_id)}
-            style={{ color: '#F44336' }}
+            style={{ color: isDisabled ? 'grey' : '#F44336' }}
+            disabled={isDisabled}
           >
             <DeleteIcon />
           </Button>

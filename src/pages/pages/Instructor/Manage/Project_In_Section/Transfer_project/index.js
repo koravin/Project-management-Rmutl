@@ -54,7 +54,7 @@ export default function Transfer_project({ open, handleClose, section }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preproject_not_yet_transfer`)
         setProjectData(response.data.data)
       } catch (error) {
         console.error(error)
@@ -127,7 +127,7 @@ export default function Transfer_project({ open, handleClose, section }) {
         } else if (value === '2') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'black'
+          bgColor = '#2979ff'
         } else if (value === '3') {
           statusText = statusName
           statusColor = 'white'
@@ -135,7 +135,7 @@ export default function Transfer_project({ open, handleClose, section }) {
         } else if (value === '4') {
           statusText = statusName
           statusColor = 'white'
-          bgColor = 'yellow'
+          bgColor = '#ff9800'
         } else if (value === '5') {
           statusText = statusName
           statusColor = 'white'

@@ -25,8 +25,6 @@ function Committee_preproject() {
   // รับค่าข้อมูลโปรเจค
   const [projectdata, setProjectData] = useState([])
 
-  console.log('ทานวยหัวลูกคิด', projectdata)
-
   //ตัวแปรเช็คสถานะ Loading
   const [isLoading, setIsLoading] = useState(true)
 

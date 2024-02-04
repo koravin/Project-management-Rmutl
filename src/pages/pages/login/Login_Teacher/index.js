@@ -126,11 +126,15 @@ const Login_Teacher = () => {
           localStorage.setItem('jwtToken', response.data.jwt)
           localStorage.setItem('jwtRole', response.data.jwtRole)
           localStorage.setItem('jwtUser_id', response.data.teacherId)
+          localStorage.setItem('jwtFirst_Name', response.data.data[0].first_name)
+          localStorage.setItem('jwtLast_Name', response.data.data[0].last_name)
 
           setTimeout(() => {
             localStorage.removeItem('jwtToken')
             localStorage.removeItem('jwtRole')
             localStorage.removeItem('jwtUser_id')
+            localStorage.removeItem('jwtFirst_Name')
+            localStorage.removeItem('jwtLast_Name')
           }, 3600 * 1000)
 
           Swal.fire({

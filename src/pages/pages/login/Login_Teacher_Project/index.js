@@ -120,15 +120,19 @@ const Login_Teacher_Project = () => {
 
           return
         } else {
-          // console.log('หา Id', response.data)
+          // console.log('หา Id', response.data.data)
 
           // เก็บค่า JWT และ JWT Role ใน localStorage
           localStorage.setItem('jwtToken', response.data.jwt)
           localStorage.setItem('jwtRole', response.data.jwtRole)
+          localStorage.setItem('jwtFirst_Name', response.data.data.first_name)
+          localStorage.setItem('jwtLast_Name', response.data.data.last_name)
 
           setTimeout(() => {
             localStorage.removeItem('jwtToken')
             localStorage.removeItem('jwtRole')
+            localStorage.removeItem('jwtFirst_Name')
+            localStorage.removeItem('jwtLast_Name')
           }, 3600 * 1000)
           Swal.fire({
             icon: 'success',

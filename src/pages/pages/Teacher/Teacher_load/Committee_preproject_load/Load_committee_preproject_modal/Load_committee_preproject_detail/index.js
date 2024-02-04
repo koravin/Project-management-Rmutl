@@ -62,7 +62,7 @@ export default function Load_committee_preproject_detail({ project_id }) {
         setSec(response.data.PreprojectData[0].section_name)
         setProjectCode(response.data.PreprojectData[0].project_code)
         setCurriculums(response.data.PreprojectData[0].curriculum)
-        setProjectType(response.data.PreprojectData[0].project_type)
+        setProjectType(response.data.PreprojectData[0].type_name)
         setAdvisor(fullNameAdvisor)
         setSubAdvisor(response.data.PreprojectSubAdviser)
         setCommittee(response.data.PreprojectCommittee)
@@ -311,14 +311,16 @@ export default function Load_committee_preproject_detail({ project_id }) {
                 <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>
                   อาจารย์ที่ปรึกษารอง
                 </Box>
-                {subAdvisor.map((advisor, index) => (
-                  <span key={index}>
-                    {<br />}
-                    {`อาจารย์ที่ปรึกษารอง ${index + 1}: ${advisor.prefix} ${advisor.first_name} ${
-                      advisor.last_name
-                    }`}{' '}
-                  </span>
-                ))}
+                {subAdvisor && subAdvisor.length > 0 ? (
+                  subAdvisor.map((advisor, index) => (
+                    <span key={index}>
+                      {<br />}
+                      {`อาจารย์ที่ปรึกษารอง ${index + 1}: ${advisor.prefix} ${advisor.first_name} ${advisor.last_name}`}
+                    </span>
+                  ))
+                ) : (
+                  <span>-</span>
+                )}
               </Typography>
               <Typography variant='body2' sx={{ marginBottom: 3.5 }}>
                 <Box component='span' sx={{ fontWeight: 'bold', mr: 1 }}>

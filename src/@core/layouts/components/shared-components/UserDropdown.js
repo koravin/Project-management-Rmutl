@@ -1,5 +1,6 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
+import axios from 'axios'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -35,6 +36,40 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 const UserDropdown = () => {
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
+
+  // Variable
+  const [role, setRole] = useState('')
+  const [name, setName] = useState('')
+  const [lastname, setLastName] = useState('')
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        // ดึงค่า jwtToken และ jwtRole จาก localStorage
+        const storedJwtToken = localStorage.getItem('jwtToken')
+        const storedJwtRole = localStorage.getItem('jwtRole')
+        const storedName = localStorage.getItem('jwtFirst_Name')
+        const storedLastName = localStorage.getItem('jwtLast_Name')
+
+        setName(storedName)
+        setLastName(storedLastName)
+
+        if (storedJwtToken && storedJwtRole) {
+          // ส่ง token และ role ไปยัง API
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/verifyauthentication`, {
+            token: storedJwtToken,
+            tokenRole: storedJwtRole
+          })
+
+          setRole(response.data.stateRole)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchMenuItems()
+  }, [])
 
   // ** Hooks
   const router = useRouter()
@@ -102,9 +137,11 @@ const UserDropdown = () => {
               />
             </Badge>
             <Box sx={{ display: 'flex', marginLeft: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>JongRai</Typography>
+              <Typography sx={{ fontWeight: 600 }}>
+                {name} {lastname}
+              </Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+                {role}
               </Typography>
             </Box>
           </Box>
