@@ -10,6 +10,14 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import RecommendIcon from '@mui/icons-material/Recommend'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import InputLabel from '@mui/material/InputLabel'
+import { IconButton, InputAdornment } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 // Component Import
 import Detail_reccommend_project from './Detail_reccommend_project'
@@ -223,13 +231,94 @@ function Recommend_Project() {
     })
   }
 
+  // Search function
+  // เก็บค่าข้อมูล Input
+  const [projectName, setProjectName] = useState('')
+  const [projecttype, setProjectType] = React.useState('')
+  const [projectYear, setProjectYear] = useState('')
+  const [projectAdvisor, setProjectAdvisor] = useState('')
+  const [searchResult, setSearchResult] = useState([])
+  const [selectedProjectType, setSelectedProjectType] = useState('')
+
+  const [projectTypeData, setprojectTypeData] = useState([])
+
+  // ฟังชันเก็บค่าข้อมูล Input
+  const handleProjectNameChange = event => {
+    setProjectName(event.target.value)
+  }
+
+  const handleProjectTypeChange = event => {
+    setSelectedProjectType(event.target.value)
+  }
+
+  const handleProjectYearChange = event => {
+    setProjectYear(event.target.value)
+  }
+
+  const handleProjectAdvisorChange = event => {
+    setProjectAdvisor(event.target.value)
+  }
+
+  // ปุ่ม Reset
+  const handleReset = () => {
+    setProjectName('')
+    setProjectType('')
+    setProjectYear('')
+    setProjectAdvisor('')
+    setSelectedProjectType('')
+  }
+
+  // ฟังก์ชันค้นหาข้อมูล
+  const handleSearch = () => {
+    const filteredData = projectdata.filter(project => {
+      // ตรวจสอบชื่อโครงงาน
+      const isNameMatch =
+        project.project_name_eng.toLowerCase().includes(projectName.toLowerCase()) ||
+        project.project_name_th.includes(projectName)
+
+      // ตรวจสอบว่าประเภทโครงงานตรงกับที่เลือกหรือไม่
+      const isTypeMatch = selectedProjectType ? String(project.project_type) === String(selectedProjectType) : true
+
+      // ตรวจสอบว่าอาจารย์ที่ปรึกษาตรงกับที่เลือกหรือไม่
+      const isAdvisorMatch =
+        project.prefix.toLowerCase().includes(projectAdvisor.toLowerCase()) ||
+        project.first_name.toLowerCase().includes(projectAdvisor.toLowerCase()) ||
+        project.last_name.toLowerCase().includes(projectAdvisor.toLowerCase())
+
+      // ตรวจสอบว่าปีที่จัดทำตรงกับที่เลือกหรือไม่
+      const isYearMatch = projectYear ? project.sem_year === parseInt(projectYear, 10) : true
+
+      return isNameMatch && isTypeMatch && isAdvisorMatch && isYearMatch
+    })
+
+    setSearchResult(filteredData)
+    if (filteredData.length === 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'ไม่พบข้อมูล',
+        text: 'ไม่พบโครงการที่ตรงตามเงื่อนไขที่คุณค้นหา'
+      })
+    }
+  }
+
+  // ดึงข้อมูล project type
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/project_type`)
+        const projectType = response.data.data || []
+        setprojectTypeData(projectType)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
   return (
     <div>
       <Grid>
-        <Grid item xs={12} sx={{ paddingBottom: 4 }}>
-          <Typography variant='h5'>โครงงานแนะนำ</Typography>
-        </Grid>
-
         {/* Header card */}
         <Grid style={{ width: '100%' }}>
           <Card
@@ -292,7 +381,93 @@ function Recommend_Project() {
         </Grid>
         {/* Header card */}
 
-        <Card sx={{ mt: 10 }}>
+        {/* Search data */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '25px' }}>
+          <Card style={{ width: '100%' }}>
+            <CardContent>
+              <Grid item xs={12}>
+                <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                  สืบค้นชื่อโครงงาน
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  type='text'
+                  label='ชื่อโครงงาน'
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </Grid>
+
+              <Grid container spacing={2} sx={{ mt: 3 }}>
+                {/* Project-Type Select */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl fullWidth>
+                    <InputLabel id='term-label'>ประเภทของโครงงาน</InputLabel>
+                    <Select
+                      label='Project-Type'
+                      defaultValue=''
+                      id='select-04'
+                      labelId='Project-Type'
+                      onChange={handleProjectTypeChange}
+                      value={selectedProjectType}
+                    >
+                      {projectTypeData && projectTypeData.length > 0 ? (
+                        projectTypeData.map(type => (
+                          <MenuItem key={type.type_id} value={type.type_id}>
+                            {type.type_name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem disabled>ไม่มีข้อมูล</MenuItem>
+                      )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                {/* Project-year */}
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    type='text'
+                    label='ปีที่จัดทำ'
+                    value={projectYear}
+                    onChange={handleProjectYearChange}
+                  />
+                </Grid>
+                {/* Adviser */}
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    type='text'
+                    label='อาจารย์ที่ปรึกษา'
+                    value={projectAdvisor}
+                    onChange={handleProjectAdvisorChange}
+                  />
+                </Grid>
+              </Grid>
+
+              {/* Search Button */}
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <Button variant='contained' color='primary' startIcon={<SearchIcon />} onClick={handleSearch}>
+                  ค้นหาข้อมูล
+                </Button>
+
+                <Button
+                  variant='outlined'
+                  color='warning'
+                  sx={{ ml: 2 }}
+                  onClick={handleReset}
+                  startIcon={<RefreshIcon />}
+                >
+                  รีเซ็ตข้อมูล
+                </Button>
+              </Grid>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card sx={{ mt: 6 }}>
           <CardContent>
             <Box sx={{ height: '100%', width: '100%' }}>
               {isLoading ? (
@@ -322,7 +497,7 @@ function Recommend_Project() {
                 <p>No Data</p>
               ) : (
                 <DataGrid
-                  rows={projectdata}
+                  rows={searchResult.length > 0 ? searchResult : projectdata}
                   columns={columns}
                   getRowId={row => row.project_id}
                   initialState={{

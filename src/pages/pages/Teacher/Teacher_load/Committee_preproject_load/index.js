@@ -75,6 +75,16 @@ function Committee_preproject_load({ loadCommitteePreprojectData }) {
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
+      field: 'sem_year',
+      headerName: 'ปี/เทอม/section',
+      width: 150,
+      renderCell: params => {
+        const { sem_year, semester_order, section_name } = params.row
+
+        return `${sem_year}/${semester_order}/${section_name}`
+      }
+    },
+    {
       field: 'project_status',
       headerName: 'สถานะโครงงาน',
       width: 200,

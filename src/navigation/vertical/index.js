@@ -23,6 +23,9 @@ import Diversity1Icon from '@mui/icons-material/Diversity1'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt'
 import LocalPostOfficeIcon from '@mui/icons-material/LocalPostOffice'
+import AddTaskIcon from '@mui/icons-material/AddTask'
+
+import Groups3Icon from '@mui/icons-material/Groups3'
 
 const Navigation = () => {
   const [jwtToken, setJwtToken] = useState(null)
@@ -83,7 +86,7 @@ const Navigation = () => {
         },
         {
           title: 'Committee',
-          icon: PeopleAltIcon,
+          icon: Groups3Icon,
           path: '/pages/Teacher/Committee'
         },
         {
@@ -134,8 +137,13 @@ const Navigation = () => {
         },
         {
           title: 'Committee',
-          icon: PeopleAltIcon,
+          icon: Groups3Icon,
           path: '/pages/Teacher/Committee'
+        },
+        {
+          title: 'Approve project',
+          icon: AddTaskIcon,
+          path: '/pages/Teacher/Approve_Project'
         }
       ]
     } else {

@@ -18,6 +18,7 @@ import Load_preproject_modal from './Load_preproject_modal'
 
 function Preproject_load({ loadPreprojectData }) {
   const router = useRouter() // router สร้าง path
+
   const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
@@ -53,7 +54,6 @@ function Preproject_load({ loadPreprojectData }) {
 
   // dialog Chang Status open
   const handleClickChangStatusDialog = rowData => {
-    console.log('อัง', rowData)
     setOpenDialogChangStatus(true)
     setSelectedRowData(rowData)
   }
@@ -75,6 +75,17 @@ function Preproject_load({ loadPreprojectData }) {
     { field: 'project_code', headerName: 'รหัสโครงงาน', width: 140 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
     { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
+    {
+      field: 'sem_year',
+      headerName: 'ปี/เทอม/section',
+      width: 150,
+      renderCell: params => {
+        const { sem_year, semester_order, section_name } = params.row
+
+        return `${sem_year}/${semester_order}/${section_name}`
+      }
+    },
+
     {
       field: 'project_status',
       headerName: 'สถานะโครงงาน',
@@ -156,7 +167,6 @@ function Preproject_load({ loadPreprojectData }) {
       try {
         setIsLoading(true) // เริ่มต้น loading
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/preprojects`)
-        console.log(response.data.data)
 
         const projects = response.data.data.map(project => ({
           ...project,

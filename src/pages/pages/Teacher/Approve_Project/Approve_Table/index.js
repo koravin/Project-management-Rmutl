@@ -9,15 +9,25 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 
 // import sweetalert2 popup
 import Swal from 'sweetalert2'
 
-// Component Import
-import StudentProjectDetail from './StudentProjectDetail'
-
-function PreprojectStudent() {
+function Approve_Table() {
   const router = useRouter() // router สร้าง path
+
+  // รับค่า id user จาก local storage
+  const [user_id, setUser_Id] = useState([])
+
+  useEffect(() => {
+    // Check for CSR
+    if (typeof window !== 'undefined') {
+      const userID = localStorage.getItem('jwtUser_id')
+      setUser_Id(userID)
+    }
+  }, [])
+
   const [refreshData, setRefreshData] = useState(false) // รีตาราง
   // นำเข้าตัวsweetalert2
   const Swal = require('sweetalert2')
@@ -51,29 +61,37 @@ function PreprojectStudent() {
     setDetailOpenDialog(false)
   }
 
-  // dialog Chang Status open
-  const handleClickChangStatusDialog = rowData => {
-    setOpenDialogChangStatus(true)
-    setSelectedRowData(rowData)
-  }
-
-  const handleCloseChangStatusDialog = () => {
-    setOpenDialogChangStatus(false)
-  }
-
   // dialog Detail open
-  const handleDetailClick = rowData => {
-    handleClickOpenDetailDialog()
-    setSelectedRowData(rowData)
+  const handleApproveClick = rowData => {
+    const data = {
+      preproject_id: rowData
+    }
+
+    // console.log('data', data)
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API}api/project-mgt/approve_adviser`, data)
+      .then(response => {
+        console.log(response)
+        setIsLoading(true)
+        setIsLoading(false)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    Swal.fire({
+      icon: 'success',
+      title: 'Approve Status Complete'
+    })
   }
 
   //----------------------------End dialog control Functions---------------------------------//
 
   // ประกาศ Colum DataGrid
   const columns = [
-    { field: 'project_code', headerName: 'รหัสโครงการ', width: 120 },
+    { field: 'project_code', headerName: 'รหัสโครงการ', width: 140 },
     { field: 'preproject_name_th', headerName: 'ชื่อโครงงาน(ภาษาไทย)', width: 300 },
-    { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(อังกฤษ)', width: 300 },
+    { field: 'preproject_name_eng', headerName: 'ชื่อโครงงาน(ภาษาอังกฤษ)', width: 300 },
     {
       field: 'project_status',
       headerName: 'สถานะโครงงาน',
@@ -134,85 +152,72 @@ function PreprojectStudent() {
       }
     },
     {
-      field: 'Detail',
-      headerName: 'รายละเอียด',
+      field: 'Approve',
+      headerName: 'ยืนยัน',
       width: 100,
       sortable: false,
       filterable: false,
       renderCell: cellValues => {
+        const isDisabled = cellValues.row.can_register_status === 0
+
         return (
-          <Button variant='text' onClick={() => handleDetailClick(cellValues.row.preproject_id)}>
-            <VisibilityIcon />
+          <Button variant='text' onClick={() => handleApproveClick(cellValues.row.preproject_id)}>
+            <CheckCircleIcon />
           </Button>
         )
       }
     }
   ]
 
-  // รับค่า id Student จาก local storage
-  const [user_id, setUser_Id] = useState([])
-
-  useEffect(() => {
-    // Check for CSR
-    if (typeof window !== 'undefined') {
-      const userID = localStorage.getItem('jwtUser_id')
-      setUser_Id(userID)
-    }
-  }, [])
-
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true) // เริ่มต้น loading
+        setIsLoading(true)
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallmyproject?student_id=${user_id}`
+          `${process.env.NEXT_PUBLIC_API}api/project-mgt/getprojectwaitapprove?instructor_id=${user_id}`
         )
 
-        setProjectData(response.data.preprojectlist)
-        setIsLoading(false) // หยุด loading เมื่อเสร็จสิ้นการดึงข้อมูล
+        if (response.data && response.data.PreprojectList) {
+          setProjectData(response.data.PreprojectList)
+          setIsLoading(false)
+        } else {
+          console.error('Invalid response format')
+          setIsLoading(false)
+        }
       } catch (error) {
         console.error(error)
-        setIsLoading(false) // หยุด loading ในกรณีเกิดข้อผิดพลาด
+        setIsLoading(false)
       }
     }
+
     fetchData()
-  }, [openDialogChangStatus, user_id, refreshData])
+  }, [openDialogChangStatus, refreshData, user_id])
 
   return (
     <div>
-      <Grid>
-        {/* ปุ่ม Insert project */}
-        <Button
-          sx={{ marginBottom: '10px', width: '18vh', height: '20' }}
-          variant='contained'
-          onClick={() => {
-            router.push(`/pages/Student/HomeStudent/PreprojectStudent/RegisNewProject`)
-          }}
-        >
-          สร้างโปรเจค
-        </Button>
-        <Button
-          sx={{
-            marginBottom: '10px',
-            width: '15vh',
-            marginLeft: '5px',
-            height: '20',
-            backgroundColor: '#FFC107',
-            '&:hover': {
-              backgroundColor: '#FFD600'
-            }
-          }}
-          variant='contained'
-          onClick={() => {
-            setRefreshData(prevSubmitted => !prevSubmitted)
-          }}
-        >
-          <RefreshIcon /> รีเฟรช
-        </Button>
-        <Card>
-          <CardContent>
+      <Button
+        sx={{
+          marginBottom: '10px',
+          width: '15vh',
+          height: '20',
+          backgroundColor: '#FFC107',
+          '&:hover': {
+            backgroundColor: '#FFD600'
+          }
+        }}
+        variant='contained'
+        onClick={() => {
+          setRefreshData(prevSubmitted => !prevSubmitted)
+        }}
+      >
+        <RefreshIcon /> รีเฟรช
+      </Button>
+
+      <Card>
+        <CardContent>
+          <Grid>
             <Box sx={{ height: '100%', width: '100%' }}>
               {isLoading ? (
                 <Box
@@ -234,7 +239,7 @@ function PreprojectStudent() {
                     alt='Loading...'
                   />
                 </Box>
-              ) : projectdata.length === 0 ? (
+              ) : projectdata && projectdata.length === 0 ? (
                 <p>No Data</p>
               ) : (
                 <DataGrid
@@ -253,18 +258,11 @@ function PreprojectStudent() {
                 />
               )}
             </Box>
-          </CardContent>
-        </Card>
-      </Grid>
-      {/*  Detail data Dialog */}
-      <StudentProjectDetail
-        open={openDetailDialog}
-        handleClose={handleCloseDetailDialog}
-        fullWidth
-        rowData={selectedRowData}
-      />
+          </Grid>
+        </CardContent>
+      </Card>
     </div>
   )
 }
 
-export default PreprojectStudent
+export default Approve_Table

@@ -15,6 +15,8 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
+import WbIncandescentIcon from '@mui/icons-material/WbIncandescent'
 
 // Component Imports
 import Overview_load from './Overview_load'
@@ -52,7 +54,8 @@ const Teacher_load = () => {
   const [loadCommitteeProjectData, setLoadCommitteeProjectData] = useState([]) //ข้อมูลโครงงาน กรรมการโปรเจค
   const [overviewdata, setoverviewdata] = useState([])
 
-  console.log('loadProjectData++++', loadProjectData)
+  // state chang
+  const [sectionState, setSectionState] = useState('false')
 
   // รับค่าข้อมูลจาก Api
   useEffect(() => {
@@ -61,7 +64,6 @@ const Teacher_load = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API}api/project-mgt/teacherload?instructor_id=${user_id}`
         )
-        console.log('จงไหนเล่าจะเท่าจงไร ชิงรัม', response.data)
         setLoadPreprojectData(response.data.preprojectAdviser)
         setLoadProjectData(response.data.projectAdviser)
         setLoadCommitteePreprojectData(response.data.preprojectCommittee)
@@ -74,68 +76,84 @@ const Teacher_load = () => {
     fetchData()
   }, [user_id])
 
+  const handleSecActiveClick = async () => {
+    setSectionState(true)
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}api/project-mgt/teacherloadinsecactive?instructor_id=${user_id}`
+      )
+
+      setLoadPreprojectData(response.data.preprojectAdviser)
+      setLoadProjectData(response.data.projectAdviser)
+      setLoadCommitteePreprojectData(response.data.preprojectCommittee)
+      setLoadCommitteeProjectData(response.data.projectCommittee)
+      setoverviewdata(response.data.loadCount)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleAllSecClick = async () => {
+    setSectionState(false)
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}api/project-mgt/teacherload?instructor_id=${user_id}`
+      )
+
+      setLoadPreprojectData(response.data.preprojectAdviser)
+      setLoadProjectData(response.data.projectAdviser)
+      setLoadCommitteePreprojectData(response.data.preprojectCommittee)
+      setLoadCommitteeProjectData(response.data.projectCommittee)
+      setoverviewdata(response.data.loadCount)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ paddingBottom: 4 }}>
         <Typography variant='h5'>อาจารย์</Typography>
       </Grid>
 
-      {/* Header card */}
-      {/* <Grid style={{ width: '100%' }}>
-        <Card style={{ borderRadius: '20px', background: '#00BFFF', margin: 0, padding: 0 }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              padding: '10px',
-              borderRadius: '20px',
-              margin: 0,
-              padding: 0
-            }}
-          >
-            <PersonIcon
-              style={{
-                fontSize: '2.5rem',
-                marginTop: '21px',
-                marginLeft: '20px',
-                backgroundColor: '#28c7fc',
-                borderRadius: '10px',
-                padding: '5px'
-              }}
-            />
-            <CardHeader
-              title='CE-Reform'
-              subheader={
-                <Typography variant='body2'>
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    Project-MGT
-                  </Box>
-                  <br />
-                  <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                    Rmutl
-                  </Box>
-                </Typography>
-              }
-            />
-          </div>
-
-          <CardHeader
-            title='All You Load'
-            subheader={
-              <Typography variant='body2'>
-                <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  xxx All Load
-                </Box>
-              </Typography>
-            }
-          />
-        </Card>
-      </Grid> */}
-      {/* Header card */}
       <Grid style={{ width: '100%' }}>
         <Overview_load overviewdata={overviewdata} />
       </Grid>
-      <Box sx={{ width: '100%', typography: 'body1', mt: 10 }}>
+      {sectionState === false ? (
+        <Button
+          sx={{
+            marginTop: '20px',
+            width: '30vh',
+            height: '20',
+            backgroundColor: '#00BFFF',
+            '&:hover': {
+              backgroundColor: '#28c7fc'
+            }
+          }}
+          variant='contained'
+          onClick={() => handleSecActiveClick()}
+        >
+          <TipsAndUpdatesIcon /> แสดง Section ที่เปิด
+        </Button>
+      ) : (
+        <Button
+          sx={{
+            marginTop: '20px',
+            width: '32vh',
+            height: '20',
+            backgroundColor: '#b23c17',
+            '&:hover': {
+              backgroundColor: '#ff5722'
+            }
+          }}
+          variant='contained'
+          onClick={() => handleAllSecClick()}
+        >
+          <TipsAndUpdatesIcon sx={{ color: 'black' }} /> แสดง Section ทั้งหมด
+        </Button>
+      )}
+
+      <Box sx={{ width: '100%', typography: 'body1' }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleTabChange} aria-label='lab API tabs example'>

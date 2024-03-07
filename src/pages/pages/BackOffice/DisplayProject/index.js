@@ -12,6 +12,11 @@ import SyncIcon from '@mui/icons-material/Sync'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import TextField from '@mui/material/TextField'
+import SearchIcon from '@mui/icons-material/Search'
+
+import FormControl from '@mui/material/FormControl'
+import Autocomplete from '@mui/material/Autocomplete'
 
 // Component Import
 import Project_Detail_Modal from './Project_Detail_Modal'
@@ -292,15 +297,64 @@ function DisplayProject() {
     })
   }
 
+  //==================================================== search student projects ============================================//
+  const [student, setStudent] = useState([])
+  const [selectedValueStudent, setSelectedValueStudent] = useState('') // เก็บค่า Student ที่เลือก
+
+  const [selectStudent, setSelectStudent] = useState([])
+
+  const getOptionLabel = option => {
+    return option ? `${option.prefix} ${option.first_name} ${option.last_name} ${option.id_rmutl}` : ''
+  }
+
+  const handleStudentChange = (_, value) => {
+    setSelectedValueStudent(value)
+  }
+
+  // api student call
+  // ดึงข้อมูล นักเรียนจาก Api
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API}api/project-mgt/students`)
+        const studentData = response.data.data || []
+        setStudent(studentData)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchStudentData()
+  }, [])
+
+  const handleSearch = async () => {
+    const idstudent = selectedValueStudent.student_id
+    setProjectData('')
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}api/project-mgt/getallpreprojectbystudentid?student_id=${idstudent}`
+      )
+
+      // console.log('ข้อมูลโครงงานเดี่ยว', response.data.Preproject_data)
+
+      console.log('ข้อมูลโครงงานเดี่ยว 2', response.data.Projoject_data)
+
+      const projects = response.data.Projoject_data.map(project => ({
+        ...project,
+        YearColum: `${project.sem_year}/${project.semester_order}/${project.section_name}`
+      }))
+      setProjectData(projects)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div>
       <Grid>
-        {/* <Typography variant='h6' align='center' sx={{ mb: 10, fontWeight: 'bold' }}>
-          ตารางแสดงรายชื่อหัวข้อโครงงาน - วิชาโปรเจค
-        </Typography> */}
         <Button
           sx={{
-            marginBottom: '10px',
+            marginBottom: '5px',
             width: '15vh',
             height: '20',
             backgroundColor: '#FFC107',
@@ -315,6 +369,33 @@ function DisplayProject() {
         >
           <RefreshIcon /> รีเฟรช
         </Button>
+        <div style={{ marginTop: '10px', marginBottom: '15px', width: '70vh' }}>
+          <Card>
+            <CardContent
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}
+            >
+              <FormControl fullWidth>
+                <Autocomplete
+                  id='student-label'
+                  value={selectedValueStudent === '' ? null : selectedValueStudent}
+                  onChange={handleStudentChange}
+                  options={student}
+                  getOptionLabel={getOptionLabel}
+                  renderInput={params => <TextField {...params} label='ชื่อนักศึกษา' />}
+                />
+              </FormControl>
+              <Button
+                variant='contained'
+                color='primary'
+                startIcon={<SearchIcon />}
+                onClick={handleSearch}
+                sx={{ width: 'auto', height: '7vh', marginLeft: '5px' }}
+              >
+                ค้นหา
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
         <Card>
           <CardContent>
             <Box sx={{ height: '100%', width: '100%' }}>
