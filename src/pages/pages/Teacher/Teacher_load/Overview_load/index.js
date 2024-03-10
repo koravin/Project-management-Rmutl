@@ -18,6 +18,8 @@ import CoPresentIcon from '@mui/icons-material/CoPresent'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff'
 import ExtensionIcon from '@mui/icons-material/Extension'
+import Diversity1Icon from '@mui/icons-material/Diversity1'
+import Groups3Icon from '@mui/icons-material/Groups3'
 
 const Overview_load = ({ overviewdata }) => {
   const salesData = [
@@ -37,13 +39,13 @@ const Overview_load = ({ overviewdata }) => {
       stats: 'ภาระ ' + overviewdata?.committeeCount_preproject + ' โครงงาน',
       color: 'warning',
       title: 'กรรมการ วิชาเตรียมโครงการ',
-      icon: <DataSaverOffIcon sx={{ fontSize: '1.75rem' }} />
+      icon: <Diversity1Icon sx={{ fontSize: '1.75rem' }} />
     },
     {
       stats: 'ภาระ ' + overviewdata?.committeeCount_project + ' โครงงาน',
       color: 'info',
       title: 'กรรมการ วิชาโครงการ',
-      icon: <ExtensionIcon sx={{ fontSize: '1.75rem' }} />
+      icon: <Groups3Icon sx={{ fontSize: '1.75rem' }} />
     }
   ]
 
